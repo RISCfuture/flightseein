@@ -1,0 +1,18 @@
+<p id="call-to-action">Edit your profile:</p>
+<%= form_for current_user, url: account_url do |f| %>
+    <ul>
+      <li><%= f.text_field :name, placeholder: t('activerecord.attributes.user.name') %></li>
+      <li>
+        <%= f.text_area :quote, placeholder: t('activerecord.attributes.user.quote'), rows: 3, cols: 22 %>
+        <p class="note">Format your quote using <%= link_to "Markdown", "http://daringfireball.net/projects/markdown/syntax" %>.</p>
+      </li>
+      <li><%= f.label :avatar %>: <%= f.file_field :avatar %></li>
+
+      <li class="submit"><%= f.submit %></li>
+    </ul>
+<% end %>
+
+<p>
+  <%= link_to "&larr; Return to your home page".html_safe, root_url, class: 'button-small' %>
+  <%= link_to "Delete my account", account_url, method: :delete, confirm: "This will prevent anyone from viewing your account. Are you sure?", class: 'button-small' %>
+</p>

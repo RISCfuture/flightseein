@@ -1,0 +1,87 @@
+<section id="title">
+  <%= image_tag subdomain_owner.avatar.url(:profile), alt: subdomain_owner.best_name %>
+  <div id="name">
+    <h1><%= subdomain_owner.best_name %></h1>
+    <% if @quote %>
+        <div id="quote"><%= raw @quote.to_html %></div>
+    <% end %>
+    <p id="vitals">
+      <% if subdomain_owner.certificate %>
+          <%= t "models.user.certificate.#{subdomain_owner.certificate}" %>
+          <%= "(instrument)" if subdomain_owner.has_instrument? %>
+          <% if subdomain_owner.certification_date %>
+            since <%= l subdomain_owner.certification_date, format: :vitals %>
+          <% end %>
+          &bull;
+      <% end %>
+      <%= number_with_precision subdomain_owner.hours, precision: 1 %> hours
+    </p>
+    <% if subdomain_owner? %>
+        <p><%= link_to "Edit your profile", edit_account_url, class: 'button' %></p>
+    <% end %>
+  </div>
+</section>
+
+<% if subdomain_owner? %>
+    <p id="import-link">
+      <% if @flight_count.zero? %>
+          &rarr; Import your digital logbook to finish your profile!
+      <% else %>
+          &rarr; Update your profile by re-importing your logbook.
+      <% end %>
+      <%= link_to "Import your logbook", new_import_url, class: 'button' %>
+    </p>
+<% end %>
+
+<section id="stats">
+  <ul id="row-flights" class="carousel">
+    <li class="statbox nofade center" fakehref="<%= flights_url %>">
+      <h1><%= number_with_delimiter @flight_count %></h1>
+      <p><%= "adventure".send(@flight_count == 1 ? :self : :pluralize) %></p>
+    </li>
+    <% @flight_images.each do |flight| %>
+        <% if flight.photographs.empty? %>
+            <li class="no-image center" fakehref="<%= flight_url flight %>">
+              <h1><%= raw flight.destinations.map(&:airport).map(&:identifier).join(" &rarr; ") %></h1>
+              <p><%= l flight.date, format: :carousel %></p>
+            </li>
+        <% else %>
+            <li><%= link_to image_tag(flight.photographs.limit(4).sample.image.url(:carousel), alt: "#{flight.origin.airport.identifier} to #{flight.destination.airport.identifier}"), flight %></li>
+        <% end %>
+    <% end %>
+  </ul>
+
+  <ul id="row-pax" class="carousel">
+    <li class="statbox nofade center" fakehref="<%= people_url %>">
+      <h1><%= number_with_delimiter @pax_count %></h1>
+      <p><%= "passenger".send(@pax_count == 1 ? :self : :pluralize) %></p>
+    </li>
+    <% @pax_images.each do |pax| %>
+        <% if pax.has_photo? %>
+            <li><%= link_to image_tag(pax.photo.url(:carousel), alt: pax.name), pax %></li>
+        <% else %>
+            <li class="no-image center" fakehref="<%= person_url pax %>">
+              <h1><%= pax.name %></h1>
+              <p><%= number_with_precision pax.hours, precision: 1 %> hours</p>
+            </li>
+        <% end %>
+    <% end %>
+  </ul>
+
+  <ul id="row-airports" class="carousel">
+    <li class="statbox nofade center" fakehref="<%= airports_url %>">
+      <h1><%= number_with_delimiter @airport_count %></h1>
+      <p><%= "destination".send(@airport_count == 1 ? :self : :pluralize) %></p>
+    </li>
+    <% @airport_images.each do |dest| %>
+        <% if dest.has_photo? %>
+            <li><%= link_to image_tag(dest.photo.url(:carousel), alt: dest.airport.name), dest.airport %></li>
+        <% else %>
+            <li class="no-image center" fakehref="<%= airport_url dest.airport %>">
+              <h1><%= dest.airport.identifier %></h1>
+              <p><%= dest.airport.name %></p>
+            </li>
+        <% end %>
+    <% end %>
+  </ul>
+</section>

@@ -1,0 +1,34 @@
+@import "_vars";
+@import "compass/css3/box";
+
+article#users {
+    #tagline {
+        color: $header-color;
+        font-size: 36pt;
+        font-weight: bold;
+    }
+
+    #detail {
+        margin-top: 1em;
+        color: lighten($header-color, 25%);
+        font-size: 24pt;
+    }
+
+    ul#examples {
+        @include display-box;
+        @include box-orient(horizontal);
+        
+        margin-top: 2em;
+        margin-bottom: 2em;
+
+        li {
+            width: 140px;
+            height: 100px;
+            margin-right: 20px;
+        }
+    }
+
+    #call-to-action {
+        color: lighten($alternate-color, 15%);
+    }
+}

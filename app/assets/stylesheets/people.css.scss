@@ -1,0 +1,50 @@
+@import "_vars";
+@import "compass/css3/box";
+@import "compass/css3/text-shadow";
+
+article#people {
+
+    // INDEX
+
+    p.note {
+        text-align: center;
+        font-style: italic;
+        color: $alternate-color;
+        font-size: 14pt;
+    }
+
+    p.error {
+        text-align: center;
+        color: darkred;
+        font-size: 14pt;
+    }
+
+    ul {
+        @include display-box;
+        @include box-orient(horizontal);
+        margin-bottom: 20px;
+        
+        li {
+            width: 140px;
+            height: 100px;
+            margin-right: 20px;
+
+            h1 {
+                //@include text-shadow(black 0 0 2px);
+                text-shadow: 0 0 2px black;
+                color: white;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+
+            p {
+                //@include text-shadow(black 0 0 2px);
+                text-shadow: 0 0 2px black;
+                color: white;
+                font-size: 10pt;
+                text-align: center;
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+<section id="title">
+  <%= image_tag @destination.photo.url(:profile), alt: @destination.airport.name %>
+  <div id="name">
+    <h1><%= @destination.airport.name %> <span id="airport_ident">(<%= @destination.airport.identifier %>)</span></h1>
+    <% if @notes %>
+        <div id="notes"><%= raw @notes.to_html %></div>
+    <% end %>
+    <p id="vitals">
+      <%= @destination.airport.city %>, <%= @destination.airport.state %> &bull;
+      <%= pluralize_with_delimiter @destination.flights_count, 'flight' %> (to, from, or enroute)
+    </p>
+  </div>
+</section>
+<p><%= link_to "&larr; All airports".html_safe, airports_url, class: 'button' %></p>
+
+<h1>Flights to <%= @destination.airport.identifier %></h1>
+<ol id="logbook"></ol>
+
+<%= content_for :javascripts do %>
+    <script type="text/javascript">
+        $(window).ready(function() {
+            $('#logbook').logbook("<%= raw escape_javascript(airport_flights_url(@destination.airport, format: :json)) %>");
+        });
+    </script>
+<% end %>

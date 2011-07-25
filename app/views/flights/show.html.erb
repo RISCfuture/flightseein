@@ -1,0 +1,105 @@
+<%= render(partial: 'accounts/profile') %>
+
+<section id="overview">
+  <h1>
+    <time datetime="<%= @flight.date.xmlschema %>"><%= l @flight.date, format: :flight %></time>
+    <%= number_with_precision @flight.duration, precision: 1 %> hours
+  </h1>
+  <p><%= @flight.remarks %></p>
+</section>
+
+<section id="details">
+  <% if @blog or subdomain_owner? %>
+      <div id="blog">
+        <% if @blog %>
+            <%= raw @blog.to_html %>
+            <% if subdomain_owner? %>
+                <p><%= link_to "Edit blog entry or add photos", edit_flight_url(@flight), class: 'button' %></p>
+            <% end %>
+        <% else %>
+            <p>There is no blog entry for this flight. <%= link_to "Write one &rarr;".html_safe, edit_flight_url(@flight), class: 'button' %></p>
+        <% end %>
+      </div>
+  <% end %>
+
+  <div id="stats">
+    <h2>Aircraft</h2>
+    <div class="stat">
+      <%= image_tag @flight.aircraft.image.url(:stat) %>
+      <div>
+        <h3><%= @flight.aircraft.ident %></h3>
+        <p><%= @flight.aircraft.year %> <%= @flight.aircraft.long_type || @flight.aircraft.type %></p>
+      </div>
+    </div>
+
+    <% if @flight.pic %>
+        <h2>Pilot in command</h2>
+        <div class="stat">
+          <%= link_to image_tag(@flight.pic.photo.url(:stat)), @flight.pic %>
+          <div>
+            <h3><%= link_to @flight.pic.name, @flight.pic %></h3>
+            <p><%= pluralize_with_delimiter @flight.pic.flights.count, 'flight' %></p>
+          </div>
+        </div>
+    <% end %>
+
+    <% if @flight.sic %>
+        <h2>Second in command</h2>
+        <div class="stat">
+          <%= link_to image_tag(@flight.sic.photo.url(:stat)), @flight.sic %>
+          <div>
+            <h3><%= link_to @flight.sic.name, @flight.sic %></h3>
+            <p><%= pluralize_with_delimiter @flight.sic.flights.count, 'flight' %></p>
+          </div>
+        </div>
+    <% end %>
+
+    <% unless @flight.passengers.empty? %>
+        <h2>Passengers</h2>
+        <% @flight.passengers.includes(:metadata, :slugs).limit(20).each do |person| %>
+            <div class="stat">
+              <%= link_to image_tag(person.photo.url(:stat)), person %>
+              <div>
+                <h3><%= link_to person.name, person %></h3>
+                <p><%= pluralize_with_delimiter person.flights.count, 'flight' %></p>
+              </div>
+            </div>
+        <% end %>
+        <% if @flight.passengers.count > 20 %>
+            <p>&hellip; and more &hellip;</p>
+        <% end %>
+    <% end %>
+
+    <h2>Route and stops</h2>
+    <% @flight.destinations { |d| d.includes(:metadata, airport: :metadata).limit(20) }.uniq.each do |destination| %>
+        <div class="stat">
+          <%= link_to image_tag(destination.photo.url(:stat)), destination.airport %>
+          <div>
+            <h3><%= link_to destination.airport.name, destination.airport %></h3>
+            <p><%= destination.airport.city %>, <%= destination.airport.state %></p>
+          </div>
+        </div>
+    <% end %>
+    <% if @flight.stops.count > 18 %>
+        <p>&hellip; and more &hellip;</p>
+    <% end %>
+
+    <% unless @flight.photographs.empty? %>
+        <hr />
+
+        <div id="photos">
+          <% @flight.photographs.limit(20).each do |photo| %>
+              <figure>
+                <%= link_to image_tag(photo.image.url(:blog)), photo.image.url %>
+                <% if photo.caption.present? %>
+                    <figcaption><%= photo.caption %></figcaption>
+                <% end %>
+              </figure>
+          <% end %>
+          <% if @flight.photographs.count > 20 %>
+            <p>&hellip; and more &hellip;</p>
+          <% end %>
+        </div>
+    <% end %>
+  </div>
+</section>

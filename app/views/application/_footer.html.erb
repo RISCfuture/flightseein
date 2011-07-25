@@ -1,0 +1,9 @@
+<footer>
+  <p>
+    Copyright &copy;2011 <%= link_to "Tim Morgan", "http://www.timothymorgan.info" %>. All rights reserved. |
+    <%= mail_to 'tim@flightsee.in', "Contact Me", encode: :javascript %>
+    <% unless logged_in? %>
+        | Pilot? Like what you see? <%= link_to "Get your own.", root_url(subdomain: false) %>
+    <% end %>
+  </p>
+</footer>

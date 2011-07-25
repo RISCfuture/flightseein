@@ -1,0 +1,120 @@
+@import "_vars";
+@import "compass/css3/box";
+@import "compass/css3/border-radius";
+@import "compass/css3/images";
+@import "compass/css3/text-shadow";
+
+@mixin statbox($color) {
+    //@include background-image(linear-gradient(top, lighten($color, 90%), lighten($color, 50%)));
+    @include vertical-gradient(mix(white, $color, 80%), mix(white, $color, 40%));
+    color: darken($color, 25%);
+
+    @include border-radius(8px);
+    text-align: center;
+
+    &:hover { color: $color; }
+}
+
+article#accounts {
+
+    // SHOW
+
+    section#title {
+        @include display-box;
+        @include box-orient(horizontal);
+
+        width: 100%;
+
+        margin-bottom: 1em;
+
+        img { margin-right: 1em; }
+        div#name { @include box-flex(1); }
+
+        h1 {
+            font-size: 36pt;
+            font-weight: bold;
+            color: $header-color;
+        }
+
+        div#quote {
+            color: $alternate-color;
+            padding-left: 1em;
+            border-left: 5px solid lighten($alternate-color, 25%);
+        }
+
+        p#vitals {
+            color: $alternate-color;
+        }
+
+        p { margin-top: 1em; }
+    }
+
+    section#stats {
+        margin-top: 2em;
+
+        ul {
+            @include display-box;
+            @include box-orient(horizontal);
+            margin-bottom: 2em;
+        }
+
+        li {
+            width: 140px;
+            height: 100px;
+            margin-right: 20px;
+
+            &.statbox {
+                h1 {
+                    //@include text-shadow(rgba(white, 0.75) 0 1px 1px);
+                    text-shadow: 0 1px 1px rgba(white, 0.75);
+                    font-size: 36pt;
+                    font-weight: bold;
+                    margin-bottom: 0;
+                }
+            }
+
+            &.no-image {
+                @include statbox(gray);
+
+                h1 {
+                    //@include text-shadow(rgba(white, 0.75) 0 1px 1px);
+                    text-shadow: 0 1px 1px rgba(white, 0.75);
+                    font-size: 14pt;
+                    font-weight: bold;
+                    margin-bottom: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                &:hover { color: black; }
+            }
+        }
+
+        ul#row-flights>li.statbox {
+            @include statbox(red);
+        }
+
+        ul#row-pax>li.statbox {
+            @include statbox(green);
+        }
+
+        ul#row-airports>li.statbox {
+            @include statbox(blue);
+        }
+    }
+
+    #call-to-action {
+        color: lighten($alternate-color, 15%);
+    }
+
+    #import-link {
+        color: darken($base-color, 25%);
+        font-weight: bold;
+    }
+
+    // EDIT
+
+    form {
+        margin-bottom: 2em;
+    }
+}

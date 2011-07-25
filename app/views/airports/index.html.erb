@@ -1,0 +1,61 @@
+<%= render(partial: 'accounts/profile') %>
+
+<p id="loading"><%= image_tag 'spinner.gif' %> Loading airports&hellip;</p>
+
+<section id="airports_view">
+  <div id="map"></div>
+  <ul id="list"></ul>
+</section>
+
+<%= content_for :javascripts do %>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript">
+        $(window).ready(function() {
+            var myOptions = {
+                zoom: 4,
+                center: new google.maps.LatLng(<%= @lat %>, <%= @lon %>),
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+            };
+            var map = new google.maps.Map(document.getElementById("map"),
+                                          myOptions);
+            var bounds = new google.maps.LatLngBounds();
+
+            var loader = function(data) {
+                if (data.length == 0) {
+                    map.fitBounds(bounds);
+                    $('#loading').fadeOut();
+                    return;
+                }
+
+                $.each(data, function(_, dest) {
+                    var pos = new google.maps.LatLng(dest.airport.lat, dest.airport.lon);
+                    bounds.extend(pos);
+
+                    var marker = new google.maps.Marker({
+                                               map: map,
+                                               position: pos,
+                                               title: dest.airport.name
+                                           });
+
+                    google.maps.event.addListener(marker, 'click', function() {
+                        $('#list>li').removeClass('highlighted')
+                        $('li#airport_' + dest.airport_id).addClass('highlighted');
+                        $('#list').scrollTo($('li#airport_' + dest.airport_id), 500);
+                    });
+
+                    var li = $('<li/>').attr('id', 'airport_' + dest.airport_id).appendTo($('#list'));
+                    $('<img/>').attr('src', dest.photo).appendTo(li);
+                    var details = $('<div/>').addClass('details').appendTo(li);
+                    $('<h1/>').append($('<a/>').text(dest.airport.name).attr('href', dest.url)).appendTo(details);
+                    $('<p/>').text(dest.airport.city + ', ' + dest.airport.state).appendTo(details);
+                });
+
+                $.getJSON("<%= raw escape_javascript(airports_url(format: 'json')) %>",
+                          { last_record: data[data.length - 1].airport_id },
+                          loader);
+            };
+
+            $.getJSON("<%= raw escape_javascript(airports_url(format: 'json')) %>", loader);
+        });
+    </script>
+<% end %>

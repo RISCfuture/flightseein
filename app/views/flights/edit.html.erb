@@ -1,0 +1,43 @@
+<%= render(partial: 'accounts/profile') %>
+
+<%= form_for @flight do |f| %>
+    <ul>
+      <li>
+        <%= f.text_area :blog, rows: 40, cols: 80, placeholder: "Write a blog entry" %>
+        <p class="note">Format your blog entry using <%= link_to "Markdown", "http://daringfireball.net/projects/markdown/syntax" %>.</p>
+      </li>
+
+      <li><h2>Add photos from your adventure</h2></li>
+      <%= f.fields_for :photographs do |fp| %>
+          <li <%= 'id="new_photo"'.html_safe if fp.object.new_record? %>>
+            <% if fp.object.new_record? %>
+                <%= fp.file_field :image %><br />
+            <% else %>
+                <%= image_tag fp.object.image.url(:logbook) %>
+            <% end %>
+            <%= fp.text_field :caption, size: 80, maxlength: 300, placeholder: 'Caption your photo' %>
+            <% if fp.object.persisted? %>
+                <br /><%= fp.check_box :_destroy %> <%= fp.label :_destroy, "Delete this photograph" %>
+            <% end %>
+          </li>
+      <% end %>
+      <li><%= link_to "Add an additional photo", '#', class: 'button', id: 'new_photo_button' %></li>
+      <li class="submit"><%= f.submit %></li>
+    </ul>
+<% end %>
+
+<%= content_for :javascripts do %>
+    <script type="text/javascript">
+      var cascadeLastIndex = 0;
+      $(window).ready(function() {
+          $('#new_photo_button').click(function() {
+              cascadeLastIndex++;
+              var newLi = $('#new_photo').clone();
+              newLi.find("input[type=file]").attr({ id: 'flight_photographs_attributes_' + cascadeLastIndex + '_image', name: 'flight[photographs_attributes][' + cascadeLastIndex + '][image]' });
+              newLi.find("input[type=text]").attr({ id: 'flight_photographs_attributes_' + cascadeLastIndex + '_caption', name: 'flight[photographs_attributes][' + cascadeLastIndex + '][caption]' }).value('');
+              newLi.insertBefore($('#new_photo_button'));
+              return false
+          });
+      });
+    </script>
+<% end %>

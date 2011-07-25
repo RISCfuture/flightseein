@@ -1,0 +1,7 @@
+@import "_vars";
+
+article#sessions {
+    #call-to-action {
+        color: lighten($alternate-color, 15%);
+    }
+}

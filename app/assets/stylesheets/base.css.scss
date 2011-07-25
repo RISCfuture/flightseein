@@ -1,0 +1,151 @@
+@import "compass/reset";
+//@import "compass/css3/images";
+//@import "compass/css3/box-shadow";
+@import "compass/css3/border-radius";
+@import "compass/css3/box";
+@import "_vars";
+
+@mixin flash($color) {
+    color: mix($font-color, $color, 50%);
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: center;
+}
+
+@mixin button {
+    //@include background-image(linear-gradient(top, lighten($base-color, 40%), $base-color));
+    @include vertical-gradient(lighten($base-color, 40%), $base-color);
+    @include border-radius(5px);
+    //@include text-shadow(rgba(white, 0.75) 0 1px 1px);
+
+    padding: 3px 10px;
+
+    color: darken($base-color, 50%);
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(white, 0.75);
+    font-weight: normal;
+    white-space: nowrap;
+
+    &:hover {
+        //@include background-image(linear-gradient(top, lighten($base-color, 40%), darken($base-color, 10%)));
+        @include vertical-gradient(lighten($base-color, 40%), lighten($base-color, 10%));
+    }
+
+    &:active {
+        //@include background-image(linear-gradient(top, darken($base-color, 30%), $base-color, 10%));
+        @include vertical-gradient(darken($base-color, 30%), $base-color);
+        text-shadow: 0 -1px 1px rgba(white, 0.5);
+    }
+}
+
+body {
+    color: $font-color;
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: 12pt;
+}
+
+header {
+    background-color: $base-color;
+    text-align: center;
+    height: 100px;
+
+    p#login {
+        position: relative;
+        top: -12px;
+    }
+
+    p#flash-alert {
+        @include flash(red);
+    }
+
+    p#flash-notice {
+        @include flash(green);
+    }
+}
+
+article {
+    width: 800px;
+    margin: 1em auto;
+    padding: 1em;
+    background-color: white;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+
+    p {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: 9pt;
+        text-align: center;
+        color: $alternate-color;
+    }
+}
+
+form {
+    margin-top: 1em;
+    padding-left: 0.5em;
+    border-left: 4px solid lighten($header-color, 25%);
+
+    li {
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        color: $alternate-color;
+
+        p.note {
+            font-size: 8pt;
+            color: black;
+            font-style: italic;
+        }
+    }
+}
+
+input[type=submit] {
+    @include button;
+    border: none;
+    font-size: 11pt;
+
+    &:hover { cursor: pointer; }
+}
+
+input[type=file] {
+    background: none;
+}
+
+span.field-with-errors {
+    &>input, &>textarea {
+        //@include background-image(linear-gradient(top, white, #fdd));
+        @include vertical-gradient(white, #fdd);
+    }
+}
+
+em { font-style: italic; }
+strong { font-weight: bold; }
+
+a.button {
+    @include button;
+}
+
+a.button-small {
+    @include button;
+    font-size: 7pt;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+p.progress {
+    text-align: center;
+}
+
+ul.inline-errors {
+    padding-left: 2em;
+
+    li {
+        font-size: 11pt;
+        color: darken(red, 25%);
+    }
+}
+

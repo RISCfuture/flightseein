@@ -1,0 +1,16 @@
+<header>
+  <%= image_tag('title.jpg', alt: "flightseein&rsquo;".html_safe) %>
+  <p id="login">
+    <% if logged_in? %>
+        <%= link_to "Log out", session_url(subdomain: false), method: :delete, class: 'button-small' %>
+    <% else %>
+        <%= link_to "Log in", new_session_url(subdomain: false), class: 'button-small' %>
+    <% end %>
+  </p>
+  <% if flash[:alert] %>
+    <p id="flash-alert"><%= flash[:alert] %></p>
+  <% end %>
+  <% if flash[:notice] %>
+    <p id="flash-notice"><%= flash[:notice] %></p>
+  <% end %>
+</header>

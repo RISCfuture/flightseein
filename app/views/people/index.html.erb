@@ -1,0 +1,11 @@
+<%= render(partial: 'accounts/profile') %>
+
+<div id="faces"></div>
+
+<%= content_for :javascripts do %>
+    <script type="text/javascript">
+      $(window).ready(function() {
+          $('#faces').facebook("<%= raw escape_javascript(people_url(format: :json)) %>");
+      });
+    </script>
+<% end %>

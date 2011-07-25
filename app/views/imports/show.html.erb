@@ -1,0 +1,36 @@
+<h1>Importing your logbook&hellip;</h1>
+
+<p class="progress"><progress value=0 max=6></progress></p>
+<p id="progress-text"></p>
+
+<p><%= link_to "&larr; Go to home page".html_safe, root_url, class: 'button' %></p>
+
+<%= content_for :javascripts do %>
+    <script type="text/javascript">
+        $(window).ready(function() {
+            $(document).everyTime(5000, function() {
+                $.getJSON("<%= raw escape_javascript(import_url(@import, format: 'json')) %>", function(data) {
+                    if (data.state == 'completed') window.location = "<%= raw escape_javascript(root_url) %>";
+                    else if (data.state == 'failed') {
+                        $('p.progress').remove();
+                        if ($('p#flash-alert').size() == 0) $('<p/>').attr('id', 'flash-alert').insertAfter($('p#login'));
+                        $('p#flash-alert').text("Sorry, but your logbook failed to import.");
+                    }
+                    else {
+                        $('progress').attr('value', data.progress_value);
+                        switch (data.state) {
+                            case 'pending':              $('#progress-text').html("Import hasn&rsquo;t started yet&hellip;"); break;
+                            case 'starting':             $('#progress-text').html("Beginning import&hellip;"); break;
+                            case 'importing_aircraft':   $('#progress-text').html("Importing aircraft&hellip;"); break;
+                            case 'importing_airports':   $('#progress-text').html("Importing airports&hellip;"); break;
+                            case 'importing_passengers': $('#progress-text').html("Importing passengers&hellip;"); break;
+                            case 'importing_flights':    $('#progress-text').html("Importing flights&hellip;"); break;
+                            case 'uploading_photos':     $('#progress-text').html("Uploading photos&hellip;"); break;
+                            default:                     $('#progress-text').html("Processing&hellip;"); break;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+<% end %>

@@ -1,0 +1,85 @@
+@import "_vars";
+@import "compass/css3/border-radius";
+@import "compass/css3/images";
+@import "compass/css3/text-shadow";
+
+@mixin flight-banner($color) {
+    //@include background-image(linear-gradient(top, lighten(mix($color, $alternate-color), 20%), darken(mix($color, $alternate-color), 20%)));
+    @include vertical-gradient(lighten(mix($color, $alternate-color, 10%), 20%), mix($color, $alternate-color, 10%));
+}
+
+ol#logbook {
+    li {
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+
+    li.red summary { @include flight-banner(red); }
+    li.yellow summary { @include flight-banner(yellow); }
+    li.green summary { @include flight-banner(green); }
+    li.cyan summary { @include flight-banner(#0ff); }
+    li.blue summary { @include flight-banner(blue); }
+    li.magenta summary { @include flight-banner(#f0f); }
+
+    li.error {
+        color: darkred;
+        text-align: center;
+    }
+
+    li.note {
+        color: $alternate-color;
+        text-style: italic;
+        text-align: center;
+    }
+
+    details {
+        summary {
+            @include border-radius(5px);
+            //@include text-shadow(rgba(black, 0.75) 0 -1px 1px);
+            text-shadow: 0 -1px 1px rgba(black, 0.75);
+
+            color: white;
+            font-size: 16pt;
+
+            display: inline-block;
+            position: relative;
+            top: 5px;
+            padding: 3px 10px;
+
+            time {
+                padding-right: 0.25em;
+                margin-right: 0.25em;
+                border-right: 2px solid rgba(white, 0.25);
+                font-weight: bold;
+            }
+
+            a {
+                color: white;
+                text-decoration: none;
+
+                &:hover {
+                    //@include text-shadow(darken($base-color, 25%) 0 -1px 2px);
+                    text-shadow: 0 -1px 2px darken($base-color, 25%);
+                }
+            }
+        }
+
+        p {
+            @include border-bottom-radius(5px);
+
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 8px;
+            padding-bottom: 3px;
+
+            color: rgba(black, 0.65);
+            background-color: lighten($alternate-color, 48%);
+            border: 1px solid lighten($alternate-color, 25%);
+
+            img {
+                padding: 5px 2px;
+            }
+        }
+    }
+}

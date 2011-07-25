@@ -1,0 +1,24 @@
+<section id="title">
+  <%= image_tag @person.photo.url(:profile), alt: @person.name %>
+  <div id="name">
+    <h1><%= @person.name %></h1>
+    <% if @notes %>
+        <div id="notes"><%= raw @notes.to_html %></div>
+    <% end %>
+    <p id="vitals">
+      <%= pluralize_with_delimiter @person.flights.count, 'flight' %> &bull;
+      <%= number_with_precision @person.hours, precision: 1 %> hours
+    </p>
+  </div>
+</section>
+
+<p><%= link_to "&larr; All passengers".html_safe, people_url, class: 'button' %></p>
+<ol id="logbook"></ol>
+
+<%= content_for :javascripts do %>
+    <script type="text/javascript">
+        $(window).ready(function() {
+            $('#logbook').logbook("<%= raw escape_javascript(person_flights_url(@person.to_param, format: :json)) %>");
+        });
+    </script>
+<% end %>

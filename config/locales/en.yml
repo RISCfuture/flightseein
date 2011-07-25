@@ -1,0 +1,172 @@
+en:
+  activerecord:
+    errors:
+      models:
+        aircraft:
+          attributes:
+            image_content_type:
+              invalid: must be an image file (such as JPEG)
+            image_file_size:
+              less_than: must be smaller than two megabytes
+        destination:
+          attributes:
+            photo_content_type:
+              invalid: must be an image file (such as JPEG)
+            photo_file_size:
+              less_than: must be smaller than two megabytes
+        import:
+          attributes:
+            logbook_content_type:
+              inclusion: is not a supported logbook format
+            logbook_file_size:
+              less_than: must be smaller than fifty megabytes
+        person:
+          attributes:
+            photo_content_type:
+              invalid: must be an image file (such as JPEG)
+            photo_file_size:
+              less_than: must be smaller than two megabytes
+        user:
+          attributes:
+            avatar_content_type:
+              invalid: must be an image file (such as JPEG)
+            avatar_file_size:
+              less_than: must be smaller than two megabytes
+            subdomain:
+              invalid: can only contain letters, numbers, dashes, or underscores, and can only start and end with letters or numbers
+    models:
+      aircraft: Aircraft
+      airport: Airport
+      destination: Destination
+      flight: Flight
+      import: Logbook import
+      person: Passenger
+      user: Account
+    attributes:
+      aircraft:
+        ident: Tail number
+        image: Picture
+        image_content_type: Picture
+        image_file_name: Picture
+        image_file_size: Picture
+        long_type: Type name
+        type: Type code
+        year: Year
+      airport:
+        city: City name
+        iata: IATA code
+        icao: ICAO code
+        lat: Latitude
+        lid: FAA LID
+        lon: Longitude
+        name: Name
+        notes: Notes
+        site_number: FADDS site number
+        state: State code
+      destination:
+        logbook_id: Logbook unique identifier
+        notes: Notes
+        photo_content_type: Photo
+        photo_file_name: Photo
+        photo_file_size: Photo
+      flight:
+        aircraft: Aircraft
+        destination: Destination
+        duration: Duration
+        logbook_id: Logbook unique identifier
+        origin: Origin
+        pic: Pilot-in-command
+        remarks: Remarks
+        user: User account
+      import:
+        state: State
+        logbook_file_name: Logbook file
+        logbook_content_type: Logbook file
+        logbook_file_size: Logbook file
+        logbook_updated_at: Logbook file
+      person:
+        hours: Hours
+        logbook_id: Logbook unique identifier
+        name: Name
+        photo: Profile picture
+        photo_content_type: Photo
+        photo_file_name: Photo
+        photo_file_size: Photo
+        user: Account
+      user:
+        avatar: Profile picture
+        avatar_content_type: Profile picture
+        avatar_file_name: Profile picture
+        avatar_file_size: Profile picture
+        email: Email address
+        encrypted_password: Password
+        name: Name
+        password: Password
+        quote: Quote
+        salt: Password salt
+  controllers:
+      accounts:
+        destroy:
+          done: Your account has been deleted.
+      application:
+        login_required:
+          notice: Please log in to continue.
+        owner_login_required:
+          not_owner: Sorry, you are not the owner if this account!
+      sessions:
+        create:
+          bad_credentials: Email address or password was incorrect.
+          success: Welcome back, %{name}.
+        destroy:
+          logged_out: You’re now logged out. Come back soon!
+  date:
+    formats:
+      carousel: "%b %d, %Y"
+      vitals: "%b %d, %Y"
+      logbook: "%m/%d/%y"
+      flight: "%b %d, %Y"
+  errors:
+    messages:
+      accepted: must be accepted
+      blank: can’t be blank
+      confirmation: doesn’t match confirmation
+      empty: can’t be empty
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: reserved
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: not acceptable
+      incorrect_type: incorrect type
+      invalid: invalid
+      invalid_email: not a valid email address
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      not_a_number: not a number
+      not_an_integer: not an integer
+      odd: must be odd
+      taken: already taken
+      too_long: must be shorter than %{count} characters
+      too_short: must be longer than %{count} characters
+      wrong_length: must be be %{count} characters long
+  helpers:
+    application:
+      pluralize_with_delimiter:
+        format: "%{count} %{thing}"
+    submit:
+      flight:
+        update: Post Blog Entry
+      import:
+        create: Upload and Import
+      user:
+        create: Sign Up
+  models:
+    user:
+      certificate:
+        atp: airline transport pilot
+        cfi: certified flight instructor
+        commercial: commercial pilot
+        private: private pilot
+        recreational: recreational pilot
+        sport: sport pilot
+        student: student pilot

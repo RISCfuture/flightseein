@@ -1,0 +1,24 @@
+<p id="tagline">Think of it like a logbook for your&nbsp;passengers.</p>
+<p id="detail">Share your flights in a rich, visual way. Let your friends see
+  where you&rsquo;ve been and what you&rsquo;ve done there. Bring your flights
+  to life with photos, videos,&nbsp;and&nbsp;stories.</p>
+
+<ul class="carousel" id="examples">
+  <% @flights.each do |flight| %>
+      <li><%= link_to image_tag(flight.photographs.limit(4).sample.image.url(:carousel), alt: "#{flight.origin.airport.identifier} to #{flight.destination.airport.identifier}"), flight_url(flight, subdomain: flight.user.subdomain) %></li>
+  <% end %>
+</ul>
+
+<p id="call-to-action">To get started, sign up below, then import your digital
+  logbook:</p>
+<%= form_for @user do |f| %>
+    <ul>
+      <li><%= f.text_field :name, placeholder: t('activerecord.attributes.user.name') %></li>
+      <li><%= f.text_field :email, type: 'email', required: true, placeholder: t('activerecord.attributes.user.email') %></li>
+      <li><%= f.password_field :password, required: true, placeholder: t('activerecord.attributes.user.password') %></li>
+      <li>My friends can see my flightseein&rsquo; page at <span style="white-space: nowrap"><%= f.text_field :subdomain, size: 20, maxlength: 32, required: true %>.<%= request.domain %>.</span></li>
+      <li><%= f.label :avatar %>: <%= f.file_field :avatar %></li>
+
+      <li class="submit"><%= f.submit %></li>
+    </ul>
+<% end %>

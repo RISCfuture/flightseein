@@ -1,0 +1,50 @@
+@import "_vars";
+
+article#imports {
+    h1 {
+        color: $header-color;
+        font-size: 24pt;
+        font-weight: bold;
+        margin-bottom: 2em;
+    }
+
+    h2 {
+        color: $header-color;
+        font-size: 18pt;
+        font-weight: bold;
+        margin-top: 2em;
+        margin-bottom: 1em;
+    }
+
+    details summary {
+        color: lighten($alternate-color, 25%);
+        font-size: 14pt;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+
+        em {
+            color: lighten($header-color, 25%);
+            font-weight: bold;
+            font-style: normal;
+        }
+    }
+
+    p {
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+
+    p.diagram {
+        text-align: center;
+    }
+
+    p.progress {
+        margin-bottom: 0;
+    }
+
+    p#progress-text {
+        color: lighten($font-color, 50%);
+        font-size: 10pt;
+        text-align: center;
+    }
+}

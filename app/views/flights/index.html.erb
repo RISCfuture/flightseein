@@ -1,0 +1,16 @@
+<%= render(partial: 'accounts/profile') %>
+
+<p id="filters">
+  <%= link_to_unless params[:filter] == 'all', "All flights", url_for(filter: 'all') %> |
+  <%= link_to_unless params[:filter] == 'blog', "Flights with blog entries", url_for(filter: 'blog') %>
+</p>
+
+<ol id="logbook"></ol>
+
+<%= content_for :javascripts do %>
+    <script type="text/javascript">
+        $(window).ready(function() {
+            $('#logbook').logbook("<%= raw escape_javascript(flights_url(filter: params[:filter], format: :json)) %>");
+        });
+    </script>
+<% end %>

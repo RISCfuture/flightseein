@@ -1,0 +1,10 @@
+<section id="title">
+  <%= link_to image_tag(subdomain_owner.avatar.url(:profile_small), alt: subdomain_owner.best_name), root_url %>
+  <div id="name">
+    <h1><%= link_to subdomain_owner.best_name, root_url %></h1>
+    <p id="vitals">
+      <%= link_to pluralize_with_delimiter(subdomain_owner.people.count, 'passenger'), people_url %> &bull;
+      <%= link_to pluralize_with_delimiter(subdomain_owner.flights.count, 'flight'), flights_url %>
+    </p>
+  </div>
+</section>

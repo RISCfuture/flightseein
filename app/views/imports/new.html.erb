@@ -1,0 +1,16 @@
+<h1>Import your logbook to fill out your profile.</h1>
+<%= form_for @import do |f| %>
+    <ul>
+      <li><%= f.file_field :logbook %></li>
+      <li class="submit"><%= f.submit %></li>
+    </ul>
+<% end %>
+
+<h2>Supported logbook file formats</h2>
+
+<details>
+  <summary><em>LogTen Pro</em> (Mac OS X)</summary>
+  <p>In some browsers (such as Google Chrome), you&rsquo;ll need to compress
+    your logbook before you&rsquo;ll be able to upload it.</p>
+  <p class="diagram"><%= image_tag 'import/logten.png', alt: "Right-click on your logbook and select 'Compress'." %></p>
+</details>
