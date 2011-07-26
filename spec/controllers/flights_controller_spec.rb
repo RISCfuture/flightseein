@@ -257,6 +257,11 @@ describe FlightsController do
   end
 
   describe "#edit" do
+    before :each do
+      session[:user_id] = @user
+      request.host = "#{@user.subdomain}.test.host"
+    end
+
     it "should 404 if an invalid flight ID is provided" do
       get :edit, id: 'not-found'
       response.status.should eql(404)
@@ -291,6 +296,11 @@ describe FlightsController do
   end
 
   describe "#update" do
+    before :each do
+      session[:user_id] = @user
+      request.host = "#{@user.subdomain}.test.host"
+    end
+    
     it "should 404 if an invalid flight ID is provided" do
       put :update, id: 'not-found'
       response.status.should eql(404)
