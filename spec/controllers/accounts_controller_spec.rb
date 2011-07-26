@@ -19,7 +19,8 @@ describe AccountsController do
     end
 
     it "should set @pax_count to the number of people" do
-      8.times { Factory :person, user: @user }
+      8.times { Factory :person, user: @user, hours: 2.0 }
+      Factory :person, user: @user, hours: 0.0
       get :show
       assigns(:pax_count).should eql(8)
     end

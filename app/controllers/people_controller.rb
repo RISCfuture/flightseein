@@ -33,7 +33,7 @@ class PeopleController < ApplicationController
       format.json do
         people = subdomain_owner.people.
           includes(:metadata, :slugs).
-          where('hours > 0').
+          participating.
           order('hours DESC, id DESC').
           limit(50)
 

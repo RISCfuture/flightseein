@@ -13,7 +13,7 @@ class AccountsController < ApplicationController
 
   def show
     @flight_count = subdomain_owner.flights.count
-    @pax_count = subdomain_owner.people.count
+    @pax_count = subdomain_owner.people.participating.count
     @airport_count = subdomain_owner.destinations.count
 
     @flight_images = subdomain_owner.flights.includes(photographs: :metadata, stops: { destination: { airport: :slug } }).order('date DESC').limit(4)

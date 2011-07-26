@@ -75,6 +75,7 @@ class Person < ActiveRecord::Base
                     default_url: "person/:style-missing.png"
 
   scope :randomly, order('RANDOM()')
+  scope :participating, where('hours > 0')
 
   # Updates this person's `hours` field from their flights, and saves the
   # record.
