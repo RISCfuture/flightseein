@@ -28,7 +28,7 @@
     <div class="stat">
       <%= image_tag @flight.aircraft.image.url(:stat) %>
       <div>
-        <h3><%= @flight.aircraft.ident %></h3>
+        <h3><%= link_to @flight.aircraft.ident, "http://www.airport-data.com/aircraft/#{CGI.escape @flight.aircraft.ident}.html" %></h3>
         <p><%= @flight.aircraft.year %> <%= @flight.aircraft.long_type || @flight.aircraft.type %></p>
       </div>
     </div>
