@@ -14,9 +14,6 @@ Flightseein::Application.configure do
   config.action_controller.perform_caching = false
   config.action_dispatch.show_exceptions = false
   config.action_controller.allow_forgery_protection    = false
-
-  # Mailers
-  config.action_mailer.delivery_method = :test
 end
 
 Resque.inline = true
