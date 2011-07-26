@@ -11,6 +11,7 @@
       <%= @destination.airport.city %>, <%= @destination.airport.state %> &bull;
       <%= pluralize_with_delimiter @destination.flights_count, 'flight' %> (to, from, or enroute)
     </p>
+    <p><%= link_to "More Information", "http://www.airnav.com/airport/#{CGI.escape @destination.airport.identifier}", class: 'button' %></p>
   </div>
 </section>
 <p><%= link_to "&larr; All airports".html_safe, airports_url, class: 'button' %></p>
