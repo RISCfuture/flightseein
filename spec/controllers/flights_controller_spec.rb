@@ -50,8 +50,14 @@ describe FlightsController do
               json['date'].should eql(I18n.l(flight.date, format: :logbook))
               json['photos'].size.should <= 4
               json['photos'].each { |url| flight.photographs.map { |photo| photo.image.url :logbook }.should include(url) }
-              json['people']['photos'].size.should eql(flight.people.count)
-              json['people']['photos'].each { |url| flight.people.map { |person| person.photo.url :logbook }.should include(url) }
+              json['people'].size.should eql(flight.people.count)
+              json['people'].each do |attrs|
+                flight.people.detect do |person|
+                  attrs['name'].should eql(person.name)
+                  attrs['url'].should =~ /\/people\/#{Regexp.escape person.slug}$/
+                  attrs['photo'].should eql(person.photo.url(:logbook))
+                end.should_not be_nil
+              end
             end
           end
 
@@ -90,8 +96,14 @@ describe FlightsController do
               json['date'].should eql(I18n.l(flight.date, format: :logbook))
               json['photos'].size.should <= 4
               json['photos'].each { |url| flight.photographs.map { |photo| photo.image.url :logbook }.should include(url) }
-              json['people']['photos'].size.should eql(flight.people.count)
-              json['people']['photos'].each { |url| flight.people.map { |person| person.photo.url :logbook }.should include(url) }
+              json['people'].size.should eql(flight.people.count)
+              json['people'].each do |attrs|
+                flight.people.detect do |person|
+                  attrs['name'].should eql(person.name)
+                  attrs['url'].should =~ /\/people\/#{Regexp.escape person.slug}$/
+                  attrs['photo'].should eql(person.photo.url(:logbook))
+                end.should_not be_nil
+              end
             end
           end
 

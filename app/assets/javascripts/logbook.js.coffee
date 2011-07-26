@@ -42,10 +42,11 @@ class Logbook
         $('<br/>').appendTo remarks
         for photo in flight.photos
           $('<img/>').attr('src', photo).appendTo remarks
-      if flight.people.photos.length > 0
+      if flight.people.length > 0
         $('<br/>').appendTo remarks
-        for photo in flight.people.photos
-          $('<img/>').attr('src', photo).appendTo remarks
+        for person in flight.people
+          link = $('<a/>').attr(href: person.url, alt: person.name).appendTo remarks
+          $('<img/>').attr('src', person.photo).appendTo link
 
     if $(window).height() == $(document).height() and data.length > 0
       this.loadNextPage();
