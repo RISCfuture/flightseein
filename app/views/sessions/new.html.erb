@@ -1,3 +1,5 @@
+<%= content_for :title, "Log In" %>
+
 <p id="call-to-action">Log in to add or modify your flights:</p>
 <%= form_for @user, url: session_url(subdomain: false), method: :post do |f| %>
     <ul>

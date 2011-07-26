@@ -1,3 +1,4 @@
+<% content_for :title, "Flight to #{@flight.destination.airport.identifier} on #{l @flight.date, format: :flight}" %>
 <%= render(partial: 'accounts/profile') %>
 
 <section id="overview">

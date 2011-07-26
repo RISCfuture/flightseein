@@ -4,7 +4,15 @@
 Remove this if you use the .htaccess -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-<title>flightseein&rsquo;</title>
+<title>
+  <% if content_for? :title %>
+      <%= yield :title %> |
+  <% end %>
+  <% if subdomain_owner %>
+      <%= subdomain_owner.best_name %>&rsquo;s
+  <% end %>
+  flightseein&rsquo;
+</title>
 <meta name="description" content="A visual, interactive way to show off your logbook.">
 <meta name="author" content="Tim Morgan">
 

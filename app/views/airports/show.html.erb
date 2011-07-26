@@ -1,3 +1,5 @@
+<% content_for :title, @destination.airport.name %>
+
 <section id="title">
   <%= image_tag @destination.photo.url(:profile), alt: @destination.airport.name %>
   <div id="name">

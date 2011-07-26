@@ -1,3 +1,5 @@
+<%= content_for :title, @person.name %>
+
 <section id="title">
   <%= image_tag @person.photo.url(:profile), alt: @person.name %>
   <div id="name">
