@@ -56,7 +56,11 @@ class Importer
     FileUtils.mkdir_p @work_dir
     name = File.basename(@import.logbook.path)
     path = File.join(@work_dir, name)
-    File.open(path, 'wb') { |f| f.print open(@import.logbook.url).read }
+    if Flightseein::Configuration.paperclip.storage == :s3 then
+      File.open(path, 'wb') { |f| f.print open(@import.logbook.url).read }
+    else
+      File.open(path, 'wb') { |f| f.print open(@import.logbook.path).read }
+    end
     return path
   end
 
