@@ -51,8 +51,8 @@ class Destination < ActiveRecord::Base
 
   validates :logbook_id,
             presence: true,
-            numericality: { only_integer: true }
-            #uniqueness: { scope: :user_id }
+            numericality: { only_integer: true },
+            uniqueness: { scope: :user_id }
   validates :user,
             presence: true
   validates :airport,
