@@ -20,6 +20,7 @@
 # | `photo_content_type` | Used by Paperclip.                                          |
 # | `photo_file_size`    | Used by Paperclip.                                          |
 # | `photo_updated_at`   | Used by Paperclip.                                          |
+# | `photo_fingerprint`  | Used by Paperclip.                                          |
 #
 # Associations
 # ------------
@@ -34,6 +35,7 @@
 class Person < ActiveRecord::Base
   include HasMetadata
   include Slugalicious
+  include CheckForDuplicateAttachedFile
 
   slugged :name, scope: ->(person) { person.user.subdomain }, slugifier: ->(str) { str.remove_formatting.replace_whitespace('_').collapse('_') }
 
@@ -49,7 +51,8 @@ class Person < ActiveRecord::Base
     photo_file_name: { allow_blank: true },
     photo_content_type: { allow_blank: true, format: { with: /^image\// } },
     photo_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    photo_updated_at: { type: Time, allow_blank: true }
+    photo_updated_at: { type: Time, allow_blank: true },
+    photo_fingerprint: { allow_blank: true }
   )
 
   validates :user,
@@ -73,6 +76,7 @@ class Person < ActiveRecord::Base
                       carousel: { geometry: '140x100#', format: :png, border_radius: 8 }
                     },
                     default_url: "person/:style-missing.png"
+  check_for_duplicate_attached_file :photo
 
   scope :randomly, order('RANDOM()')
   scope :participating, where('hours > 0')

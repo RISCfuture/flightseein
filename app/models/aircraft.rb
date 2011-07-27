@@ -22,6 +22,7 @@
 # | `image_content_type` | Used by Paperclip.                                                   |
 # | `image_file_size`    | Used by Paperclip.                                                   |
 # | `image_updated_at`   | Used by Paperclip.                                                   |
+# | `image_fingerprint`  | Used by Paperclip.                                                   |
 #
 # Associations
 # ------------
@@ -32,6 +33,7 @@
 
 class Aircraft < ActiveRecord::Base
   include HasMetadata
+  include CheckForDuplicateAttachedFile
 
   belongs_to :user, inverse_of: :aircraft
   has_many :flights, inverse_of: :aircraft, dependent: :restrict
@@ -55,7 +57,8 @@ class Aircraft < ActiveRecord::Base
   image_file_name: { allow_blank: true },
     image_content_type: { allow_blank: true, format: { with: /^image\// } },
     image_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    image_updated_at: { type: Time, allow_blank: true }
+    image_updated_at: { type: Time, allow_blank: true },
+    image_fingerprint: { allow_blank: true }
   )
 
   validates :ident,
@@ -73,4 +76,5 @@ class Aircraft < ActiveRecord::Base
   has_attached_file :image,
                     styles: { stat: '64x64#' },
                     default_url: "aircraft/:style-missing.png"
+  check_for_duplicate_attached_file :image
 end

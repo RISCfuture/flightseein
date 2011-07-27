@@ -20,6 +20,7 @@
 # | `photo_content_type` | Used by Paperclip.                                       |
 # | `photo_file_size`    | Used by Paperclip.                                       |
 # | `photo_updated_at`   | Used by Paperclip.                                       |
+# | `photo_fingerprint`  | Used by Paperclip.                                       |
 #
 # Associations
 # ------------
@@ -31,6 +32,7 @@
 
 class Destination < ActiveRecord::Base
   include HasMetadata
+  include CheckForDuplicateAttachedFile
 
   set_primary_key 'airport_id'
 
@@ -43,7 +45,8 @@ class Destination < ActiveRecord::Base
     photo_file_name: { allow_blank: true },
     photo_content_type: { allow_blank: true, format: { with: /^image\// } },
     photo_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    photo_updated_at: { type: Time, allow_blank: true }
+    photo_updated_at: { type: Time, allow_blank: true },
+    photo_fingerprint: { allow_blank: true }
   )
 
   validates :logbook_id,
@@ -68,6 +71,7 @@ class Destination < ActiveRecord::Base
                       carousel: { geometry: '140x100#', format: :png, border_radius: 8 }
                     },
                     default_url: "airport/:style-missing.png"
+  check_for_duplicate_attached_file :photo
 
   scope :randomly, order('RANDOM()')
 
