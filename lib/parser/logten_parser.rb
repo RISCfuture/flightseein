@@ -64,7 +64,7 @@ class LogtenParser < Parser
     rows = @db.execute <<-SQL
       SELECT ZPLACE.Z_PK, ZPLACE_FAAID, ZPLACE_ICAOID, ZPLACE_IATAID, ZLOGTENPROPERTY_IMAGEPATH
         FROM ZPLACE
-        LEFT JOIN ZPLACEPROPERTY ON ZPLACE = ZPLACE.Z_PK
+        LEFT JOIN ZPLACEPROPERTY ON ZPLACE = ZPLACE.Z_PK AND ZLOGTENPROPERTY_KEY = 'place_image1'
     SQL
 
     rows.each do |(id, lid, icao, iata, image_path)|
