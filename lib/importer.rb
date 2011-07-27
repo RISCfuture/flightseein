@@ -1,6 +1,9 @@
 require 'securerandom'
 require 'open-uri'
-require 'parser/logten_parser'
+
+# Resque does weird things for requires, so let's do it manually
+Dir.glob("#{Rails.root}/lib/**/*.rb").each { |f| require f }
+Dir.glob("#{Rails.root}/app/models/**/*.rb").each { |f| require f }
 
 # Prepares an uploaded logbook file for importing and delegates the importing
 # to the appropriate {Parser}.
