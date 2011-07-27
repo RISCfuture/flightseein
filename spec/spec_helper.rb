@@ -21,6 +21,6 @@ RSpec.configure do |config|
 
   config.after(:all) do
     # clear out temporary downloaded files
-    #Dir.glob(Rails.root.join('tmp', 'work', '*')).each { |file| FileUtils.rm_rf file }
+    FileUtils.rm_rf Rails.root.join('public', 'system', 'test')
   end
 end
