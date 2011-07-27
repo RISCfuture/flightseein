@@ -1,7 +1,5 @@
 # Update has_attached_file to also optionally set a column indicating whether
 # a file is attached.
-#
-# Also update it to include global storage configuration options.
 
 class ActiveRecord::Base
   def self.has_attached_file_with_bool(name, options={})
@@ -13,13 +11,11 @@ class ActiveRecord::Base
     end
   end
 
-  def self.has_attached_file_with_configoro(name, options={})
-    has_attached_file_without_configoro name,
-                                        options.reverse_merge(Flightseein::Configuration.paperclip.symbolize_keys)
-  end
-
   class << self
     alias_method_chain :has_attached_file, :bool
-    alias_method_chain :has_attached_file, :configoro
   end
 end
+
+# Also update it to include global storage configuration options.
+
+Paperclip::Attachment.default_options.update Flightseein::Configuration.paperclip.symbolize_keys
