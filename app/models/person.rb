@@ -8,6 +8,7 @@
 # |:----------------|:-------------------------------------------------------------------------------------------------------------|
 # | `hours`         | _(cached counter)_ The total number of hours this person has logged as pilot or passenger.                   |
 # | `logbook_id`    | The unique ID assigned to this person by the user's logbook; used for matching passengers in future imports. |
+# | `me`            | Id `true`, this is the `Person` record for the associated {User}.                                            |
 #
 # Metadata
 # --------
@@ -65,7 +66,7 @@ class Person < ActiveRecord::Base
             numericality: { only_integer: true },
             uniqueness: { scope: :user_id }
 
-  attr_accessible :name, :photo
+  attr_accessible :name, :photo, :me
 
   has_attached_file :photo,
                     processors: [ :round_corners ],
@@ -80,6 +81,7 @@ class Person < ActiveRecord::Base
 
   scope :randomly, order('RANDOM()')
   scope :participating, where('hours > 0')
+  scope :not_me, where(me: false)
 
   # Updates this person's `hours` field from their flights, and saves the
   # record.

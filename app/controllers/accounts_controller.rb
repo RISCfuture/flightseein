@@ -13,13 +13,13 @@ class AccountsController < ApplicationController
 
   def show
     @flight_count = subdomain_owner.flights.count
-    @pax_count = subdomain_owner.people.participating.count
+    @pax_count = subdomain_owner.people.participating.not_me.count
     @airport_count = subdomain_owner.destinations.count
 
     @flight_images = subdomain_owner.flights.includes(photographs: :metadata, stops: { destination: { airport: :slug } }).order('date DESC').limit(4)
 
-    @pax_images = subdomain_owner.people.with_photo.limit(50).sample(4)
-    @pax_images += subdomain_owner.people.without_photo.limit(50).sample(4 - @pax_images.size) unless @pax_images.size == 4
+    @pax_images = subdomain_owner.people.with_photo.participating.not_me.limit(50).sample(4)
+    @pax_images += subdomain_owner.people.without_photo.participating.not_me.limit(50).sample(4 - @pax_images.size) unless @pax_images.size == 4
     @pax_images.shuffle!
 
     @airport_images = subdomain_owner.destinations.with_photo.limit(50).sample(4)

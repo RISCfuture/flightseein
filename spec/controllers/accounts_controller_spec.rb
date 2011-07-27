@@ -20,8 +20,12 @@ describe AccountsController do
 
     it "should set @pax_count to the number of people" do
       8.times { Factory :person, user: @user, hours: 2.0 }
+      # red herrings
       Factory :person, user: @user, hours: 0.0
+      Factory :person, user: @user, hours: 2.0, me: true
+
       get :show
+
       assigns(:pax_count).should eql(8)
     end
 
@@ -49,25 +53,40 @@ describe AccountsController do
     end
 
     it "should set @pax_images to four random people with photos" do
-      people = (1..4).map { Factory :person, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
-      Factory :person, user: @user
+      people = (1..4).map { Factory :person, hours: 4.0, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
+      # red herrings
+      Factory :person, user: @user, hours: 2.0
+      Factory :person, user: @user, hours: 0.0
+      Factory :person, user: @user, me: true
+
       get :show
+
       assigns(:pax_images).size.should eql(4)
       people.each { |person| assigns(:pax_images).map(&:id).should include(person.id) }
     end
 
     it "should fill @pax_images if four people with photos aren't available" do
-      people = (1..2).map { Factory :person, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
-      people << Factory(:person, user: @user)
-      people << Factory(:person, user: @user)
+      people = (1..2).map { Factory :person, hours: 2.0, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
+      people << Factory(:person, user: @user, hours: 2.0)
+      people << Factory(:person, user: @user, hours: 2.0)
+      # red herrings
+      Factory :person, user: @user, hours: 0.0
+      Factory :person, user: @user, hours: 2.0, me: true
+
       get :show
+
       assigns(:pax_images).size.should eql(4)
       people.each { |person| assigns(:pax_images).map(&:id).should include(person.id) }
     end
 
     it "should use as many people as are available if there are fewer than four" do
-      people = (1..2).map { Factory :person, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
+      people = (1..2).map { Factory :person, hours: 2.0, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
+      # red herrings
+      Factory :person, user: @user, hours: 0.0
+      Factory :person, user: @user, hours: 2.0, me: true
+
       get :show
+
       assigns(:pax_images).size.should eql(2)
       people.each { |person| assigns(:pax_images).map(&:id).should include(person.id) }
     end
@@ -75,7 +94,9 @@ describe AccountsController do
     it "should set @airport_images to four random destinations with photos" do
       dests = (1..4).map { Factory :destination, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
       Factory :destination, user: @user
+
       get :show
+
       assigns(:airport_images).size.should eql(4)
       dests.each { |dest| assigns(:airport_images).map(&:airport_id).should include(dest.airport_id) }
     end
@@ -84,14 +105,18 @@ describe AccountsController do
       dests = (1..2).map { Factory :destination, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
       dests << Factory(:destination, user: @user)
       dests << Factory(:destination, user: @user)
+
       get :show
+
       assigns(:airport_images).size.should eql(4)
       dests.each { |dest| assigns(:airport_images).map(&:airport_id).should include(dest.airport_id) }
     end
 
     it "should use as many destinations as are available if there are fewer than four" do
       dests = (1..2).map { Factory :destination, user: @user, photo: open(Rails.root.join('spec', 'fixtures', 'image.jpg')) }
+
       get :show
+
       assigns(:airport_images).size.should eql(2)
       dests.each { |dest| assigns(:airport_images).map(&:airport_id).should include(dest.airport_id) }
     end

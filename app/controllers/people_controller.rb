@@ -34,6 +34,7 @@ class PeopleController < ApplicationController
         people = subdomain_owner.people.
           includes(:metadata, :slugs).
           participating.
+          not_me.
           order('hours DESC, id DESC').
           limit(50)
 

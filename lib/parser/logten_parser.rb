@@ -87,12 +87,12 @@ class LogtenParser < Parser
     importing_passengers!
 
     rows = @db.execute <<-SQL
-      SELECT ZPERSON.Z_PK, ZPERSON_FULLNAME, ZPERSON_NAME, ZLOGTENPROPERTY_IMAGEPATH, ZPERSON_ISORGANIZATION
+      SELECT ZPERSON.Z_PK, ZPERSON_FULLNAME, ZPERSON_NAME, ZLOGTENPROPERTY_IMAGEPATH, ZPERSON_ISORGANIZATION, ZPERSON_ISME
         FROM ZPERSON
         LEFT JOIN ZPERSONPROPERTY ON ZPERSONPROPERTY.ZPERSON = ZPERSON.Z_PK;
     SQL
 
-    rows.each do |(pkey, name1, name2, image_path, is_org)|
+    rows.each do |(pkey, name1, name2, image_path, is_org, is_me)|
       next if is_org.parse_bool
       image = if image_path.present? then
                 image_path = File.join(@path, image_path)
@@ -101,7 +101,7 @@ class LogtenParser < Parser
                 nil
               end
       name = name1.present? ? name1 : name2
-      user.people.where(logbook_id: pkey).create_or_update!(name: name, photo: image)
+      user.people.where(logbook_id: pkey).create_or_update!(name: name, photo: image, me: is_me.parse_bool)
     end
   end
 
