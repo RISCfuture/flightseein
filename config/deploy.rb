@@ -41,6 +41,13 @@ namespace :deploy do
    end
 end
 
+# PERMISSIONS
+
+task :chown_directories, roles: :app do
+  sudo "chown -R #{runner}:wheel #{release_path}"
+end
+after "deploy:finalize_update", :chown_directories
+
 # BUNDLER
 
 require 'bundler/capistrano'
