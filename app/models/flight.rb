@@ -57,10 +57,6 @@ class Flight < ActiveRecord::Base
 
   validates :user,
             presence: true
-  validates :origin,
-            presence: true
-  validates :destination,
-            presence: true
   validates :aircraft,
             presence: true
   validates :duration,
