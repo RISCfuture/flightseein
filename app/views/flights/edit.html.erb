@@ -35,7 +35,7 @@
               cascadeLastIndex++;
               var newLi = $('#new_photo').clone();
               newLi.find("input[type=file]").attr({ id: 'flight_photographs_attributes_' + cascadeLastIndex + '_image', name: 'flight[photographs_attributes][' + cascadeLastIndex + '][image]' });
-              newLi.find("input[type=text]").attr({ id: 'flight_photographs_attributes_' + cascadeLastIndex + '_caption', name: 'flight[photographs_attributes][' + cascadeLastIndex + '][caption]' }).value('');
+              newLi.find("input[type=text]").attr({ id: 'flight_photographs_attributes_' + cascadeLastIndex + '_caption', name: 'flight[photographs_attributes][' + cascadeLastIndex + '][caption]' }).val('');
               newLi.insertBefore($('#new_photo_button'));
               return false
           });
