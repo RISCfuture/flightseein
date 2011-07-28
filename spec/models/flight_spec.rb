@@ -60,4 +60,56 @@ describe Flight do
       flight.passengers.each { |pax| flight.people.should include(pax) }
     end
   end
+
+  describe "#previous" do
+    before :each do
+      @flight = Factory(:flight)
+    end
+
+    it "should return the previous flight" do
+      prev = Factory(:flight, user: @flight.user, date: @flight.date - 1)
+      Factory :flight, user: @flight.user, date: @flight.date - 2
+      @flight.user.update_flight_sequence!
+
+      @flight.reload.previous.should eql(prev)
+    end
+
+    it "should return nil if there is no previous flight" do
+      Factory :flight, user: @flight.user, date: @flight.date + 1
+      @flight.user.update_flight_sequence!
+
+      @flight.reload.previous.should be_nil
+    end
+
+    it "should return nil if the flight is unsequenced" do
+      Factory :flight, user: @flight.user, date: @flight.date - 1, sequence: 1
+      @flight.reload.previous.should be_nil
+    end
+  end
+
+  describe "#next" do
+    before :each do
+      @flight = Factory(:flight)
+    end
+
+    it "should return the next flight" do
+      prev = Factory(:flight, user: @flight.user, date: @flight.date + 1)
+      Factory :flight, user: @flight.user, date: @flight.date + 2
+      @flight.user.update_flight_sequence!
+
+      @flight.reload.next.should eql(prev)
+    end
+
+    it "should return nil if there is no next flight" do
+      Factory :flight, user: @flight.user, date: @flight.date - 1
+      @flight.user.update_flight_sequence!
+
+      @flight.reload.next.should be_nil
+    end
+
+    it "should return nil if the flight is unsequenced" do
+      Factory :flight, user: @flight.user, date: @flight.date + 1, sequence: 1
+      @flight.next.should be_nil
+    end
+  end
 end

@@ -16,7 +16,7 @@ class AccountsController < ApplicationController
     @pax_count = subdomain_owner.people.participating.not_me.count
     @airport_count = subdomain_owner.destinations.count
 
-    @flight_images = subdomain_owner.flights.includes(photographs: :metadata, stops: { destination: { airport: :slug } }).order('date DESC').limit(4)
+    @flight_images = subdomain_owner.flights.includes(photographs: :metadata, stops: { destination: { airport: :slug } }).order('sequence DESC').limit(4)
 
     @pax_images = subdomain_owner.people.with_photo.participating.not_me.limit(50).sample(4)
     @pax_images += subdomain_owner.people.without_photo.participating.not_me.limit(50).sample(4 - @pax_images.size) unless @pax_images.size == 4

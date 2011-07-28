@@ -21,9 +21,12 @@ describe FlightsController do
     describe ".json" do
       describe "[basic route]" do
         before :all do
-          @blog_flights = (1..60).map { Factory :flight, user: @user, blog: "Hello, world!", date: Date.today - rand(600) }.sort_by { |f| [ -f.date.to_time.to_i, -f.id ] }
+          @blog_flights = (1..60).map { Factory :flight, user: @user, blog: "Hello, world!", date: Date.today - rand(600) }
           noblog_flights = (1..60).map { Factory :flight, user: @user, blog: nil, date: Date.today - rand(600) }
-          @flights = (@blog_flights + noblog_flights).sort_by { |f| [ -f.date.to_time.to_i, -f.id ] }
+          @user.update_flight_sequence!
+          @blog_flights = Flight.where(id: @blog_flights.map(&:id)).order('sequence DESC').all
+          @flights = Flight.where(id: (@blog_flights + noblog_flights).map(&:id)).order('sequence DESC').all
+
           100.times { Factory :photograph, flight: @flights.sample }
           50.times { @flights.sample.passengers << Factory(:person, user: @user) }
         end
@@ -31,7 +34,7 @@ describe FlightsController do
         it "should use filter=all by default" do
           get :index, format: 'json'
           response.status.should eql(200)
-          JSON.parse(response.body).map { |hsh| hsh['id'] }.should eql(@flights[0, 50].map(&:id))
+          JSON.parse(response.body).map { |hsh| hsh['id'] }.should eql(@flights[0, 50].map(&:sequence))
         end
 
         context "[filter = all]" do
@@ -40,9 +43,10 @@ describe FlightsController do
             response.status.should eql(200)
             JSON.parse(response.body).size.should eql(50)
             JSON.parse(response.body).zip(@flights[0, 50]).each do |(json, flight)|
-              [ :id, :remarks, :duration ].each do |attr|
+              [ :remarks, :duration ].each do |attr|
                 json[attr.to_s].should eql(flight.send(attr))
               end
+              json['id'].should eql(flight.sequence)
               [ :type, :ident ].each do |attr|
                 json['aircraft'][attr.to_s].should eql(flight.aircraft.send(attr))
               end
@@ -62,20 +66,20 @@ describe FlightsController do
           end
 
           it "should paginate using the last_record parameter" do
-            get :index, format: 'json', last_record: @flights[49].id, filter: 'all'
+            get :index, format: 'json', last_record: @flights[49].sequence, filter: 'all'
             response.status.should eql(200)
             JSON.parse(response.body).size.should eql(50)
             JSON.parse(response.body).zip(@flights[50, 50]).each do |(json, flight)|
-              json['id'].should eql(flight.id)
+              json['id'].should eql(flight.sequence)
             end
           end
 
           it "should not blow up if given an invalid last_record" do
-            get :index, format: 'json', last_record: Factory(:flight).id, filter: 'all'
+            get :index, format: 'json', last_record: 'wellp', filter: 'all'
             response.status.should eql(200)
             JSON.parse(response.body).size.should eql(50)
             JSON.parse(response.body).zip(@flights[0, 50]).each do |(json, flight)|
-              json['id'].should eql(flight.id)
+              json['id'].should eql(flight.sequence)
             end
           end
         end
@@ -86,9 +90,10 @@ describe FlightsController do
             response.status.should eql(200)
             JSON.parse(response.body).size.should eql(50)
             JSON.parse(response.body).zip(@blog_flights[0, 50]).each do |(json, flight)|
-              [ :id, :remarks, :duration ].each do |attr|
+              [ :remarks, :duration ].each do |attr|
                 json[attr.to_s].should eql(flight.send(attr))
               end
+              json['id'].should eql(flight.sequence)
               [ :type, :ident ].each do |attr|
                 json['aircraft'][attr.to_s].should eql(flight.aircraft.send(attr))
               end
@@ -108,20 +113,20 @@ describe FlightsController do
           end
 
           it "should paginate using the last_record parameter" do
-            get :index, format: 'json', last_record: @blog_flights[39].id, filter: 'blog'
+            get :index, format: 'json', last_record: @blog_flights[39].sequence, filter: 'blog'
             response.status.should eql(200)
             JSON.parse(response.body).size.should eql(20)
             JSON.parse(response.body).zip(@blog_flights[40, 20]).each do |(json, flight)|
-              json['id'].should eql(flight.id)
+              json['id'].should eql(flight.sequence)
             end
           end
 
           it "should not blow up when given an invalid last_record parameter" do
-            get :index, format: 'json', last_record: Factory(:flight).id, filter: 'blog'
+            get :index, format: 'json', last_record: 'yep', filter: 'blog'
             response.status.should eql(200)
             JSON.parse(response.body).size.should eql(50)
             JSON.parse(response.body).zip(@blog_flights[0, 50]).each do |(json, flight)|
-              json['id'].should eql(flight.id)
+              json['id'].should eql(flight.sequence)
             end
           end
         end
@@ -138,7 +143,8 @@ describe FlightsController do
             flight.update_people!
             flight
           end
-          @flights = (pic_flights + sic_flights + pax_flights).sort_by { |fl| [ fl.date, fl.id ] }.reverse
+          @user.update_flight_sequence!
+          @flights = Flight.where(id: (pic_flights + sic_flights + pax_flights).map(&:id)).order('sequence DESC').all
         end
 
         it "should return the first 50 flights by date where that person was a pilot, copilot, or passenger" do
@@ -146,25 +152,25 @@ describe FlightsController do
           response.status.should eql(200)
           JSON.parse(response.body).size.should eql(50)
           JSON.parse(response.body).zip(@flights[0, 50]).each do |(json, flight)|
-            json['id'].should eql(flight.id)
+            json['id'].should eql(flight.sequence)
           end
         end
 
         it "should paginate using the last_record parameter" do
-          get :index, format: 'json', last_record: @flights[39].id, person_id: @person.slug
+          get :index, format: 'json', last_record: @flights[39].sequence, person_id: @person.slug
           response.status.should eql(200)
           JSON.parse(response.body).size.should eql(20)
           JSON.parse(response.body).zip(@flights[40, 20]).each do |(json, flight)|
-            json['id'].should eql(flight.id)
+            json['id'].should eql(flight.sequence)
           end
         end
 
         it "should not blow up when given an invalid last_record parameter" do
-          get :index, format: 'json', last_record: Factory(:flight).id, person_id: @person.slug
+          get :index, format: 'json', last_record: 'hello', person_id: @person.slug
           response.status.should eql(200)
           JSON.parse(response.body).size.should eql(50)
           JSON.parse(response.body).zip(@flights[0, 50]).each do |(json, flight)|
-            json['id'].should eql(flight.id)
+            json['id'].should eql(flight.sequence)
           end
         end
       end
@@ -172,10 +178,13 @@ describe FlightsController do
       describe "[airports nested resource]" do
         before :all do
           @destination = Factory(:destination, user: @user)
-          @flights = (1..60).map { Factory :flight, destination: @destination, user: @user, date: Date.today - rand(400) }.sort_by { |f| [ f.date, f.id ] }.reverse
+          @flights = (1..60).map { Factory :flight, destination: @destination, user: @user, date: Date.today - rand(400) }
           # red herrings
           Factory :flight, origin: @destination, user: @user
           Factory :stop, destination: @destination, sequence: 1
+
+          @user.update_flight_sequence!
+          @flights = Flight.where(id: @flights.map(&:id)).order('sequence DESC').all
         end
 
         it "should return the first 50 flights by date to that airport" do
@@ -183,25 +192,25 @@ describe FlightsController do
           response.status.should eql(200)
           JSON.parse(response.body).size.should eql(50)
           JSON.parse(response.body).zip(@flights[0, 50]).each do |(json, flight)|
-            json['id'].should eql(flight.id)
+            json['id'].should eql(flight.sequence)
           end
         end
 
         it "should paginate using the last_record parameter" do
-          get :index, format: 'json', last_record: @flights[39].id, airport_id: @destination.airport.identifier
+          get :index, format: 'json', last_record: @flights[39].sequence, airport_id: @destination.airport.identifier
           response.status.should eql(200)
           JSON.parse(response.body).size.should eql(20)
           JSON.parse(response.body).zip(@flights[40, 20]).each do |(json, flight)|
-            json['id'].should eql(flight.id)
+            json['id'].should eql(flight.sequence)
           end
         end
 
         it "should not blow up when given an invalid last_record parameter" do
-          get :index, format: 'json', last_record: Factory(:flight).id, airport_id: @destination.airport.identifier
+          get :index, format: 'json', last_record: 'byee!', airport_id: @destination.airport.identifier
           response.status.should eql(200)
           JSON.parse(response.body).size.should eql(50)
           JSON.parse(response.body).zip(@flights[0, 50]).each do |(json, flight)|
-            json['id'].should eql(flight.id)
+            json['id'].should eql(flight.sequence)
           end
         end
       end

@@ -104,3 +104,16 @@
     <% end %>
   </div>
 </section>
+
+<nav>
+  <% if @flight.previous %>
+      <%= link_to "&larr; Previous flight".html_safe, @flight.previous, class: 'button-small' %>
+  <% else %>
+      <span class="button-small-disabled">&larr; Previous flight</span>
+  <% end %>
+  <% if @flight.next %>
+      <%= link_to "Next flight &rarr;".html_safe, @flight.next, class: 'button-small' %>
+  <% else %>
+      <span class="button-small-disabled">Next flight &rarr;</span>
+  <% end %>
+</nav>

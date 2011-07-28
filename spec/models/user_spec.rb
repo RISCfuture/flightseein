@@ -41,6 +41,28 @@ describe User do
     end
   end
 
+  describe "#update_flight_sequence!" do
+    before :each do
+      @user = Factory(:user)
+      @flights = (1..5).map { |n| Factory :flight, user: @user, date: Date.today - n }.sort_by(&:date)
+      @flights << Factory(:flight, user: @user, date: @flights.last.date)
+    end
+
+    it "should sequence the user's flights" do
+      Factory :flight, date: Date.today - 10 # red herring to screw up the sequence
+      @user.update_flight_sequence!
+      @flights.each_with_index { |flight, i| flight.reload.sequence.should eql(i+1) }
+    end
+
+    it "should not alter other users' flights" do
+      herring = Factory :flight, sequence: 1
+
+      @user.update_flight_sequence!
+      @flights.each_with_index { |flight, i| flight.reload.sequence.should eql(i+1) }
+      herring.reload.sequence.should eql(1)
+    end
+  end
+
   it "should relinquish a subdomain when deleted" do
     user = Factory(:user)
     subdomain = user.subdomain

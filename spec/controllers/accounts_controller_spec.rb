@@ -41,6 +41,7 @@ describe AccountsController do
     it "should set @flight_images to the last four flights" do
       flights = (1..5).map { Factory :flight, user: @user, date: Date.today - rand(100) }.reverse.sort_by { |f| [ f.date, f.id ] }.reverse
       # reverse twice so we get a sort by date then ID
+      @user.update_flight_sequence!
       get :show
       assigns(:flight_images).map(&:id).should eql(flights[0,4].map(&:id))
     end
@@ -48,6 +49,7 @@ describe AccountsController do
     it "should set @flight_images to the last flights if there are fewer than four" do
       flights = (1..2).map { Factory :flight, user: @user, date: Date.today - rand(100) }.reverse.sort_by { |f| [ f.date, f.id ] }.reverse
       # reverse twice so we get a sort by date then ID
+      @user.update_flight_sequence!
       get :show
       assigns(:flight_images).map(&:id).should eql(flights.map(&:id))
     end

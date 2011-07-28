@@ -117,6 +117,7 @@ class LogtenParser < Parser
     user.destinations.each(&:update_flights_count!)
     user.people.each(&:update_hours!)
     user.update_hours!
+    user.update_flight_sequence!
   end
 
   def import_flight_records

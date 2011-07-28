@@ -152,6 +152,39 @@ class User < ActiveRecord::Base
     update_attribute :hours, flights.sum(:duration)
   end
 
+  # Goes through all of a user's flights and updates their `sequence` fields.
+
+  def update_flight_sequence!
+    flights.update_all(sequence: nil)
+    Flight.connection.execute <<-SQL
+      UPDATE flights
+      SET sequence = counter.num
+      FROM (
+        SELECT
+          id,
+          RANK() OVER (PARTITION BY user_id ORDER BY date ASC, id ASC) AS num
+        FROM flights
+        WHERE user_id = #{Flight.connection.quote id}) AS counter
+      WHERE flights.id = counter.id;
+    SQL
+  end
+
+  # The same as {#update_flight_sequence!}, but does so for every user in the
+  # database.
+
+  def self.update_all_flight_sequences!
+    Flight.connection.execute <<-SQL
+      UPDATE flights
+      SET sequence = counter.num
+      FROM (
+        SELECT
+          id,
+          RANK() OVER (PARTITION BY user_id ORDER BY date ASC, id ASC) AS num
+        FROM flights) AS counter
+      WHERE flights.id = counter.id;
+    SQL
+  end
+
   private
 
   def set_salt

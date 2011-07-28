@@ -12,29 +12,36 @@
     text-align: center;
 }
 
-@mixin button {
+@mixin button($enabled: true) {
+    $color: $base-color;
+    @if not($enabled) { $color: gray; }
     //@include background-image(linear-gradient(top, lighten($base-color, 40%), $base-color));
-    @include vertical-gradient(lighten($base-color, 40%), $base-color);
+    @include vertical-gradient(lighten($color, 40%), $color);
     @include border-radius(5px);
     //@include text-shadow(rgba(white, 0.75) 0 1px 1px);
 
     padding: 3px 10px;
 
-    color: darken($base-color, 50%);
+    color: darken($color, 50%);
     text-decoration: none;
     text-shadow: 0 1px 1px rgba(white, 0.75);
     font-weight: normal;
     white-space: nowrap;
+    @if not($enabled) { user-select: none; }
 
     &:hover {
-        //@include background-image(linear-gradient(top, lighten($base-color, 40%), darken($base-color, 10%)));
-        @include vertical-gradient(lighten($base-color, 40%), lighten($base-color, 10%));
+        @if $enabled {
+            //@include background-image(linear-gradient(top, lighten($color, 40%), darken($color, 10%)));
+            @include vertical-gradient(lighten($color, 40%), lighten($color, 10%));
+        }
     }
 
     &:active {
-        //@include background-image(linear-gradient(top, darken($base-color, 30%), $base-color, 10%));
-        @include vertical-gradient(darken($base-color, 30%), $base-color);
-        text-shadow: 0 -1px 1px rgba(white, 0.5);
+        @if $enabled {
+            //@include background-image(linear-gradient(top, darken($color, 30%), $color, 10%));
+            @include vertical-gradient(darken($color, 30%), $color);
+            text-shadow: 0 -1px 1px rgba(white, 0.5);
+        }
     }
 }
 
@@ -131,6 +138,13 @@ a.button {
 
 a.button-small {
     @include button;
+    font-size: 7pt;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.button-small-disabled {
+    @include button(false);
     font-size: 7pt;
     text-transform: uppercase;
     font-weight: bold;

@@ -63,13 +63,12 @@ class FlightsController < ApplicationController
 
         @flights = @flights.
           includes(:metadata, aircraft: :metadata, photographs: :metadata, people: :metadata, pic: :metadata, sic: :metadata).
-          order('date DESC, id DESC').
+          order('sequence DESC').
           limit(50)
         @flights = @flights.where(has_blog: true) if params['filter'] == 'blog'
 
-        if params['last_record'] then
-          last_flight = subdomain_owner.flights.find_by_id(params['last_record'])
-          @flights = @flights.where('date < ? OR (date = ? AND id < ?)', last_flight.date, last_flight.date, last_flight.id) if last_flight
+        if params['last_record'] and params['last_record'].to_i > 0 then
+          @flights = @flights.where('sequence < ?', params['last_record'].to_i)
         end
 
         render(json: build_json(@flights).to_json)
@@ -161,7 +160,7 @@ class FlightsController < ApplicationController
   def build_json(flights)
     flights.map do |flight|
       {
-        id: flight.id,
+        id: flight.sequence,
         url: flight_url(flight),
         date: l(flight.date, format: :logbook),
         aircraft: {

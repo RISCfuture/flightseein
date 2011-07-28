@@ -1,6 +1,11 @@
 # An instance of one or more {Person people} taking an {Aircraft} on a flight
 # from one {Airport} to another. A flight is exclusive to a {User} account.
 #
+# Flights have a `sequence` column that sequences flights in order by date.
+# Two flights occurring on the same day have an arbitrary but consistent
+# ordering. Flights are unsequenced when first created; you must call the
+# {User#update_flight_sequence!} method to sequence a user's flights.
+#
 # Fields
 # ------
 #
@@ -10,6 +15,7 @@
 # | `logbook_id` | The unique ID assigned to this person by the user's logbook; used for matching flights in future imports. |
 # | `has_blog`   | `true` if a blog entry has been written for this flight.                                                  |
 # | `has_photos` | `true` if the flight has at least one {Photograph}.                                                       |
+# | `sequence`   | A number ordering the flights: 1 is the first of a user's flights, and so on from there.                  |
 #
 # Metadata
 # --------
@@ -32,6 +38,7 @@
 # | `people`     | All {Person people} present on the flight (PIC and SIC included).  |
 
 class Flight < ActiveRecord::Base
+  extend ActiveSupport::Memoizable
   include HasMetadata
   
   belongs_to :user, inverse_of: :flights
@@ -69,6 +76,10 @@ class Flight < ActiveRecord::Base
             presence: true
   validates :destination_id,
             presence: true
+  validates :sequence,
+            numericality: { only_integer: true, greater_than_or_equal_to: 1 },
+            uniqueness: { scope: :user_id },
+            allow_blank: true
 
   before_save { |obj| obj.has_blog = obj.blog.present?; true }
   after_save :update_people!, if: ->(obj) { obj.pic_id_changed? or obj.sic_id_changed? }
@@ -97,6 +108,24 @@ class Flight < ActiveRecord::Base
     dests = scope.all
     ids.map { |id| dests.detect { |dest| dest.airport_id == id } }
   end
+
+  # @return [Flight, nil] The user's previous flight, or `nil` if this is the
+  #   first flight or an as-yet unsequenced flight.
+
+  def previous
+    return nil unless sequence
+    user.flights.where(sequence: sequence - 1).first
+  end
+  memoize :previous
+
+  # @return [Flight, nil] The user's next flight, or `nil` if this is the latest
+  #   flight or an as-yet unsequenced flight.
+
+  def next
+    return nil unless sequence
+    user.flights.where(sequence: sequence + 1).first
+  end
+  memoize :next
 
   # Ensures that the PIC, SIC, and all passengers are included in the `people`
   # association.
