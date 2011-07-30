@@ -335,6 +335,12 @@ describe FlightsController do
           put :update, id: @flight.id, flight: { blog: "new blog entry" }
           response.should redirect_to(flight_url(@flight))
         end
+
+        it "should update photographs as well" do
+          photo = Factory(:photograph, flight: @flight, caption: 'foo')
+          put :update, id: @flight.id, flight: { blog: 'new 2', photographs_attributes: { '0' => { caption: 'bar', _destroy: '0', id: photo.id } } }
+          photo.reload.caption.should eql('bar')
+        end
       end
 
       context "[invalid attributes]" do
