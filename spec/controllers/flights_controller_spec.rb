@@ -338,7 +338,7 @@ describe FlightsController do
 
         it "should update photographs as well" do
           photo = Factory(:photograph, flight: @flight, caption: 'foo')
-          put :update, id: @flight.id, flight: { blog: 'new 2', photographs_attributes: { '0' => { caption: 'bar', _destroy: '0', id: photo.id } } }
+          put :update, id: @flight.id, flight: { blog: 'new 2', photographs_attributes: { '0' => { caption: 'bar', _destroy: '0', id: photo.id.to_s } } }
           photo.reload.caption.should eql('bar')
         end
       end

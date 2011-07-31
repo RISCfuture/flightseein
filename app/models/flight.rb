@@ -83,7 +83,7 @@ class Flight < ActiveRecord::Base
   attr_accessible :origin, :destination, :pic, :sic, :aircraft, :people,
                   :remarks, :duration, :date, :blog, :photographs_attributes
 
-  accepts_nested_attributes_for :photographs, allow_destroy: true, reject_if: ->(attrs) { attrs['image'].nil? or attrs['id'].nil? }
+  accepts_nested_attributes_for :photographs, allow_destroy: true, reject_if: ->(attrs) { attrs['image'].nil? and attrs['id'].nil? }
 
   # @private
   def origin() user.destinations.where(airport_id: origin_id).first end
