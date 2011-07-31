@@ -1,10 +1,14 @@
 Flightseein::Application.configure do
    # Framework
   config.cache_classes = true # to prevent memcache bugs
+  config.whiny_nils    = true
+  config.cache_store   = :memory_store
+
+  # Logging
+  #config.append_backtrace_to_log                = true
+  config.active_support.deprecation             = :log
   config.action_dispatch.best_standards_support = :builtin
-  config.whiny_nils = true
-  config.active_support.deprecation = :log
-  config.cache_store = :memory_store
+
 
   # Controllers
   config.consider_all_requests_local       = true
