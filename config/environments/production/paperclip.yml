@@ -4,4 +4,7 @@ s3_credentials:
   access_key_id: 19SQZEWB9DZFD5ZZ16R2
   secret_access_key: fTmq8Smd2WDBkLrh2v4wvTEAi3wGbfGVJ1JKSpvg
   bucket: flightseein
-path: ":class/:id/:attachment/:style.:extension"
+s3_headers:
+  Expires: "Sun, 31 Jul 2016 07:16:10 GMT"
+path: ":class/:id/:attachment/:style-:fingerprint.:content_extension"
+use_timestamp: false

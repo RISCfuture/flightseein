@@ -1,2 +1,2 @@
 ---
-url: "/system/test/:attachment/:id/:style/:filename"
+url: "/system/test/:class/:id/:attachment/:style-:fingerprint.:content_extension"

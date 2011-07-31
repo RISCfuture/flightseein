@@ -40,6 +40,7 @@ require 'digest/sha1'
 # | `avatar_content_type` | Used by Paperclip.                                                      |
 # | `avatar_file_size`    | Used by Paperclip.                                                      |
 # | `avatar_updated_at`   | Used by Paperclip.                                                      |
+# | `avatar_fingerprint`  | Used by Paperclip.                                                      |
 #
 # Associations
 # ------------
@@ -76,7 +77,8 @@ class User < ActiveRecord::Base
     avatar_file_name: { allow_blank: true },
     avatar_content_type: { allow_blank: true, format: { with: /^image\// } },
     avatar_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    avatar_updated_at: { type: Time, allow_blank: true }
+    avatar_updated_at: { type: Time, allow_blank: true },
+    avatar_fingerprint: { allow_blank: true }
   )
 
   validates :email,

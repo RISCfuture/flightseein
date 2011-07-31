@@ -11,6 +11,7 @@
 # | `image_content_type` | Used by Paperclip.                |
 # | `image_file_size`    | Used by Paperclip.                |
 # | `image_updated_at`   | Used by Paperclip.                |
+# | `image_fingerprint`  | Used by Paperclip.                |
 #
 # Associations
 # ------------
@@ -30,7 +31,8 @@ class Photograph < ActiveRecord::Base
     image_file_name: { presence: true },
     image_content_type: { presence: true, format: { with: /^image\// } },
     image_file_size: { type: Fixnum, presence: true, numericality: { less_than: 2.megabytes } },
-    image_updated_at: { type: Time, presence: true }
+    image_updated_at: { type: Time, presence: true },
+    image_fingerprint: { presence: true }
   )
 
   validates :flight,

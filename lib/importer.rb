@@ -57,7 +57,7 @@ class Importer
 
   def download_file
     FileUtils.mkdir_p @work_dir
-    name = File.basename(@import.logbook.path)
+    name = @import.logbook.original_filename
     path = File.join(@work_dir, name)
     if Flightseein::Configuration.paperclip.storage == :s3 then
       File.open(path, 'wb') { |f| f.print open(@import.logbook.url).read }

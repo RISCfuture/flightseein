@@ -34,6 +34,7 @@ require 'importer'
 # | `logbook_content_type` | Used by Paperclip. |
 # | `logbook_file_size`    | Used by Paperclip. |
 # | `logbook_updated_at`   | Used by Paperclip. |
+# | `logbook_fingerprint`  | Used by Paperclip. |
 #
 # Associations
 # ------------
@@ -60,7 +61,8 @@ class Import < ActiveRecord::Base
     logbook_file_name: { allow_blank: true },
     logbook_content_type: { allow_blank: true, inclusion: { in: SUPPORTED_TYPES } },
     logbook_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 50.megabytes } },
-    logbook_updated_at: { type: Time, allow_blank: true }
+    logbook_updated_at: { type: Time, allow_blank: true },
+    logbook_fingerprint: { allow_blank: true }
   )
   enum_type :state, values: %w( pending starting importing_aircraft
                                 importing_airports importing_passengers
