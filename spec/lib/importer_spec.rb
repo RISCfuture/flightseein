@@ -5,7 +5,7 @@ describe Importer do
   context "[decompression]" do
     it "should skip unknown files" do
       LogtenParser.should_not_receive(:new)
-      import = Factory(:import, logbook: open(Rails.root.join('spec', 'fixtures', 'bogus.zip')))
+      import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.zip'), 'application/zip'))
       Importer.new(import).perform
     end
 
@@ -17,17 +17,17 @@ describe Importer do
       end
 
       it "should decompress a .zip file" do
-        import = Factory(:import, logbook: open(Rails.root.join('spec', 'fixtures', 'logten.zip')))
+        import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.zip'), 'application/zip'))
         Importer.new(import).perform
       end
 
       it "should decompress a .tar.gz file" do
-        import = Factory(:import, logbook: open(Rails.root.join('spec', 'fixtures', 'logten.tar.gz')))
+        import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.tar.gz'), 'application/x-gzip'))
         Importer.new(import).perform
       end
 
       it "should decompress a .tar.bz2 file" do
-        import = Factory(:import, logbook: open(Rails.root.join('spec', 'fixtures', 'logten.tar.bz2')))
+        import = Factory(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.tar.bz2'), 'application/x-bzip2'))
         Importer.new(import).perform
       end
     end

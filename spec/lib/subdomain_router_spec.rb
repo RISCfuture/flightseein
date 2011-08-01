@@ -128,20 +128,20 @@ describe SubdomainRouter::Constraint do
     end
 
     it "should return true if the subdomain belongs to a user and save the user to the env" do
-      user = Factory(:user)
+      user = FactoryGirl.create(:user)
       @request.stub!(:subdomains).and_return([ user.subdomain ])
       SubdomainRouter::Constraint.matches?(@request).should be_true
       @env['subdomain_router.subdomain_owner'].should eql(user)
     end
 
     it "should downcase the subdomain" do
-      user = Factory(:user)
+      user = FactoryGirl.create(:user)
       @request.stub!(:subdomains).and_return([ user.subdomain.upcase ])
       SubdomainRouter::Constraint.matches?(@request).should be_true
     end
 
     it "should return false if the subdomain belongs to an inactive user" do
-      user = Factory(:user, active: false)
+      user = FactoryGirl.create(:user, active: false)
       @request.stub!(:subdomains).and_return([ user.subdomain ])
       SubdomainRouter::Constraint.matches?(@request).should be_false
     end

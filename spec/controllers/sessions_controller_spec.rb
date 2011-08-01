@@ -10,7 +10,7 @@ describe SessionsController do
     end
 
     it "should redirect if the user is already logged in" do
-      user = Factory(:user)
+      user = FactoryGirl.create(:user)
       session[:user_id] = user.id
       get :new
       response.should redirect_to(root_url(subdomain: user.subdomain))
@@ -19,11 +19,11 @@ describe SessionsController do
 
   describe "#create" do
     before :each do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
     end
 
     it "should log the user out if credentials are incorrect" do
-      session[:user_id] = Factory(:user).id
+      session[:user_id] = FactoryGirl.create(:user).id
       post :create, user: { email: @user.email, password: 'wrong' }
       session[:user_id].should be_nil
     end
@@ -76,7 +76,7 @@ describe SessionsController do
     end
 
     it "should log the user out and redirect to the root URL" do
-      session[:user_id] = Factory(:user).id
+      session[:user_id] = FactoryGirl.create(:user).id
       delete :destroy
       session[:user_id].should be_nil
       response.should redirect_to(root_url)

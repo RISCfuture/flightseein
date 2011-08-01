@@ -3,18 +3,18 @@ require 'spec_helper'
 describe Flight do
   describe "#destinations" do
     before :each do
-      user = Factory(:user)
+      user = FactoryGirl.create(:user)
 
-      @origin = Factory(:destination, user: user)
-      @stop1 = Factory(:destination, user: user)
-      @stop2 = Factory(:destination, user: user)
-      @stop3 = Factory(:destination, user: user)
-      @destination = Factory(:destination, user: user)
+      @origin = FactoryGirl.create(:destination, user: user)
+      @stop1 = FactoryGirl.create(:destination, user: user)
+      @stop2 = FactoryGirl.create(:destination, user: user)
+      @stop3 = FactoryGirl.create(:destination, user: user)
+      @destination = FactoryGirl.create(:destination, user: user)
 
-      @flight = Factory(:flight, user: user, origin: @origin, destination: @destination)
-      Factory :stop, flight: @flight, destination: @stop2, sequence: 2
-      Factory :stop, flight: @flight, destination: @stop1, sequence: 1
-      Factory :stop, flight: @flight, destination: @stop3, sequence: 3
+      @flight = FactoryGirl.create(:flight, user: user, origin: @origin, destination: @destination)
+      FactoryGirl.create :stop, flight: @flight, destination: @stop2, sequence: 2
+      FactoryGirl.create :stop, flight: @flight, destination: @stop1, sequence: 1
+      FactoryGirl.create :stop, flight: @flight, destination: @stop3, sequence: 3
     end
 
     it "should return all destinations" do
@@ -24,38 +24,38 @@ describe Flight do
 
   describe "#has_blog" do
     it "should be false for flights without a blog" do
-      Factory(:flight, blog: nil).should_not have_blog
-      Factory(:flight, blog: '').should_not have_blog
+      FactoryGirl.create(:flight, blog: nil).should_not have_blog
+      FactoryGirl.create(:flight, blog: '').should_not have_blog
     end
 
     it "should be true for flights with a blog" do
-      Factory(:flight, blog: 'foo').should have_blog
+      FactoryGirl.create(:flight, blog: 'foo').should have_blog
     end
   end
 
   describe "#update_people!" do
     it "should automatically add the PIC" do
-      flight = Factory(:flight)
+      flight = FactoryGirl.create(:flight)
       flight.people.should include(flight.pic)
     end
 
     it "should automatically add the SIC" do
-      user = Factory(:user)
-      flight = Factory(:flight, user: user, sic: Factory(:person, user: user))
+      user = FactoryGirl.create(:user)
+      flight = FactoryGirl.create(:flight, user: user, sic: FactoryGirl.create(:person, user: user))
       flight.people.should include(flight.sic)
     end
 
     it "should not call update_people! unless the PIC or SIC is changed" do
-      flight = Factory(:flight)
+      flight = FactoryGirl.create(:flight)
       flight.should_not_receive(:update_people!)
       flight.blog = "hello!"
       flight.save!
     end
 
     it "should automatically add the passengers" do
-      flight = Factory(:flight)
-      flight.passengers << Factory(:person, user: flight.user)
-      flight.passengers << Factory(:person, user: flight.user)
+      flight = FactoryGirl.create(:flight)
+      flight.passengers << FactoryGirl.create(:person, user: flight.user)
+      flight.passengers << FactoryGirl.create(:person, user: flight.user)
       flight.update_people!
       flight.passengers.each { |pax| flight.people.should include(pax) }
     end
@@ -63,52 +63,52 @@ describe Flight do
 
   describe "#previous" do
     before :each do
-      @flight = Factory(:flight)
+      @flight = FactoryGirl.create(:flight)
     end
 
     it "should return the previous flight" do
-      prev = Factory(:flight, user: @flight.user, date: @flight.date - 1)
-      Factory :flight, user: @flight.user, date: @flight.date - 2
+      prev = FactoryGirl.create(:flight, user: @flight.user, date: @flight.date - 1)
+      FactoryGirl.create :flight, user: @flight.user, date: @flight.date - 2
       @flight.user.update_flight_sequence!
 
       @flight.reload.previous.should eql(prev)
     end
 
     it "should return nil if there is no previous flight" do
-      Factory :flight, user: @flight.user, date: @flight.date + 1
+      FactoryGirl.create :flight, user: @flight.user, date: @flight.date + 1
       @flight.user.update_flight_sequence!
 
       @flight.reload.previous.should be_nil
     end
 
     it "should return nil if the flight is unsequenced" do
-      Factory :flight, user: @flight.user, date: @flight.date - 1, sequence: 1
+      FactoryGirl.create :flight, user: @flight.user, date: @flight.date - 1, sequence: 1
       @flight.reload.previous.should be_nil
     end
   end
 
   describe "#next" do
     before :each do
-      @flight = Factory(:flight)
+      @flight = FactoryGirl.create(:flight)
     end
 
     it "should return the next flight" do
-      prev = Factory(:flight, user: @flight.user, date: @flight.date + 1)
-      Factory :flight, user: @flight.user, date: @flight.date + 2
+      prev = FactoryGirl.create(:flight, user: @flight.user, date: @flight.date + 1)
+      FactoryGirl.create :flight, user: @flight.user, date: @flight.date + 2
       @flight.user.update_flight_sequence!
 
       @flight.reload.next.should eql(prev)
     end
 
     it "should return nil if there is no next flight" do
-      Factory :flight, user: @flight.user, date: @flight.date - 1
+      FactoryGirl.create :flight, user: @flight.user, date: @flight.date - 1
       @flight.user.update_flight_sequence!
 
       @flight.reload.next.should be_nil
     end
 
     it "should return nil if the flight is unsequenced" do
-      Factory :flight, user: @flight.user, date: @flight.date + 1, sequence: 1
+      FactoryGirl.create :flight, user: @flight.user, date: @flight.date + 1, sequence: 1
       @flight.next.should be_nil
     end
   end

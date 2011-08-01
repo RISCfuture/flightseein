@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
 # FRAMEWORK
-gem 'rake', '< 0.9'
-gem 'rails', '3.1.0.rc4'
+gem 'rake'
+gem 'rails', '3.1.0.rc5'
 gem 'configoro'
 
 # MODELS
@@ -15,7 +15,6 @@ gem 'slugalicious'
 gem 'find_or_create_on_scopes'
 
 # VIEWS
-gem 'sprockets', '= 2.0.0.beta.10' # Rails 3.1rc4 incompatible with latest sprockets
 gem 'coffee-script'
 gem 'compass', '0.11.4', require: false # 0.11.5 has a bug in the reset module
 gem 'jquery-rails'
@@ -44,7 +43,7 @@ end
 group :test do
   # SPECS
   gem 'rspec-rails'
-  gem 'factory_girl', '2.0.0.beta2'
+  gem 'factory_girl'
   gem 'faker'
   gem 'nokogiri'
 end

@@ -12,15 +12,15 @@ describe ImportsController do
     end
 
     it "should redirect if the user is not the subdomain owner" do
-      session[:user_id] = Factory(:user).id
-      request.host = "#{Factory(:user).subdomain}.test.host"
+      session[:user_id] = FactoryGirl.create(:user).id
+      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
       get :new
       response.should be_redirect
     end
 
     context "[subdomain owner]" do
       before :each do
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
         session[:user_id] = @user.id
         request.host = "#{@user.subdomain}.test.host"
         get :new
@@ -45,29 +45,29 @@ describe ImportsController do
     end
 
     it "should redirect if the user is not the subdomain owner" do
-      session[:user_id] = Factory(:user).id
-      request.host = "#{Factory(:user).subdomain}.test.host"
+      session[:user_id] = FactoryGirl.create(:user).id
+      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
       post :create, import: {}
       response.should be_redirect
     end
 
     context "[subdomain owner]" do
       before :each do
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
         session[:user_id] = @user.id
         request.host = "#{@user.subdomain}.test.host"
       end
 
       context "[valid values]" do
         before :each do
-          @attributes = Factory.attributes_for(:import, user: @user, logbook: open("#{Rails.root}/spec/fixtures/logten.zip"))
+          @attributes = FactoryGirl.attributes_for(:import, user: @user, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.zip'), 'application/zip'))
         end
 
         it "should create a new Import" do
           post :create, import: @attributes
           @user.imports.count.should eql(1)
           import = @user.imports.first
-          import.logbook_file_name.should eql('logten.zip')
+          import.logbook.original_filename.should eql('logten.zip')
         end
 
         it "should enqueue the Import" do
@@ -83,7 +83,7 @@ describe ImportsController do
 
       context "[invalid values]" do
         before :each do
-          @attributes = Factory.attributes_for(:import, user: @user, logbook: open(Rails.root.join('spec', 'fixtures', 'bogus.txt')))
+          @attributes = FactoryGirl.attributes_for(:import, user: @user, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain'))
         end
 
         it "should move errors on the Paperclip aux fields to the main Paperclip field" do
@@ -114,27 +114,27 @@ describe ImportsController do
 
   describe "#show" do
     it "should redirect if no user is logged in" do
-      get :show, id: Factory(:import).id
+      get :show, id: FactoryGirl.create(:import).id
       response.should be_redirect
     end
 
     it "should redirect if the user is not the subdomain owner" do
-      user = Factory(:user)
+      user = FactoryGirl.create(:user)
       session[:user_id] = user.id
-      request.host = "#{Factory(:user).subdomain}.test.host"
-      get :show, id: Factory(:import, user: user).id
+      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
+      get :show, id: FactoryGirl.create(:import, user: user).id
       response.should be_redirect
     end
 
     context "[subdomain owner]" do
       before :each do
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
         session[:user_id] = @user.id
         request.host = "#{@user.subdomain}.test.host"
       end
       
       it "should 404 if the Import does not belong to the current user" do
-        get :show, id: Factory(:import).id
+        get :show, id: FactoryGirl.create(:import).id
         response.status.should eql(404)
       end
 
@@ -144,7 +144,7 @@ describe ImportsController do
       end
 
       it "should set @import to the Import" do
-        import = Factory(:import, user: @user)
+        import = FactoryGirl.create(:import, user: @user)
         get :show, id: import.id
         assigns(:import).should eql(import)
       end

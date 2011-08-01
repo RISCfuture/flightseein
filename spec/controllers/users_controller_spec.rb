@@ -5,7 +5,7 @@ describe UsersController do
   
   describe "#new" do
     it "should redirect to the root URL if the user is already logged in" do
-      user = Factory(:user)
+      user = FactoryGirl.create(:user)
       session[:user_id] = user.id
       get :new
       response.should redirect_to(root_url(subdomain: user.subdomain))
@@ -19,7 +19,7 @@ describe UsersController do
 
   describe "#create" do
     it "should redirect to the root URL if the user is already logged in" do
-      user = Factory(:user)
+      user = FactoryGirl.create(:user)
       session[:user_id] = user.id
       post :create, user: {}
       response.should redirect_to(root_url(subdomain: user.subdomain))
@@ -27,7 +27,7 @@ describe UsersController do
 
     context "[valid values]" do
       before :each do
-        @template = Factory.build(:user)
+        @template = FactoryGirl.build(:user)
         post :create, user: @template.attributes.slice('email', 'subdomain').merge('password' => 'password')
       end
 
@@ -51,7 +51,7 @@ describe UsersController do
 
     context "[invalid values]" do
       before :each do
-        @template = Factory.build(:user)
+        @template = FactoryGirl.build(:user)
         post :create, user: @template.attributes.slice('email').merge('password' => 'something')
       end
 

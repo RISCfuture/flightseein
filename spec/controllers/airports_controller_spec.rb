@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe AirportsController do
   before :all do
-    @user = Factory(:user)
-    @destinations = (1..60).map { Factory :destination, user: @user }
+    @user = FactoryGirl.create(:user)
+    @destinations = FactoryGirl.create_list(:destination, 60, user: @user)
   end
 
   before :each do
@@ -57,13 +57,13 @@ describe AirportsController do
     end
 
     it "should return 404 if the airport exists but is not a destination for this user" do
-      get :show, id: Factory(:airport).identifier
+      get :show, id: FactoryGirl.create(:airport).identifier
       response.status.should eql(404)
     end
 
     context "[valid airport identifier]" do
       before :each do
-        @destination = Factory(:destination, user: @user)
+        @destination = FactoryGirl.create(:destination, user: @user)
       end
 
       it "should set @destination to the Destination record" do

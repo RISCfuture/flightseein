@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PeopleController do
   before :all do
-    @user = Factory(:user)
+    @user = FactoryGirl.create(:user)
   end
 
   before :each do
@@ -20,8 +20,8 @@ describe PeopleController do
 
     describe ".json" do
       before :all do
-        @people = (1..60).map { Factory :person, user: @user }
-        @people.each { |pers| Factory :flight, user: @user, pic: pers }
+        @people = FactoryGirl.create_list(:person, 60, user: @user)
+        @people.each { |pers| FactoryGirl.create :flight, user: @user, pic: pers }
         @people.each(&:update_hours!)
         @people = @people.sort_by { |pers| [ pers.hours, pers.id ] }.reverse
       end
@@ -50,7 +50,7 @@ describe PeopleController do
       end
 
       it "should not blow up if given an invalid last_record" do
-        get :index, format: 'json', last_record: Factory(:person).id
+        get :index, format: 'json', last_record: FactoryGirl.create(:person).id
         response.status.should eql(200)
         JSON.parse(response.body).size.should eql(50)
         JSON.parse(response.body).zip(@people[0, 50]).each do |(json, person)|
@@ -67,13 +67,13 @@ describe PeopleController do
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      get :show, id: Factory(:person).slug
+      get :show, id: FactoryGirl.create(:person).slug
       response.status.should eql(404)
     end
 
     context "[valid person]" do
       before :each do
-        @person = Factory(:person, user: @user)
+        @person = FactoryGirl.create(:person, user: @user)
       end
 
       it "should set @notes to a Redcarpet with the person's notes" do
