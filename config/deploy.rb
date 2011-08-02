@@ -43,11 +43,22 @@ end
 
 # PERMISSIONS
 
-task :chown_directories, roles: :app do
-  sudo "chown -R #{runner}:wheel #{release_path}"
+namespace :permissions do
+  task :chown, roles: :app do
+    sudo "chown -R #{runner}:wheel #{release_path}"
+  end
 end
-after "deploy:finalize_update", :chown_directories
+after "assets:precompile", "permissions:chown"
 
 # BUNDLER
 
 require 'bundler/capistrano'
+
+# ASSETS
+
+namespace :assets do
+  task :precompile, roles: :app do
+    run "cd #{release_path} && bundle exec rake assets:precompile RAILS_ENV=production"
+  end
+end
+after "bundle:install", "assets:precompile"
