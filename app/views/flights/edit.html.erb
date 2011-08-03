@@ -29,7 +29,7 @@
 
 <%= content_for :javascripts do %>
     <script type="text/javascript">
-      var cascadeLastIndex = 0;
+      var cascadeLastIndex = parseInt($('li#new_photo>input[type=file]').attr('name').match(/\[.+?\]/g)[1].match(/\d+/)[0]);
       $(window).ready(function() {
           $('#new_photo_button').click(function() {
               cascadeLastIndex++;
