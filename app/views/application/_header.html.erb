@@ -7,10 +7,20 @@
         <%= link_to "Log in", new_session_url(subdomain: false), class: 'button-small' %>
     <% end %>
   </p>
-  <% if flash[:alert] %>
-    <p id="flash-alert"><%= flash[:alert] %></p>
-  <% end %>
-  <% if flash[:notice] %>
-    <p id="flash-notice"><%= flash[:notice] %></p>
-  <% end %>
+  <ul id="flashes" style="display: none">
+    <% if @unsupported %>
+        <li id="unsupported">Warning! Your Web browser isn&rsquo;t fully
+          supported. Some web pages may look strange. For the best experience,
+          download either
+          <%= link_to "Google Chrome", "http://www.google.com/chrome/" %> or
+          <%= link_to "Safari", "http://www.apple.com/safari/" %>.
+        </li>
+    <% end %>
+    <% if flash[:alert] %>
+        <li id="flash-alert"><%= flash[:alert] %></li>
+    <% end %>
+    <% if flash[:notice] %>
+        <li id="flash-notice"><%= flash[:notice] %></li>
+    <% end %>
+  </ul>
 </header>

@@ -5,6 +5,9 @@ gem 'rake'
 gem 'rails', '3.1.0.rc5'
 gem 'configoro'
 
+# MIDDLEWARE
+gem 'user-agent'
+
 # MODELS
 gem 'email_validation'
 gem 'enum_type'
