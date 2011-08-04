@@ -34,7 +34,7 @@
 <% end %>
 
 <section id="stats">
-  <ul id="row-flights" class="carousel">
+  <ul id="row-flights" class="progrid">
     <li class="statbox nofade center" fakehref="<%= flights_url %>">
       <h1><%= number_with_delimiter @flight_count %></h1>
       <p><%= "adventure".send(@flight_count == 1 ? :self : :pluralize) %></p>
@@ -51,7 +51,7 @@
     <% end %>
   </ul>
 
-  <ul id="row-pax" class="carousel">
+  <ul id="row-pax" class="progrid">
     <li class="statbox nofade center" fakehref="<%= people_url %>">
       <h1><%= number_with_delimiter @pax_count %></h1>
       <p><%= "passenger".send(@pax_count == 1 ? :self : :pluralize) %></p>
@@ -68,7 +68,7 @@
     <% end %>
   </ul>
 
-  <ul id="row-airports" class="carousel">
+  <ul id="row-airports" class="progrid">
     <li class="statbox nofade center" fakehref="<%= airports_url %>">
       <h1><%= number_with_delimiter @airport_count %></h1>
       <p><%= "destination".send(@airport_count == 1 ? :self : :pluralize) %></p>

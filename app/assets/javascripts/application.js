@@ -10,7 +10,7 @@
 //= require jquery.append-text
 //= require jquery.timers-1.2
 //= require jquery.scrollTo
-//= require carousel
+//= require progrid
 //= require center
 //= require facebook
 //= require fade_flash_notice

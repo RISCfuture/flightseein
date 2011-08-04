@@ -133,6 +133,20 @@ article#flights {
         }
     }
 
+    section#photos {
+        margin-top: 2em;
+
+        ul {
+            @include display-box;
+            @include box-orient(horizontal);
+            margin-bottom: 2em;
+        }
+
+        li {
+            margin-right: 20px;
+        }
+    }
+
     nav {
         text-align: center;
         margin-top: 1em;
