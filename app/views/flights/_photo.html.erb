@@ -1,0 +1,6 @@
+<figure>
+  <%= link_to image_tag(photo.image.url(:blog)), photo.image.url %>
+  <% if photo.caption.present? %>
+      <figcaption><%= photo.caption %></figcaption>
+  <% end %>
+</figure>

@@ -10,7 +10,7 @@
 </section>
 
 <section id="details">
-  <% if @blog or subdomain_owner? %>
+  <% if show_blog? %>
       <div id="blog">
         <% if @blog %>
             <%= raw @blog.to_html %>
@@ -85,25 +85,35 @@
         <p>&hellip; and more &hellip;</p>
     <% end %>
 
-    <% unless @flight.photographs.empty? %>
+    <% if show_blog? and not @flight.photographs.empty? %>
         <hr />
 
         <div id="photos">
           <% @flight.photographs.limit(20).each do |photo| %>
-              <figure>
-                <%= link_to image_tag(photo.image.url(:blog)), photo.image.url %>
-                <% if photo.caption.present? %>
-                    <figcaption><%= photo.caption %></figcaption>
-                <% end %>
-              </figure>
+              <%= render :partial => 'photo', locals: { photo: photo } %>
           <% end %>
           <% if @flight.photographs.count > 20 %>
-            <p>&hellip; and more &hellip;</p>
+              <p>&hellip; and more &hellip;</p>
           <% end %>
         </div>
     <% end %>
   </div>
 </section>
+
+<% if not show_blog? and not @flight.photographs.empty? %>
+    <hr />
+    <section id="photos">
+      <% @flight.photographs.limit(20).in_groups_of(3, false) do |photos| %>
+          <ul>
+            <% photos.each do |photo| %>
+                <li>
+                  <%= render :partial => 'photo', locals: { photo: photo } %>
+                </li>
+            <% end %>
+          </ul>
+      <% end %>
+    </section>
+<% end %>
 
 <nav>
   <% if @flight.previous %>
