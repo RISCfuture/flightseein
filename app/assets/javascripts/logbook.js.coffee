@@ -41,7 +41,15 @@ class Logbook
       if flight.photos.length > 0
         $('<br/>').appendTo remarks
         for photo in flight.photos
-          $('<img/>').attr('src', photo).appendTo remarks
+          thumb = $('<a/>').attr(href: photo.full, title: photo.caption).addClass('thumbs').appendTo remarks
+          $('<img/>').attr('src', photo.thumbnail).appendTo thumb
+        remarks.find('.thumbs').lightBox
+          imageLoading: '/assets/lightbox/loading.gif'
+          imageBtnClose: '/assets/lightbox/close.gif'
+          imageBtnPrev: '/assets/lightbox/prev.gif'
+          imageBtnNext: '/assets/lightbox/next.gif'
+          imageBlank: '/assets/lightbox/blank.gif'
+          txtImage: ''
       if flight.people.length > 0
         $('<br/>').appendTo remarks
         for person in flight.people
