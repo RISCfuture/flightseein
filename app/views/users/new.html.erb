@@ -3,11 +3,12 @@
   where you&rsquo;ve been and what you&rsquo;ve done there. Bring your flights
   to life with photos, videos,&nbsp;and&nbsp;stories.</p>
 
-<ul class="progrid" id="examples">
-  <% @flights.each do |flight| %>
-      <li><%= link_to image_tag(flight.photographs.limit(4).sample.image.url(:carousel), alt: "#{flight.origin.airport.identifier} to #{flight.destination.airport.identifier}"), flight_url(flight, subdomain: flight.user.subdomain) %></li>
-  <% end %>
-</ul>
+<ul id="examples"></ul>
+<%= content_for :javascripts do %>
+    <script type="text/javascript">
+      $('#examples').carousel("<%= photographs_url %>", 'horizontal', { captions: false, lightboxes: false })
+    </script>
+<% end %>
 
 <p id="call-to-action">To get started, sign up below, then import your digital
   logbook:</p>

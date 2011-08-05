@@ -115,37 +115,16 @@ article#flights {
                 }
 
             }
-
-            hr {
-                height: 1px;
-                background-color: gray;
-                border-width: 0;
-                margin-top: 2em;
-                margin-bottom: 2em;
-            }
-
-            #photos {
-                text-align: center;
-
-		figure { margin-bottom: 1em }
-                figcaption { font-size: 11pt; }
-            }
         }
     }
 
-    section#photos {
-        margin-top: 2em;
-
-        ul {
-            @include display-box;
-            @include box-orient(horizontal);
+    hr {
+            height: 1px;
+            background-color: gray;
+            border-width: 0;
+            margin-top: 2em;
             margin-bottom: 2em;
         }
-
-        li {
-            margin-right: 20px;
-        }
-    }
 
     nav {
         text-align: center;

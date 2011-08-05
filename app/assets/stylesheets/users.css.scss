@@ -15,17 +15,7 @@ article#users {
     }
 
     ul#examples {
-        @include display-box;
-        @include box-orient(horizontal);
-        
-        margin-top: 2em;
         margin-bottom: 2em;
-
-        li {
-            width: 140px;
-            height: 100px;
-            margin-right: 20px;
-        }
     }
 
     #call-to-action {

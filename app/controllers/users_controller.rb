@@ -12,9 +12,7 @@ class UsersController < ApplicationController
   # * `GET /users/new`
 
   def new
-    respond_with(@user ||= User.new) do |format|
-      format.html { @flights = Flight.includes(:user, :metadata).where(has_photos: true).order('date DESC').limit(5) }
-    end
+    respond_with(@user ||= User.new)
   end
 
   # Creates a new user account.

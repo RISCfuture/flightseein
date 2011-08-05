@@ -29,15 +29,15 @@ describe PeopleController do
       it "should return the first 50 people by hours" do
         get :index, format: 'json'
         response.status.should eql(200)
-          JSON.parse(response.body).size.should eql(50)
-          JSON.parse(response.body).zip(@people[0, 50]).each do |(json, person)|
-            json['id'].should eql(person.id)
-            json['name'].should eql(person.name)
-            json['hours'].should be_within(0.05).of(person.hours)
-            json['url'].should =~ /\/people\/#{person.slug}$/
-            json['flights'].should eql(person.flights.count)
-            json['photo'].should eql(person.photo.url(:carousel))
-          end
+        JSON.parse(response.body).size.should eql(50)
+        JSON.parse(response.body).zip(@people[0, 50]).each do |(json, person)|
+          json['id'].should eql(person.id)
+          json['name'].should eql(person.name)
+          json['hours'].should be_within(0.05).of(person.hours)
+          json['url'].should =~ /\/people\/#{person.slug}$/
+          json['flights'].should eql(person.flights.count)
+          json['photo'].should eql(person.photo.url(:carousel))
+        end
       end
 
       it "should paginate using the last_record parameter" do

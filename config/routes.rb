@@ -9,6 +9,7 @@ Flightseein::Application.routes.draw do
   constraints(subdomain: Flightseein::Configuration.routing.default_subdomain) do
     resources :users, only: [ :new, :create ]
     resource :session, only: [ :new, :create, :destroy ]
+    resources :photographs, only: :index
 
     root(to: 'users#new')
   end
@@ -18,7 +19,9 @@ Flightseein::Application.routes.draw do
     resources :airports, only: [ :index, :show ] do
       resources :flights, only: :index
     end
-    resources :flights, only: [ :index, :show, :edit, :update ]
+    resources :flights, only: [ :index, :show, :edit, :update ] do
+      resources :photographs, only: :index
+    end
     resources :imports, only: [ :new, :create, :show ]
     resources :people, only: [ :index, :show ] do
       resources :flights, only: :index

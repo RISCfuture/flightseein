@@ -8,12 +8,15 @@
 //= require jquery_ujs
 //= require jquery.qtip
 //= require jquery.append-text
+//= require jquery.lightbox-0.5
 //= require jquery.timers-1.2
 //= require jquery.scrollTo
-//= require progrid
+
+//= require carousel
 //= require center
 //= require facebook
 //= require fade_flash_notice
 //= require field_with_errors
 //= require href
 //= require logbook
+//= require progrid

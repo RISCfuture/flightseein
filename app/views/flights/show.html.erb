@@ -87,32 +87,24 @@
 
     <% if show_blog? and not @flight.photographs.empty? %>
         <hr />
-
-        <div id="photos">
-          <% @flight.photographs.limit(20).each do |photo| %>
-              <%= render :partial => 'photo', locals: { photo: photo } %>
-          <% end %>
-          <% if @flight.photographs.count > 20 %>
-              <p>&hellip; and more &hellip;</p>
-          <% end %>
-        </div>
+        <ul id="photos"></ul>
+        <%= content_for :javascripts do %>
+            <script type="text/javascript">
+              $('#photos').carousel("<%= flight_photographs_url(@flight) %>", 'vertical')
+            </script>
+        <% end %>
     <% end %>
   </div>
 </section>
 
 <% if not show_blog? and not @flight.photographs.empty? %>
     <hr />
-    <section id="photos">
-      <% @flight.photographs.limit(20).in_groups_of(3, false) do |photos| %>
-          <ul>
-            <% photos.each do |photo| %>
-                <li>
-                  <%= render :partial => 'photo', locals: { photo: photo } %>
-                </li>
-            <% end %>
-          </ul>
-      <% end %>
-    </section>
+    <ul id="photos"></ul>
+    <%= content_for :javascripts do %>
+        <script type="text/javascript">
+          $('#photos').carousel("<%= flight_photographs_url(@flight) %>", 'horizontal')
+        </script>
+    <% end %>
 <% end %>
 
 <nav>
