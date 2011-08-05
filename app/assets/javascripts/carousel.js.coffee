@@ -36,11 +36,11 @@ class Carousel
 
     if @options['lightboxes']
       @element.find('a').lightBox
-        imageLoading: '/assets/lightbox/loading.gif'
-        imageBtnClose: '/assets/lightbox/close.gif'
-        imageBtnPrev: '/assets/lightbox/prev.gif'
-        imageBtnNext: '/assets/lightbox/next.gif'
-        imageBlank: '/assets/lightbox/blank.gif'
+        imageLoading: '/images/lightbox/loading.gif'
+        imageBtnClose: '/images/lightbox/close.gif'
+        imageBtnPrev: '/images/lightbox/prev.gif'
+        imageBtnNext: '/images/lightbox/next.gif'
+        imageBlank: '/images/lightbox/blank.gif'
         txtImage: ''
 
     this.loadNextPage() if this.noScroll() and data.length > 0
