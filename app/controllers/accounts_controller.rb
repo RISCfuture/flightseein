@@ -34,7 +34,7 @@ class AccountsController < ApplicationController
       @quote.autolink = true
     end
 
-    respond_with current_user
+    respond_with subdomain_owner
   end
 
   # Displays a page where a {User} can edit his information.
