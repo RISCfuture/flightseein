@@ -105,20 +105,20 @@ en:
         quote: Quote
         salt: Password salt
   controllers:
-      accounts:
-        destroy:
-          done: Your account has been deleted.
-      application:
-        login_required:
-          notice: Please log in to continue.
-        owner_login_required:
-          not_owner: Sorry, you are not the owner if this account!
-      sessions:
-        create:
-          bad_credentials: Email address or password was incorrect.
-          success: Welcome back, %{name}.
-        destroy:
-          logged_out: You’re now logged out. Come back soon!
+    accounts:
+      destroy:
+        done: Your account has been deleted.
+    application:
+      login_required:
+        notice: Please log in to continue.
+      owner_login_required:
+        not_owner: Sorry, you are not the owner if this account!
+    sessions:
+      create:
+        bad_credentials: Email address or password was incorrect.
+        success: Welcome back, %{name}.
+      destroy:
+        logged_out: You’re now logged out. Come back soon!
   date:
     formats:
       carousel: "%b %d, %Y"
