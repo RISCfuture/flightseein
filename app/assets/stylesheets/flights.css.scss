@@ -3,6 +3,15 @@
 @import "compass/css3/box";
 
 article#flights {
+    #vitals {
+        a {
+            color: $text-color;
+            &:hover {
+                color: $text-color;
+                text-decoration: underline;
+            }
+        }
+    }
 
     // INDEX
 
@@ -10,9 +19,6 @@ article#flights {
         text-align: center;
         text-transform: uppercase;
         font-size: 10pt;
-        color: $alternate-color;
-
-        a { color: $base-color; }
     }
 
     // SHOW
@@ -40,6 +46,7 @@ article#flights {
         p {
             @include border-bottom-radius(5px);
 
+            color: $content-text-color;
             background-color: lighten($alternate-color, 48%);
             border-left: 1px solid lighten($alternate-color, 25%);
             border-right: 1px solid lighten($alternate-color, 25%);
@@ -65,6 +72,7 @@ article#flights {
             border-right: 2px solid lighten($alternate-color, 30%);
 
             p {
+                color: $content-text-color;
                 font-size: 11pt;
                 margin-top: 1em;
                 margin-bottom: 1em;
@@ -76,15 +84,13 @@ article#flights {
             
             h2 {
                 font-size: 14pt;
-                font-weight: bold;
-                color: lighten($alternate-color, 15%);
+                color: $deemphasize-header-color;
 
                 margin-top: 1em;
                 margin-bottom: 0.5em;
             }
 
             p {
-                color: $alternate-color;
                 text-align: center;
                 font-style: italic;
                 font-size: 11pt;
@@ -99,16 +105,13 @@ article#flights {
                     margin-left: 10px;
                 }
 
-                h3, h3>a {
+                h3 {
                     font-size: 16pt;
-                    font-weight: bold;
-                    color: $base-color;
                     margin-bottom: 5px;
                     text-decoration: none;
                 }
 
                 p {
-                    color: lighten($alternate-color, 15%);
                     font-size: 11pt;
                     text-align: left;
                     font-style: normal;

@@ -7,12 +7,16 @@
 @mixin statbox($color) {
     //@include background-image(linear-gradient(top, lighten($color, 90%), lighten($color, 50%)));
     @include vertical-gradient(mix(white, $color, 80%), mix(white, $color, 40%));
-    color: darken($color, 25%);
+    color: darken($color, 15%);
+    h1 { color: darken($color, 25%); }
 
     @include border-radius(8px);
     text-align: center;
 
-    &:hover { color: $color; }
+    &:hover {
+        color: $color;
+        h1 { color: darken($color, 5%); }
+    }
 }
 
 article#accounts {
@@ -32,18 +36,11 @@ article#accounts {
 
         h1 {
             font-size: 36pt;
-            font-weight: bold;
-            color: $header-color;
         }
 
         div#quote {
-            color: $alternate-color;
             padding-left: 1em;
             border-left: 5px solid lighten($alternate-color, 25%);
-        }
-
-        p#vitals {
-            color: $alternate-color;
         }
 
         p { margin-top: 1em; }
@@ -68,7 +65,6 @@ article#accounts {
                     //@include text-shadow(rgba(white, 0.75) 0 1px 1px);
                     text-shadow: 0 1px 1px rgba(white, 0.75);
                     font-size: 36pt;
-                    font-weight: bold;
                     margin-bottom: 0;
                 }
             }
@@ -80,13 +76,10 @@ article#accounts {
                     //@include text-shadow(rgba(white, 0.75) 0 1px 1px);
                     text-shadow: 0 1px 1px rgba(white, 0.75);
                     font-size: 14pt;
-                    font-weight: bold;
                     margin-bottom: 0;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
-
-                &:hover { color: black; }
             }
         }
 
@@ -101,10 +94,6 @@ article#accounts {
         ul#row-airports>li.statbox {
             @include statbox(blue);
         }
-    }
-
-    #call-to-action {
-        color: lighten($alternate-color, 15%);
     }
 
     #import-link {

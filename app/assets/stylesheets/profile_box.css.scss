@@ -13,15 +13,11 @@ section#title {
 
     div#name { @include box-flex(1); }
 
-    h1, h1>a {
+    h1 {
         font-size: 24pt;
-        font-weight: bold;
-        color: $header-color;
-        text-decoration: none;
     }
 
-    p#vitals, p#vitals>a {
-        color: $alternate-color;
+    p#vitals>a {
         text-decoration: none;
         a:hover { text-decoration: underline; }
     }

@@ -1,8 +1,11 @@
 $base-color: #4387dc;
 $alternate-color: gray;
-$font-color: black;
 
-$header-color: $base-color;
+$text-color: $alternate-color;
+$content-text-color: black;
+$header-color: darken($base-color, 10%);
+$deemphasize-header-color: lighten($alternate-color, 15%);
+$link-color: $base-color;
 
 // TEMPORARY until Compass mixins works with Rails 3.1
 

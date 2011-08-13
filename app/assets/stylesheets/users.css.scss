@@ -3,14 +3,14 @@
 
 article#users {
     #tagline {
-        color: $header-color;
+        color: $base-color;
         font-size: 36pt;
         font-weight: bold;
     }
 
     #detail {
         margin-top: 1em;
-        color: lighten($header-color, 25%);
+        color: lighten($base-color, 25%);
         font-size: 24pt;
     }
 
@@ -19,6 +19,6 @@ article#users {
     }
 
     #call-to-action {
-        color: lighten($alternate-color, 15%);
+        color: $content-text-color;
     }
 }

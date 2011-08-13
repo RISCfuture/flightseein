@@ -39,7 +39,7 @@
 }
 
 body {
-    color: $font-color;
+    color: $text-color;
     font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     font-size: 12pt;
 }
@@ -105,7 +105,6 @@ footer {
         padding-bottom: 5px;
         font-size: 9pt;
         text-align: center;
-        color: $alternate-color;
     }
 }
 
@@ -117,7 +116,6 @@ form {
     li {
         padding-top: 0.5em;
         padding-bottom: 0.5em;
-        color: $alternate-color;
 
         p.note {
             font-size: 8pt;
@@ -149,6 +147,17 @@ span.field-with-errors {
 em { font-style: italic; }
 strong { font-weight: bold; }
 
+h1, h2, h3, h4, h5, h6 {
+    color: $header-color;
+    font-weight: bold;
+}
+
+a {
+    color: $link-color;
+    text-decoration: none;
+    &:hover { color: lighten($link-color, 10%); }
+}
+
 a.button {
     @include button;
 }
@@ -179,4 +188,3 @@ ul.inline-errors {
         color: darken(red, 25%);
     }
 }
-

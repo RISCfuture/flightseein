@@ -27,7 +27,6 @@ ol#logbook {
     }
 
     li.note {
-        color: $alternate-color;
         text-style: italic;
         text-align: center;
     }
@@ -55,7 +54,6 @@ ol#logbook {
 
             a {
                 color: white;
-                text-decoration: none;
 
                 &:hover {
                     //@include text-shadow(darken($base-color, 25%) 0 -1px 2px);

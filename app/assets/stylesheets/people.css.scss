@@ -3,13 +3,21 @@
 @import "compass/css3/text-shadow";
 
 article#people {
+    #vitals {
+        a {
+            color: $text-color;
+            &:hover {
+                color: $text-color;
+                text-decoration: underline;
+            }
+        }
+    }
 
     // INDEX
 
     p.note {
         text-align: center;
         font-style: italic;
-        color: $alternate-color;
         font-size: 14pt;
     }
 
@@ -33,7 +41,6 @@ article#people {
                 //@include text-shadow(black 0 0 2px);
                 text-shadow: 0 0 2px black;
                 color: white;
-                font-weight: bold;
                 text-align: center;
                 margin-bottom: 5px;
             }
