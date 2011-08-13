@@ -12,7 +12,7 @@ describe PhotographsController do
 
     describe "#index" do
       before :all do
-        @flight = Factory(:flight, user: @user)
+        @flight = FactoryGirl.create(:flight, user: @user)
         @photographs = FactoryGirl.create_list(:photograph, 15, flight: @flight).sort_by(&:id)
       end
 

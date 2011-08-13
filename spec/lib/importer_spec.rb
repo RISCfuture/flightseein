@@ -27,7 +27,7 @@ describe Importer do
       end
 
       it "should decompress a .tar.bz2 file" do
-        import = Factory(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.tar.bz2'), 'application/x-bzip2'))
+        import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.tar.bz2'), 'application/x-bzip2'))
         Importer.new(import).perform
       end
     end
