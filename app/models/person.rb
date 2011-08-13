@@ -91,8 +91,5 @@ class Person < ActiveRecord::Base
   end
 
   # @private
-  def to_param
-    slug = slugs.loaded? ? slugs.detect(&:active) : slugs.active.first
-    slug.try(:slug)
-  end
+  def to_param() slug end
 end
