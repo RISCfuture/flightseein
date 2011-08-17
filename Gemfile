@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '3.1.0.rc5'
+gem 'rails', '3.1.0.rc6'
 gem 'configoro'
 
 # MIDDLEWARE
