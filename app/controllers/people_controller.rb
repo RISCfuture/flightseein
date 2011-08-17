@@ -1,7 +1,7 @@
 # Controller for viewing a {User}'s {Person passengers}.
 
 class PeopleController < ApplicationController
-  respond_to :html
+  respond_to :html, :json
   before_filter :find_person, only: :show
 
   # HTML
