@@ -59,9 +59,9 @@ class PeopleController < ApplicationController
   # Path Parameters
   # ---------------
   #
-  # |      |                         |
-  # |:-----|:------------------------|
-  # | `id` | The ID of the {Person}. |
+  # |      |                           |
+  # |:-----|:--------------------------|
+  # | `id` | The slug of the {Person}. |
 
   def show
     if @person.notes.present? then
