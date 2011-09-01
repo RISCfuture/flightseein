@@ -54,7 +54,7 @@ class LogtenParser < Parser
               else
                 nil
               end
-      user.aircraft.where(ident: ident).create_or_update!(year: year, type: type, long_type: long_type, notes: notes, image: image)
+      user.aircraft.where(ident: ident).create_or_update!({ year: year, type: type, long_type: long_type, notes: notes, image: image }, as: :importer)
     end
   end
 
@@ -79,7 +79,7 @@ class LogtenParser < Parser
         Rails.logger.warn "[LogtenParser] Skipping ZPLACE due to missing airport: #{[id, lid, icao, iata, image_path].inspect}"
         next
       end
-      user.destinations.where(logbook_id: id).create_or_update!(airport: airport, photo: image)
+      user.destinations.where(logbook_id: id).create_or_update!({ airport: airport, photo: image }, as: :importer)
     end
   end
 
@@ -101,7 +101,7 @@ class LogtenParser < Parser
                 nil
               end
       name = name1.present? ? name1 : name2
-      user.people.where(logbook_id: pkey).create_or_update!(name: name, photo: image, me: is_me.parse_bool)
+      user.people.where(logbook_id: pkey).create_or_update!({ name: name, photo: image, me: is_me.parse_bool }, as: :importer)
     end
   end
 
@@ -150,7 +150,7 @@ class LogtenParser < Parser
 
       date = Time.utc(2001).advance(seconds: time).utc.to_date
 
-      flight = user.flights.where(logbook_id: pkey).create_or_update!(duration: (duration/60.0), remarks: remarks.chomp.strip, aircraft: aircraft, origin: origin, destination: destination, date: date, pic: nil, sic: nil)
+      flight = user.flights.where(logbook_id: pkey).create_or_update!({ duration: (duration/60.0), remarks: remarks.chomp.strip, aircraft: aircraft, origin: origin, destination: destination, date: date, pic: nil, sic: nil }, as: :importer)
       flight.people.clear
       flight.passengers.clear
 

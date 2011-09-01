@@ -81,7 +81,8 @@ class Flight < ActiveRecord::Base
   after_save :update_people!, if: ->(obj) { obj.pic_id_changed? or obj.sic_id_changed? }
 
   attr_accessible :origin, :destination, :pic, :sic, :aircraft, :people,
-                  :remarks, :duration, :date, :blog, :photographs_attributes
+                  :remarks, :duration, :date, as: :importer
+  attr_accessible :blog, :photographs_attributes, as: :pilot
 
   accepts_nested_attributes_for :photographs, allow_destroy: true, reject_if: ->(attrs) { attrs['image'].nil? and attrs['id'].nil? }
 

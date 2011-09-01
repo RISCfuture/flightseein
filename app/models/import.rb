@@ -69,7 +69,7 @@ class Import < ActiveRecord::Base
                                 importing_flights uploading_photos completed
                                 failed )
 
-  attr_accessible :logbook
+  attr_accessible :logbook, as: :pilot
 
   has_attached_file :logbook
 

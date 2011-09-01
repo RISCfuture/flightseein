@@ -99,7 +99,7 @@ class User < ActiveRecord::Base
   after_save :update_cache
   after_destroy :invalidate_cache
 
-  attr_accessible :email, :password, :name, :quote, :subdomain, :avatar
+  attr_accessible :email, :password, :name, :quote, :subdomain, :avatar, as: :pilot
   attr_readonly :email
 
   scope :active, where(active: true)

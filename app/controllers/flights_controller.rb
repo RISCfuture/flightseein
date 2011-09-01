@@ -147,7 +147,7 @@ class FlightsController < ApplicationController
   # | `flight[photograph]` | Nested attributes for the associated photographs. (Creating and destroying photographs is allowed.) |
 
   def update
-    @flight.update_attributes params[:flight]
+    @flight.update_attributes params[:flight], as: :pilot
     respond_with @flight
   end
 

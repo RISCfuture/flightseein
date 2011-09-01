@@ -40,7 +40,7 @@ class Photograph < ActiveRecord::Base
 
   after_save { |obj| obj.flight.update_attribute :has_photos, true }
 
-  attr_accessible :image, :caption
+  attr_accessible :image, :caption, as: :pilot
   attr_readonly :image
 
   has_attached_file :image,

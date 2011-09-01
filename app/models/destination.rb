@@ -59,7 +59,8 @@ class Destination < ActiveRecord::Base
             presence: true
   validate :logbook_id_unique
 
-  attr_accessible :photo, :airport, :notes
+  attr_accessible :photo, :airport, as: :importer
+  attr_accessible :notes, as: :pilot
   attr_readonly :airport
 
   has_attached_file :photo,

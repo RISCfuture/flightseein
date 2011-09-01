@@ -66,7 +66,7 @@ class Person < ActiveRecord::Base
             numericality: { only_integer: true },
             uniqueness: { scope: :user_id }
 
-  attr_accessible :name, :photo, :me
+  attr_accessible :name, :photo, :me, as: :importer
 
   has_attached_file :photo,
                     processors: [ :round_corners ],

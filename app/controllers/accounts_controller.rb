@@ -63,7 +63,7 @@ class AccountsController < ApplicationController
   # | `user` | The information for the user account. |
 
   def update
-    current_user.update_attributes(params[:user])
+    current_user.update_attributes(params[:user], as: :pilot)
     respond_with current_user do |format|
       format.html do
         if current_user.valid? then

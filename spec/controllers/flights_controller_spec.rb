@@ -357,13 +357,15 @@ describe FlightsController do
 
       context "[invalid attributes]" do
         it "should leave the flight unchanged" do
+          pending "No invalid attributes"
           attrs = @flight.attributes
-          put :update, id: @flight.id, flight: { duration: 'halp?' }
+          put :update, id: @flight.id, flight: { blog: 'halp?' }
           @flight.reload.attributes.should eql(attrs)
         end
 
         it "should render the edit template" do
-          put :update, id: @flight.id, flight: { duration: 'halp?' }
+          pending "No invalid attributes"
+          put :update, id: @flight.id, flight: { blog: 'halp?' }
           response.should render_template('edit')
         end
       end

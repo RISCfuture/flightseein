@@ -70,7 +70,7 @@ class Aircraft < ActiveRecord::Base
     aircraft.ident = aircraft.ident.upcase if aircraft.ident
   end
 
-  attr_accessible :ident, :year, :type, :long_type, :notes, :image
+  attr_accessible :ident, :year, :type, :long_type, :notes, :image, as: :importer
   attr_readonly :ident
 
   has_attached_file :image,
