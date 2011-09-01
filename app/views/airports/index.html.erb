@@ -51,12 +51,12 @@
                     $('<p/>').text(dest.airport.city + ', ' + dest.airport.state).appendTo(details);
                 });
 
-                $.getJSON("<%= raw escape_javascript(airports_url(format: 'json')) %>",
+                $.getJSON("<%= raw j(airports_url(format: 'json')) %>",
                           { last_record: data[data.length - 1].airport_id },
                           loader);
             };
 
-            $.getJSON("<%= raw escape_javascript(airports_url(format: 'json')) %>", loader);
+            $.getJSON("<%= raw j(airports_url(format: 'json')) %>", loader);
         });
     </script>
 <% end %>

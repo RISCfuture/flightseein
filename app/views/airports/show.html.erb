@@ -22,7 +22,7 @@
 <%= content_for :javascripts do %>
     <script type="text/javascript">
         $(window).ready(function() {
-            $('#logbook').logbook("<%= raw escape_javascript(airport_flights_url(@destination.airport, format: :json)) %>");
+            $('#logbook').logbook("<%= raw j(airport_flights_url(@destination.airport, format: :json)) %>");
         });
     </script>
 <% end %>

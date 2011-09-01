@@ -20,7 +20,7 @@
 <%= content_for :javascripts do %>
     <script type="text/javascript">
         $(window).ready(function() {
-            $('#logbook').logbook("<%= raw escape_javascript(person_flights_url(@person.to_param, format: :json)) %>");
+            $('#logbook').logbook("<%= raw j(person_flights_url(@person.to_param, format: :json)) %>");
         });
     </script>
 <% end %>

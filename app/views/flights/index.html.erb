@@ -11,7 +11,7 @@
 <%= content_for :javascripts do %>
     <script type="text/javascript">
         $(window).ready(function() {
-            $('#logbook').logbook("<%= raw escape_javascript(flights_url(filter: params[:filter], format: :json)) %>");
+            $('#logbook').logbook("<%= raw j(flights_url(filter: params[:filter], format: :json)) %>");
         });
     </script>
 <% end %>
