@@ -5,7 +5,7 @@ class AddSequenceToFlights < ActiveRecord::Migration
         ADD sequence INTEGER CHECK (sequence >= 1)
     SQL
 
-    change_table :flights do |t|
+    change_table :flights, bulk: true do |t|
       t.remove_index :name => 'flights_user'
       t.remove_index :name => 'flights_user_dest'
       t.remove_index :name => 'flights_user_blog'
@@ -18,7 +18,7 @@ class AddSequenceToFlights < ActiveRecord::Migration
   end
 
   def down
-    change_table :flights do |t|
+    change_table :flights, bulk: true do |t|
       t.remove_index :name => 'flights_user'
       t.remove_index :name => 'flights_user_dest'
       t.remove_index :name => 'flights_user_blog'
