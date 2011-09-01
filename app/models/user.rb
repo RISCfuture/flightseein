@@ -187,6 +187,15 @@ class User < ActiveRecord::Base
     SQL
   end
 
+  def marshal_dump
+    encode_with(hsh = Hash.new)
+    hsh
+  end
+
+  def marshal_load(hsh)
+    init_with hsh
+  end
+
   private
 
   def set_salt
@@ -208,7 +217,7 @@ class User < ActiveRecord::Base
 
   def update_cache
     Rails.cache.delete(self.class.subdomain_cache_key(subdomain_was)) if subdomain_changed?
-    Rails.cache.write(subdomain_cache_key, reload) if active?
+    Rails.cache.write(subdomain_cache_key, self) if active?
   end
 
   def invalidate_cache
