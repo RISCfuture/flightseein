@@ -44,12 +44,12 @@ class Logbook
           thumb = $('<a/>').attr(href: photo.full, title: photo.caption).addClass('thumbs').appendTo remarks
           $('<img/>').attr('src', photo.thumbnail).appendTo thumb
         remarks.find('.thumbs').lightBox
-          imageLoading: '/images/lightbox/loading.gif'
-          imageBtnClose: '/images/lightbox/close.gif'
-          imageBtnPrev: '/images/lightbox/prev.gif'
-          imageBtnNext: '/images/lightbox/next.gif'
-          imageBlank: '/images/lightbox/blank.gif'
-          txtImage: ''
+        imageLoading: '<%= image_path "lightbox/loading.gif" %>'
+        imageBtnClose: '<%= image_path "lightbox/close.gif" %>'
+        imageBtnPrev: '<%= image_path "lightbox/prev.gif" %>'
+        imageBtnNext: '<%= image_path "lightbox/next.gif" %>'
+        imageBlank: '<%= image_path "lightbox/blank.gif" %>'
+        txtImage: ''
       if flight.people.length > 0
         $('<br/>').appendTo remarks
         for person in flight.people

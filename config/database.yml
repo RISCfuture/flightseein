@@ -17,10 +17,12 @@ test:
   username: www
   password:
 
-production:
+production: &prod
   adapter: postgresql
   encoding: unicode
   database: flightseein
   pool: 5
   username: www
   password:
+
+deploy: *prod

@@ -58,7 +58,7 @@ require 'bundler/capistrano'
 
 namespace :assets do
   task :precompile, roles: :app do
-    run "cd #{release_path} && bundle exec rake assets:precompile RAILS_ENV=production"
+    run "cd #{release_path} && bundle exec rake assets:precompile RAILS_ENV=deploy"
   end
 end
 after "bundle:install", "assets:precompile"
