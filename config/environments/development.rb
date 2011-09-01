@@ -15,6 +15,7 @@ Flightseein::Application.configure do
 
   # Views
   config.assets.compress = false
+  config.assets.debug = true
 end
 
 Paperclip.options[:command_path] = File.join('', 'usr', 'local', 'bin')
