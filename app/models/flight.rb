@@ -130,7 +130,6 @@ class Flight < ActiveRecord::Base
     people.clear
     people << pic if pic
     people << sic if sic
-    Rails.logger.debug "<< HERE"
     people << passengers
   end
 end
