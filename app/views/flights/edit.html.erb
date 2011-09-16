@@ -9,6 +9,8 @@
       </li>
 
       <li><h2>Add photos from your adventure</h2></li>
+      <div id="uploader"></div>
+
       <%= f.fields_for :photographs do |fp| %>
           <li <%= 'id="new_photo"'.html_safe if fp.object.new_record? %>>
             <% if fp.object.new_record? %>
@@ -22,23 +24,71 @@
             <% end %>
           </li>
       <% end %>
-      <li><%= link_to "Add an additional photo", '#', class: 'button', id: 'new_photo_button' %></li>
+
       <li class="submit"><%= f.submit %></li>
     </ul>
 <% end %>
 
 <%= content_for :javascripts do %>
     <script type="text/javascript">
-      var cascadeLastIndex = parseInt($('li#new_photo>input[type=file]').attr('name').match(/\[.+?\]/g)[1].match(/\d+/)[0]);
-      $(window).ready(function() {
-          $('#new_photo_button').click(function() {
-              cascadeLastIndex++;
-              var newLi = $('#new_photo').clone();
-              newLi.find("input[type=file]").attr({ id: 'flight_photographs_attributes_' + cascadeLastIndex + '_image', name: 'flight[photographs_attributes][' + cascadeLastIndex + '][image]' });
-              newLi.find("input[type=text]").attr({ id: 'flight_photographs_attributes_' + cascadeLastIndex + '_caption', name: 'flight[photographs_attributes][' + cascadeLastIndex + '][caption]' }).val('');
-              newLi.insertBefore($('#new_photo_button'));
-              return false
-          });
-      });
+        $(window).ready(function() {
+            var currentRow;
+            var uploader = $('#uploader').uploader("<%= raw j(flight_photographs_url(@flight, format: 'json')) %>", "photograph[image]", {
+                csrfProtection: [ "<%= raw j(request_forgery_protection_token.to_s) %>", "<%= raw j(form_authenticity_token.to_s) %>" ],
+                startHandler: function(uid, file) {
+                    if (!currentRow || currentRow.find('>div.file').length == 5)
+                        currentRow = $('<div/>').addClass('file-row').appendTo($('#uploader'));
+
+                    // preload images
+                    new Image().src = "<%= raw j(image_path('document-empty.png')) %>";
+                    new Image().src = "<%= raw j(image_path('document-filled.png')) %>";
+
+                    var fileDiv = $('<div/>').addClass('file').attr('id', 'file_' + uid).appendTo(currentRow);
+                    var empty = $('<div/>').addClass('empty').appendTo(fileDiv);
+                    $('<div/>').addClass('filled').appendTo(empty);
+                    var name = $('<p/>').text(file.fileName).appendTo(fileDiv);
+
+                    name.qtip({
+                        content: {
+                            text: file.fileName
+                        },
+                        position: {
+                            my: 'top center',
+                            at: 'bottom center',
+                            target: name
+                        },
+                        style: {
+                            classes: 'ui-tooltip-blue ui-tooltip-shadow ui-tooltip-rounded'
+                        }
+                    });
+                },
+                progressHandler: function(uid, phase, position, total) {
+                    if (phase == 'upload') {
+                        var amount = Math.round((position/total)*44);
+                        $('#file_' + uid + ' .filled').css('width', '' + amount + 'px');
+                    }
+                },
+                loadHandler: function(uid, xhr) {
+                    if (Math.round(xhr.status/100) == 2)
+                        $('#file_' + uid).addClass('finished');
+                    else {
+                        $('#file_' + uid).addClass('error');
+                        if (xhr.status == 422) {
+                            var errors = JSON.parse(xhr.responseText);
+                            var errorList = [];
+                            $.each(errors, function(_, fieldErrors) { errorList = errorList.concat(fieldErrors); });
+                            $('<p/>').addClass('message').text(errorList.join(', ')).appendTo($('#file_' + uid));
+                        }
+                        else $('<p/>').addClass('message').text(xhr.statusText).appendTo($('#file_' + uid));
+                    }
+
+                    if (uploader.activeUploads == 0 && uploader.failedUploads == 0) window.location.reload();
+                },
+                errorHandler: function(uid, xhr) {
+                    $('#file_' + uid).addClass('error');
+                    if (uploader.activeUploads == 0 && uploader.failedUploads == 0) window.location.reload();
+                }
+            });
+        });
     </script>
 <% end %>

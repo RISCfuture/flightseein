@@ -53,6 +53,12 @@ class PhotographsController < ApplicationController
     end
   end
 
+  def create
+    respond_with(@photograph = @flight.photographs.create(params[:photograph], as: :pilot)) do |format|
+      format.json { render(json: @photograph.to_json, status: :created) }
+    end
+  end
+
   private
 
   def find_flight

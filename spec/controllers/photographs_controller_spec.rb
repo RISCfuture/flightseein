@@ -46,6 +46,25 @@ describe PhotographsController do
         end
       end
     end
+
+    describe "#create" do
+      before :all do
+        @flight = FactoryGirl.create(:flight, user: @user)
+      end
+
+      it "should create a photograph from the 'photograph' parameter hash" do
+        post :create, flight_id: @flight.id, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg') }, format: 'json'
+        response.status.should eql(201)
+        @flight.photographs(true).size.should eql(1)
+        @flight.photographs.first.image_file_name.should eql('image.jpg')
+      end
+
+      it "should encode errors in the JSON response" do
+        post :create, flight_id: @flight.id, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain') }, format: 'json'
+        response.status.should eql(422)
+        JSON.parse(response.body).should eql('image_content_type' => [ 'must be an image file (such as JPEG)' ])
+      end
+    end
   end
 
   context "[top level]" do

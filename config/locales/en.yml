@@ -26,6 +26,12 @@ en:
               invalid: must be an image file (such as JPEG)
             photo_file_size:
               less_than: must be smaller than two megabytes
+        photograph:
+          attributes:
+            image_content_type:
+              invalid: must be an image file (such as JPEG)
+            image_file_size:
+              less_than: must be smaller than two megabytes
         user:
           attributes:
             avatar_content_type:
@@ -41,6 +47,7 @@ en:
       flight: Flight
       import: Logbook import
       person: Passenger
+      photograph: Photo
       user: Account
     attributes:
       aircraft:
@@ -93,6 +100,12 @@ en:
         photo_file_name: Photo
         photo_file_size: Photo
         user: Account
+      photograph:
+        image: File
+        image_content_type: File
+        image_file_name: File
+        image_file_size: File
+        caption: Caption
       user:
         avatar: Profile picture
         avatar_content_type: Profile picture

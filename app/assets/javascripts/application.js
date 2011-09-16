@@ -20,3 +20,4 @@
 //= require href
 //= require logbook
 //= require progrid
+//= require uploader

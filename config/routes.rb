@@ -20,7 +20,7 @@ Flightseein::Application.routes.draw do
       resources :flights, only: :index
     end
     resources :flights, only: [ :index, :show, :edit, :update ] do
-      resources :photographs, only: :index
+      resources :photographs, only: [ :index, :create ]
     end
     resources :imports, only: [ :new, :create, :show ]
     resources :people, only: [ :index, :show ] do
