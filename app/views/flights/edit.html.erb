@@ -34,6 +34,7 @@
         $(window).ready(function() {
             var currentRow;
             var uploader = $('#uploader').uploader("<%= raw j(flight_photographs_url(@flight, format: 'json')) %>", "photograph[image]", {
+                maxSimultaneousUploads: 1,
                 csrfProtection: [ "<%= raw j(request_forgery_protection_token.to_s) %>", "<%= raw j(form_authenticity_token.to_s) %>" ],
                 startHandler: function(uid, file) {
                     if (!currentRow || currentRow.find('>div.file').length == 5)
@@ -82,11 +83,11 @@
                         else $('<p/>').addClass('message').text(xhr.statusText).appendTo($('#file_' + uid));
                     }
 
-                    if (uploader.activeUploads == 0 && uploader.failedUploads == 0) window.location.reload();
+                    if (uploader.isFinished() && !uploader.isFailed()) window.location.reload();
                 },
                 errorHandler: function(uid, xhr) {
                     $('#file_' + uid).addClass('error');
-                    if (uploader.activeUploads == 0 && uploader.failedUploads == 0) window.location.reload();
+                    if (uploader.isFinished() && !uploader.isFailed()) window.location.reload();
                 }
             });
         });
