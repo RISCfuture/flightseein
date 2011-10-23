@@ -128,9 +128,6 @@ class Flight < ActiveRecord::Base
   # association.
 
   def update_people!
-    people.clear
-    people << pic if pic
-    people << sic if sic
-    people << passengers
+    self.people = [ pic, sic, *passengers ].compact.uniq_by(&:id)
   end
 end

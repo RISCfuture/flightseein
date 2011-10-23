@@ -46,7 +46,7 @@ class LogtenParser < Parser
         next
       end
       # year is stored as a seconds offset from 2001
-      year = 2001 + year/31536000
+      year = 2001 + year/31536000 if year
       long_type = model.present? ? "#{make} #{model}".strip : nil
       image = if image_path.present? then
                 image_path = File.join(@path, image_path)
@@ -79,7 +79,14 @@ class LogtenParser < Parser
         Rails.logger.warn "[LogtenParser] Skipping ZPLACE due to missing airport: #{[id, lid, icao, iata, image_path].inspect}"
         next
       end
-      user.destinations.where(logbook_id: id).create_or_update!({ airport: airport, photo: image }, as: :importer)
+      Destination.transaction do
+        if dest = user.destinations.where(airport_id: airport.id).where("logbook_id != ?", id).first then
+          Rails.logger.info "[LogtenParser] Duplicate places for airport #{airport.identifier}; consolidating"
+          dest.update_attributes({ photo: image }, as: :importer)
+        else
+          user.destinations.where(logbook_id: id).create_or_update!({ airport: airport, photo: image }, as: :importer)
+        end
+      end
     end
   end
 
@@ -150,12 +157,23 @@ class LogtenParser < Parser
 
       date = Time.utc(2001).advance(seconds: time).utc.to_date
 
-      flight = user.flights.where(logbook_id: pkey).create_or_update!({ duration: (duration/60.0), remarks: remarks.chomp.strip, aircraft: aircraft, origin: origin, destination: destination, date: date, pic: nil, sic: nil }, as: :importer)
+      if duration.nil? then
+        Rails.logger.warn "[LogtenParser] Skipping ZFLIGHT due to nil duration: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
+        next
+      end
+      duration = duration/60.0
+      if duration <= 0.0 then
+        Rails.logger.warn "[LogtenParser] Skipping ZFLIGHT due to invalid duration: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
+        next
+      end
+
+      flight = user.flights.where(logbook_id: pkey).create_or_update!({ duration: duration, remarks: remarks.try(:chomp).try(:strip), aircraft: aircraft, origin: origin, destination: destination, date: date, pic: nil, sic: nil }, as: :importer)
       flight.people.clear
       flight.passengers.clear
 
       Stop.delete_all(flight_id: flight.id)
-      if route then
+      if route.present? then
+        route.split('-')
         route.split('-')[1..-2].each_with_index do |stop, index|
           airport = Airport.with_ident(stop, stop, stop).first
           unless airport
@@ -163,7 +181,11 @@ class LogtenParser < Parser
             next
           end
           destination = user.destinations.where(airport_id: airport.id).find_or_create!
-          flight.stops.create!(destination: destination, sequence: index + 1)
+          begin
+            flight.stops.create!(destination: destination, sequence: index + 1)
+          rescue ActiveRecord::RecordNotUnique
+            Rails.logger.warn "[LogtenParser] Skipping duplicate stop on ZFLIGHT: #{[flight, destination, index + 1].inspect}"
+          end
         end
       end
     end

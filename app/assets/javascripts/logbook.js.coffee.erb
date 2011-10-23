@@ -37,7 +37,7 @@ class Logbook
       a = $('<a/>').attr('href', flight.url).text("#{flight.aircraft.ident} (#{flight.aircraft.type})").appendTo summary
       a.append " &bull; "
       a.appendText "#{flight.duration.toFixed(1)} hours"
-      remarks = $('<p/>').text(flight.remarks).appendTo(details)
+      remarks = $('<p/>').text(flight.remarks || "").appendTo(details)
       if flight.photos.length > 0
         $('<br/>').appendTo remarks
         for photo in flight.photos

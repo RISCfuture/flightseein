@@ -45,10 +45,10 @@ class Aircraft < ActiveRecord::Base
       allow_blank: true },
     type: {
       length: { maximum: 10 },
-      format: { with: /^[A-Z0-9\- ]+$/ },
+      format: { with: /^[A-Z0-9\-_\/ ]+$/ },
       allow_blank: true },
     long_type: {
-      length: { maximum: 100 },
+      length: { maximum: 500 },
       allow_blank: true },
     notes: {
       length: { maximum: 500 },
@@ -63,7 +63,7 @@ class Aircraft < ActiveRecord::Base
 
   validates :ident,
             presence: true,
-            format: { with: /^[A-Z0-9]+$/ },
+            format: { with: /^[A-Z0-9\-]+$/ },
             uniqueness: { scope: :user_id }
 
   before_validation(on: :create) do |aircraft|
