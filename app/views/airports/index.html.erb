@@ -39,7 +39,7 @@
                                            });
 
                     google.maps.event.addListener(marker, 'click', function() {
-                        $('#list>li').removeClass('highlighted')
+                        $('#list>li').removeClass('highlighted');
                         $('li#airport_' + dest.airport_id).addClass('highlighted');
                         $('#list').scrollTo($('li#airport_' + dest.airport_id), 500);
                     });

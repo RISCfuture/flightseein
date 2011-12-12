@@ -65,7 +65,7 @@ describe FlightsController do
                 flight.people.detect do |person|
                   attrs['name'] == person.name &&
                     attrs['url'] =~ /\/people\/#{Regexp.escape person.slug}$/ &&
-                    attrs['photo'] == person.photo.url(:logbook)
+                    attrs['photo'].include?(person.photo.url(:logbook))
                 end.should_not be_nil
               end
             end
@@ -118,7 +118,7 @@ describe FlightsController do
                 flight.people.detect do |person|
                   attrs['name'] == person.name &&
                     attrs['url'] =~ /\/people\/#{Regexp.escape person.slug}$/ &&
-                    attrs['photo'] == person.photo.url(:logbook)
+                    attrs['photo'].include?(person.photo.url(:logbook))
                 end.should_not be_nil
               end
             end

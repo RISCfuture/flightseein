@@ -36,7 +36,7 @@ describe PeopleController do
           json['hours'].should be_within(0.05).of(person.hours)
           json['url'].should =~ /\/people\/#{person.slug}$/
           json['flights'].should eql(person.flights.count)
-          json['photo'].should eql(person.photo.url(:carousel))
+          json['photo'].should include(person.photo.url(:carousel))
         end
       end
 

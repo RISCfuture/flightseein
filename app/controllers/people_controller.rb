@@ -85,7 +85,7 @@ class PeopleController < ApplicationController
         url: person_url(person),
         hours: person.hours,
         flights: person.flights.count,
-        photo: person.photo.url(:carousel)
+        photo: view_context.image_path(person.photo.url(:carousel))
       }
     end
   end

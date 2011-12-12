@@ -31,7 +31,7 @@ describe AirportsController do
         JSON.parse(response.body).size.should eql(50)
         JSON.parse(response.body).zip(@destinations.sort_by(&:airport_id)[0,50]).each do |(json, dest)|
           json['airport_id'].should eql(dest.airport_id)
-          json['photo'].should eql(dest.photo.url(:stat))
+          json['photo'].should include(dest.photo.url(:stat))
           json['url'].should =~ /\/airports\/#{Regexp.escape dest.airport.identifier}$/
           [ :name, :city, :state, :identifier, :lat, :lon ].each do |attr|
             json['airport'][attr.to_s].should eql(dest.airport.send(attr))

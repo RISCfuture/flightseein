@@ -84,7 +84,7 @@ class AirportsController < ApplicationController
     destinations.map do |dest|
       {
         airport_id: dest.airport_id,
-        photo: dest.photo.url(:stat),
+        photo: view_context.image_path(dest.photo.url(:stat)),
         url: airport_url(dest.airport),
         airport: {
           name: dest.airport.name,

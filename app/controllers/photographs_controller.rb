@@ -70,8 +70,8 @@ class PhotographsController < ApplicationController
     photos.map do |photo|
       {
         id: photo.id,
-        url: photo.image.url,
-        preview_url: photo.image.url(:carousel),
+        url: view_context.image_path(photo.image.url),
+        preview_url: view_context.image_path(photo.image.url(:carousel)),
         caption: photo.caption
       }
     end
@@ -82,7 +82,7 @@ class PhotographsController < ApplicationController
       {
         id: photo.id,
         url: flight_url(photo.flight, subdomain: photo.flight.user.subdomain),
-        preview_url: photo.image.url(:carousel),
+        preview_url: view_context.image_path(photo.image.url(:carousel)),
         caption: photo.caption
       }
     end

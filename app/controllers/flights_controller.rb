@@ -171,14 +171,14 @@ class FlightsController < ApplicationController
         duration: flight.duration,
         photos: flight.photographs.sample(4).map do |photo|
           {
-            thumbnail: photo.image.url(:logbook),
-            full: photo.image.url,
+            thumbnail: view_context.image_path(photo.image.url(:logbook)),
+            full: view_context.image_path(photo.image.url),
             caption: photo.caption
           }
         end,
         people: flight.people.map do |person|
           {
-            photo: person.photo.url(:logbook),
+            photo: view_context.image_path(person.photo.url(:logbook)),
             url: person_url(person),
             name: person.name
           }
