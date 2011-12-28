@@ -122,23 +122,6 @@ describe AccountsController do
       assigns(:airport_images).size.should eql(2)
       dests.each { |dest| assigns(:airport_images).map(&:airport_id).should include(dest.airport_id) }
     end
-
-    it "should set @quote to a RedCarpet for the quote" do
-      @user.update_attribute :quote, 'my quote'
-      get :show
-      assigns(:quote).should be_kind_of(Redcarpet)
-      assigns(:quote).text.should eql('my quote')
-    end
-
-    it "should set @quote to nil if the user has no quote" do
-      @user.update_attribute :quote, ''
-      get :show
-      assigns(:quote).should be_nil
-
-      @user.update_attribute :quote, nil
-      get :show
-      assigns(:quote).should be_nil
-    end
   end
 
   describe "#edit" do
@@ -210,7 +193,7 @@ describe AccountsController do
         end
 
         it "should leave the user untouched" do
-          -> { @user.reload }.should_not change(@user, :attributes)
+          -> { @user.reload }.should_not change(@user, :updated_at)
         end
 
         it "should render the form" do

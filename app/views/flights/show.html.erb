@@ -12,8 +12,8 @@
 <section id="details">
   <% if show_blog? %>
       <div id="blog">
-        <% if @blog %>
-            <%= raw @blog.to_html %>
+        <% if @flight.blog.present? %>
+            <%= raw markdown.render(@flight.blog) %>
             <% if subdomain_owner? %>
                 <p><%= link_to "Edit blog entry or add photos", edit_flight_url(@flight), class: 'button' %></p>
             <% end %>

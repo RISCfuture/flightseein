@@ -26,14 +26,6 @@ class AccountsController < ApplicationController
     @airport_images += subdomain_owner.destinations.without_photo.limit(50).sample(4 - @airport_images.size) unless @airport_images.size == 4
     @airport_images.shuffle!
 
-    if subdomain_owner.quote.present? then
-      @quote = Redcarpet.new(subdomain_owner.quote)
-      @quote.smart = true
-      @quote.no_image = true
-      @quote.safelink = true
-      @quote.autolink = true
-    end
-
     respond_with subdomain_owner
   end
 

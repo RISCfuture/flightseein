@@ -2,8 +2,8 @@
   <%= image_tag subdomain_owner.avatar.url(:profile), alt: subdomain_owner.best_name %>
   <div id="name">
     <h1><%= subdomain_owner.best_name %></h1>
-    <% if @quote %>
-        <div id="quote"><%= raw @quote.to_html %></div>
+    <% if subdomain_owner.quote.present? %>
+        <div id="quote"><%= raw markdown.render(subdomain_owner.quote) %></div>
     <% end %>
     <p id="vitals">
       <% if subdomain_owner.certificate %>

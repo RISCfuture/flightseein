@@ -64,14 +64,6 @@ class PeopleController < ApplicationController
   # | `id` | The slug of the {Person}. |
 
   def show
-    if @person.notes.present? then
-      @notes = Redcarpet.new(@person.notes)
-      @notes.smart = true
-      @notes.no_image = true
-      @notes.safelink = true
-      @notes.autolink = true
-    end
-    
     respond_with @person
   end
 

@@ -92,14 +92,6 @@ class FlightsController < ApplicationController
   # | `id` | The ID of the {Flight}. |
 
   def show
-    if @flight.blog.present? then
-      @blog = Redcarpet.new(@flight.blog)
-      @blog.smart = true
-      @blog.no_image = true
-      @blog.safelink = true
-      @blog.autolink = true
-    end
-    
     respond_with @flight
   end
 

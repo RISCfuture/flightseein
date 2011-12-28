@@ -245,25 +245,6 @@ describe FlightsController do
         @flight = FactoryGirl.create(:flight, user: @user)
       end
 
-      it "should set @blog to a RedCarpet instance for the flight blog" do
-        @flight.update_attribute :blog, "Hello, world!"
-
-        get :show, id: @flight.id
-
-        assigns(:blog).should be_kind_of(Redcarpet)
-        assigns(:blog).text.should eql(@flight.blog)
-      end
-
-      it "should set @blog to nil if the flight has no blog" do
-        @flight.update_attribute :blog, ""
-        get :show, id: @flight.id
-        assigns(:blog).should be_nil
-
-        @flight.update_attribute :blog, nil
-        get :show, id: @flight.id
-        assigns(:blog).should be_nil
-      end
-
       it "should set @flight to the flight" do
         get :show, id: @flight.id
         assigns(:flight).should eql(@flight)

@@ -76,23 +76,6 @@ describe AirportsController do
         response.status.should eql(200)
         response.should render_template('show')
       end
-
-      it "should set @notes to a Redcarpet with the airport's notes" do
-        @destination.update_attribute :notes, 'notes here'
-        get :show, id: @destination.airport.identifier
-        assigns(:notes).should be_kind_of(Redcarpet)
-        assigns(:notes).text.should eql('notes here')
-      end
-
-      it "should set @notes to nil if the person has no notes" do
-        @destination.update_attribute :notes, ''
-        get :show, id: @destination.airport.identifier
-        assigns(:notes).should be_nil
-
-        @destination.update_attribute :notes, nil
-        get :show, id: @destination.airport.identifier
-        assigns(:notes).should be_nil
-      end
     end
   end
 end

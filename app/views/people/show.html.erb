@@ -5,7 +5,7 @@
   <div id="name">
     <h1><%= @person.name %></h1>
     <% if @notes %>
-        <div id="notes"><%= raw @notes.to_html %></div>
+        <div id="notes"><%= raw markdown.render(@person.notes) %></div>
     <% end %>
     <p id="vitals">
       <%= pluralize_with_delimiter @person.flights.count, 'flight' %> &bull;

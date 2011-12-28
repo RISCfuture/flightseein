@@ -67,14 +67,6 @@ class AirportsController < ApplicationController
   # | `id` | The {Airport#identifier identifier} of the {Airport}. |
 
   def show
-    if @destination.notes.present? then
-      @notes = Redcarpet.new(@destination.notes)
-      @notes.smart = true
-      @notes.no_image = true
-      @notes.safelink = true
-      @notes.autolink = true
-    end
-    
     respond_with @destination
   end
 

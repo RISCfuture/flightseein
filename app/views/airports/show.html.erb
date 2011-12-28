@@ -5,7 +5,7 @@
   <div id="name">
     <h1><%= @destination.airport.name %> <span id="airport_ident">(<%= @destination.airport.identifier %>)</span></h1>
     <% if @notes %>
-        <div id="notes"><%= raw @notes.to_html %></div>
+        <div id="notes"><%= raw markdown.render(@destination.notes) %></div>
     <% end %>
     <p id="vitals">
       <%= @destination.airport.city %>, <%= @destination.airport.state %> &bull;

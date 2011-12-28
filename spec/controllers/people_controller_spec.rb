@@ -76,23 +76,6 @@ describe PeopleController do
         @person = FactoryGirl.create(:person, user: @user)
       end
 
-      it "should set @notes to a Redcarpet with the person's notes" do
-        @person.update_attribute :notes, 'notes here'
-        get :show, id: @person.slug
-        assigns(:notes).should be_kind_of(Redcarpet)
-        assigns(:notes).text.should eql('notes here')
-      end
-
-      it "should set @notes to nil if the person has no notes" do
-        @person.update_attribute :notes, ''
-        get :show, id: @person.slug
-        assigns(:notes).should be_nil
-
-        @person.update_attribute :notes, nil
-        get :show, id: @person.slug
-        assigns(:notes).should be_nil
-      end
-
       it "should set @person to the person" do
         get :show, id: @person.slug
         assigns(:person).should eql(@person)
