@@ -34,8 +34,6 @@ class AirportImporter
   protected
 
   class << self
-    extend ActiveSupport::Memoizable
-
     # @private
     def parser(type)
       return nil unless parsers.include?("AirportImporter::#{type}Parser")
@@ -44,9 +42,8 @@ class AirportImporter
 
     # @private
     def parsers
-      LineParser.descendants.map(&:to_s)
+      @parsers ||= LineParser.descendants.map(&:to_s)
     end
-    memoize :parsers
   end
 
   private

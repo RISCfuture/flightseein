@@ -34,7 +34,7 @@ class Destination < ActiveRecord::Base
   include HasMetadata
   include CheckForDuplicateAttachedFile
 
-  set_primary_key 'airport_id'
+  self.primary_key = 'airport_id'
 
   belongs_to :user, inverse_of: :destinations
   belongs_to :airport, inverse_of: :destinations

@@ -7,6 +7,9 @@ Flightseein::Application.configure do
   # Logging
   config.active_support.deprecation = :stderr
 
+  # Models
+  config.active_record.mass_assignment_sanitizer = :strict
+
   # Views
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=3600"

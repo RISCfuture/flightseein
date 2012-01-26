@@ -56,8 +56,6 @@ class Import < ActiveRecord::Base
   belongs_to :user, inverse_of: :imports
 
   has_metadata(
-    created_at: { type: Time, allow_blank: true },
-
     logbook_file_name: { allow_blank: true },
     logbook_content_type: { allow_blank: true, inclusion: { in: SUPPORTED_TYPES } },
     logbook_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 50.megabytes } },

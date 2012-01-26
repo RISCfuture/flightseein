@@ -18,13 +18,15 @@ class LogtenParser < Parser
 
   def process
     @db = SQLite3::Database.new(File.join(@path, 'LogTenCoreDataStore.sql'))
-    import_aircraft
-    import_airports
-    import_passengers
-    import_flights
-    import_certificates
+    Rails.logger.tagged(self.class.name) do
+      import_aircraft
+      import_airports
+      import_passengers
+      import_flights
+      import_certificates
+    end
   rescue ActiveRecord::RecordInvalid => err
-    Rails.logger.error "[LogtenParser] Invalid record: #{err.record.errors.inspect}"
+    Rails.logger.error "Invalid record: #{err.record.errors.inspect}"
     raise
   end
 
@@ -42,7 +44,7 @@ class LogtenParser < Parser
 
     rows.each do |(ident, type, year, make, model, notes, image_path)|
       if ident.blank? then
-        Rails.logger.warn "[LogtenParser] Skipping ZAIRCRAFT due to blank ident: #{[ident, type, year, make, model, notes, image_path].inspect}"
+        Rails.logger.warn "Skipping ZAIRCRAFT due to blank ident: #{[ident, type, year, make, model, notes, image_path].inspect}"
         next
       end
       # year is stored as a seconds offset from 2001
@@ -76,12 +78,12 @@ class LogtenParser < Parser
               end
       airport = Airport.with_ident(lid, icao, iata).first
       unless airport
-        Rails.logger.warn "[LogtenParser] Skipping ZPLACE due to missing airport: #{[id, lid, icao, iata, image_path].inspect}"
+        Rails.logger.warn "Skipping ZPLACE due to missing airport: #{[id, lid, icao, iata, image_path].inspect}"
         next
       end
       Destination.transaction do
         if dest = user.destinations.where(airport_id: airport.id).where("logbook_id != ?", id).first then
-          Rails.logger.info "[LogtenParser] Duplicate places for airport #{airport.identifier}; consolidating"
+          Rails.logger.info "Duplicate places for airport #{airport.identifier}; consolidating"
           dest.update_attributes({ photo: image }, as: :importer)
         else
           user.destinations.where(logbook_id: id).create_or_update!({ airport: airport, photo: image }, as: :importer)
@@ -139,31 +141,31 @@ class LogtenParser < Parser
     rows.each do |(pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id, time, route)|
       aircraft = user.aircraft.where(ident: ident).first
       unless aircraft
-        Rails.logger.warn "[LogtenParser] Skipping ZFLIGHT due to missing aircraft: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
+        Rails.logger.warn "Skipping ZFLIGHT due to missing aircraft: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
         next
       end
 
       origin = user.destinations.where(logbook_id: origin_id).first
       unless origin
-        Rails.logger.warn "[LogtenParser] Skipping ZFLIGHT due to missing origin: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
+        Rails.logger.warn "Skipping ZFLIGHT due to missing origin: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
         next
       end
 
       destination = user.destinations.where(logbook_id: destination_id).first
       unless destination
-        Rails.logger.warn "[LogtenParser] Skipping ZFLIGHT due to missing destination: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
+        Rails.logger.warn "Skipping ZFLIGHT due to missing destination: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
         next
       end
 
       date = Time.utc(2001).advance(seconds: time).utc.to_date
 
       if duration.nil? then
-        Rails.logger.warn "[LogtenParser] Skipping ZFLIGHT due to nil duration: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
+        Rails.logger.warn "Skipping ZFLIGHT due to nil duration: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
         next
       end
       duration = duration/60.0
       if duration <= 0.0 then
-        Rails.logger.warn "[LogtenParser] Skipping ZFLIGHT due to invalid duration: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
+        Rails.logger.warn "Skipping ZFLIGHT due to invalid duration: #{[pkey, duration, remarks, pic_id, sic_id, ident, origin_id, destination_id].inspect}"
         next
       end
 
@@ -177,14 +179,14 @@ class LogtenParser < Parser
         route.split('-')[1..-2].each_with_index do |stop, index|
           airport = Airport.with_ident(stop, stop, stop).first
           unless airport
-            Rails.logger.warn "[LogtenParser] Skipping unknown route ident #{stop}"
+            Rails.logger.warn "Skipping unknown route ident #{stop}"
             next
           end
           destination = user.destinations.where(airport_id: airport.id).find_or_create!
           begin
             flight.stops.create!(destination: destination, sequence: index + 1)
           rescue ActiveRecord::RecordNotUnique
-            Rails.logger.warn "[LogtenParser] Skipping duplicate stop on ZFLIGHT: #{[flight, destination, index + 1].inspect}"
+            Rails.logger.warn "Skipping duplicate stop on ZFLIGHT: #{[flight, destination, index + 1].inspect}"
           end
         end
       end
@@ -201,12 +203,12 @@ class LogtenParser < Parser
       next unless person_id and flight_id
       flight = user.flights.where(logbook_id: flight_id).first
       unless flight
-        Rails.logger.warn "[LogtenParser] Skipping ZPIC due to missing flight: #{[flight_id, person_id].inspect}"
+        Rails.logger.warn "Skipping ZPIC due to missing flight: #{[flight_id, person_id].inspect}"
         next
       end
       person = user.people.where(logbook_id: person_id).first
       unless person
-        Rails.logger.warn "[LogtenParser] Skipping ZPIC due to missing person: #{[flight_id, person_id].inspect}"
+        Rails.logger.warn "Skipping ZPIC due to missing person: #{[flight_id, person_id].inspect}"
         next
       end
       flight.update_attribute :pic, person
@@ -223,12 +225,12 @@ class LogtenParser < Parser
       next unless person_id and flight_id
       flight = user.flights.where(logbook_id: flight_id).first
       unless flight
-        Rails.logger.warn "[LogtenParser] Skipping ZSIC due to missing flight: #{[flight_id, person_id].inspect}"
+        Rails.logger.warn "Skipping ZSIC due to missing flight: #{[flight_id, person_id].inspect}"
         next
       end
       person = user.people.where(logbook_id: person_id).first
       unless person
-        Rails.logger.warn "[LogtenParser] Skipping ZSIC due to missing person: #{[flight_id, person_id].inspect}"
+        Rails.logger.warn "Skipping ZSIC due to missing person: #{[flight_id, person_id].inspect}"
         next
       end
       flight.update_attribute :sic, person
@@ -245,12 +247,12 @@ class LogtenParser < Parser
       next unless person_id and flight_id
       flight = user.flights.where(logbook_id: flight_id).first
       unless flight
-        Rails.logger.warn "[LogtenParser] Skipping ZPASSENGER due to missing flight: #{[flight_id, person_id].inspect}"
+        Rails.logger.warn "Skipping ZPASSENGER due to missing flight: #{[flight_id, person_id].inspect}"
         next
       end
       person = user.people.where(logbook_id: person_id).first
       unless person
-        Rails.logger.warn "[LogtenParser] Skipping ZPASSENGER due to missing person: #{[flight_id, person_id].inspect}"
+        Rails.logger.warn "Skipping ZPASSENGER due to missing person: #{[flight_id, person_id].inspect}"
         next
       end
       flight.passengers << person

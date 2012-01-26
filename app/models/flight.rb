@@ -38,7 +38,6 @@
 # | `people`     | All {Person people} present on the flight (PIC and SIC included).  |
 
 class Flight < ActiveRecord::Base
-  extend ActiveSupport::Memoizable
   include HasMetadata
   
   belongs_to :user, inverse_of: :flights
@@ -111,18 +110,16 @@ class Flight < ActiveRecord::Base
 
   def previous
     return nil unless sequence
-    user.flights.where(sequence: sequence - 1).first
+    @previous ||= user.flights.where(sequence: sequence - 1).first
   end
-  memoize :previous
 
   # @return [Flight, nil] The user's next flight, or `nil` if this is the latest
   #   flight or an as-yet unsequenced flight.
 
   def next
     return nil unless sequence
-    user.flights.where(sequence: sequence + 1).first
+    @next ||= user.flights.where(sequence: sequence + 1).first
   end
-  memoize :next
 
   # Ensures that the PIC, SIC, and all passengers are included in the `people`
   # association.
