@@ -12,16 +12,32 @@ article#imports {
         margin-bottom: 1em;
     }
 
-    details summary {
-        color: $deemphasize-header-color;
-        font-size: 14pt;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
+    details {
+        summary {
+            color: $deemphasize-header-color;
+            font-size: 14pt;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
 
-        em {
-            color: lighten($header-color, 25%);
+            em {
+                color: lighten($header-color, 25%);
+                font-weight: bold;
+                font-style: normal;
+            }
+        }
+        
+        li {
+            margin-left: 2em;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            list-style-type: decimal;
+        }
+
+        kbd, samp {
+            font-family: Lucida Grande, Lucida Sans, Helvetica, sans-serif;
+            font-size: 90%;
             font-weight: bold;
-            font-style: normal;
+            color: darken($text-color, 10%);
         }
     }
 
