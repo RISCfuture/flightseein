@@ -61,10 +61,9 @@ class Person < ActiveRecord::Base
             numericality: { greater_than_or_equal_to: 0.0 }
   validates :logbook_id,
             presence: true,
-            numericality: { only_integer: true },
             uniqueness: { scope: :user_id }
 
-  attr_accessible :name, :photo, :me, as: :importer
+  attr_accessible :name, :photo, :me, :logbook_id, as: :importer
 
   has_attached_file :photo,
                     processors: [ :round_corners ],

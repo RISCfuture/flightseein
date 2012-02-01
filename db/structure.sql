@@ -145,7 +145,7 @@ CREATE TABLE destinations (
 CREATE TABLE flights (
     id integer NOT NULL,
     metadata_id integer,
-    logbook_id integer NOT NULL,
+    logbook_id character varying(60) NOT NULL,
     user_id integer NOT NULL,
     origin_id integer NOT NULL,
     destination_id integer NOT NULL,
@@ -277,7 +277,7 @@ ALTER SEQUENCE occupants_id_seq OWNED BY occupants.id;
 
 CREATE TABLE people (
     id integer NOT NULL,
-    logbook_id integer NOT NULL,
+    logbook_id character varying(60) NOT NULL,
     metadata_id integer,
     user_id integer NOT NULL,
     hours double precision DEFAULT 0 NOT NULL,
@@ -963,6 +963,8 @@ INSERT INTO schema_migrations (version) VALUES ('20120126093353');
 INSERT INTO schema_migrations (version) VALUES ('20120126093404');
 
 INSERT INTO schema_migrations (version) VALUES ('20120201082606');
+
+INSERT INTO schema_migrations (version) VALUES ('20120201090431');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

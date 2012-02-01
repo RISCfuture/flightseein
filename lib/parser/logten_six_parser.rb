@@ -18,7 +18,9 @@ class LogtenSixParser < Parser
 
   def process
     @db = SQLite3::Database.new(File.join(@path, 'LogTenCoreDataStore.sql'))
-    @destination_logbook_ids = Hash.new
+    @destination_ids = Hash.new
+    @person_ids = Hash.new
+    @flight_ids = Hash.new
 
     Rails.logger.tagged(self.class.name) do
       import_aircraft
@@ -85,7 +87,7 @@ class LogtenSixParser < Parser
       end
 
       destination = user.destinations.where(airport_id: airport.id).create_or_update!({ photo: image }, as: :importer)
-      @destination_logbook_ids[id] = destination
+      @destination_ids[id] = destination
     end
   end
 
@@ -93,12 +95,13 @@ class LogtenSixParser < Parser
     importing_passengers!
 
     rows = @db.execute <<-SQL
-      SELECT ZPERSON.Z_PK, ZPERSON_FULLNAME, ZPERSON_NAME, ZLOGTENPROPERTY_IMAGEPATH, ZPERSON_ISORGANIZATION, ZPERSON_ISME
+      SELECT ZPERSON.Z_PK, ZPERSON.ZLOGTEN_UNIQUEID,
+             ZPERSON_FULLNAME, ZPERSON_NAME, ZLOGTENPROPERTY_IMAGEPATH, ZPERSON_ISORGANIZATION, ZPERSON_ISME
         FROM ZPERSON
         LEFT JOIN ZPERSONPROPERTY ON ZPERSONPROPERTY.ZPERSON = ZPERSON.Z_PK;
     SQL
 
-    rows.each do |(pkey, name1, name2, image_path, is_org, is_me)|
+    rows.each do |(pkey, uuid, name1, name2, image_path, is_org, is_me)|
       next if is_org.parse_bool
       image = if image_path.present? then
                 image_path = File.join(@path, image_path)
@@ -107,7 +110,9 @@ class LogtenSixParser < Parser
                 nil
               end
       name = name1.present? ? name1 : name2
-      user.people.where(logbook_id: pkey).create_or_update!({ name: name, photo: image, me: is_me.parse_bool }, as: :importer)
+      person = user.people.where(logbook_id: uuid).create_or_update!({ name: name, photo: image, me: is_me.parse_bool }, as: :importer)
+
+      @person_ids[pkey] = person
     end
   end
 
@@ -126,7 +131,8 @@ class LogtenSixParser < Parser
 
   def import_flight_records
     rows = @db.execute <<-SQL
-      SELECT ZFLIGHT.Z_PK, ZFLIGHT_TOTALTIME, ZFLIGHT_REMARKS,
+      SELECT ZFLIGHT.Z_PK, ZFLIGHT.ZLOGTEN_UNIQUEID,
+             ZFLIGHT_TOTALTIME, ZFLIGHT_REMARKS,
              ZAIRCRAFT_AIRCRAFTID,
              ZFLIGHT_FROMPLACE, ZFLIGHT_TOPLACE,
              ZFLIGHT_FLIGHTDATE, ZFLIGHT_ROUTE
@@ -135,20 +141,20 @@ class LogtenSixParser < Parser
         ORDER BY ZFLIGHT_FLIGHTDATE ASC
     SQL
 
-    rows.each do |(pkey, duration, remarks, ident, origin_id, destination_id, time, route)|
+    rows.each do |(pkey, uuid, duration, remarks, ident, origin_id, destination_id, time, route)|
       aircraft = user.aircraft.where(ident: ident).first
       unless aircraft
         Rails.logger.warn "Skipping ZFLIGHT due to missing aircraft: #{[pkey, duration, remarks, ident, origin_id, destination_id].inspect}"
         next
       end
 
-      origin = @destination_logbook_ids[origin_id]
+      origin = @destination_ids[origin_id]
       unless origin
         Rails.logger.warn "Skipping ZFLIGHT due to missing origin: #{[pkey, duration, remarks, ident, origin_id, destination_id].inspect}"
         next
       end
 
-      destination = @destination_logbook_ids[destination_id]
+      destination = @destination_ids[destination_id]
       unless destination
         Rails.logger.warn "Skipping ZFLIGHT due to missing destination: #{[pkey, duration, remarks, ident, origin_id, destination_id].inspect}"
         next
@@ -166,7 +172,9 @@ class LogtenSixParser < Parser
         next
       end
 
-      flight = user.flights.where(logbook_id: pkey).create_or_update!({ duration: duration, remarks: remarks.try(:chomp).try(:strip), aircraft: aircraft, origin: origin, destination: destination, date: date }, as: :importer)
+      flight = user.flights.where(logbook_id: uuid).create_or_update!({ duration: duration, remarks: remarks.try(:chomp).try(:strip), aircraft: aircraft, origin: origin, destination: destination, date: date }, as: :importer)
+      @flight_ids[pkey] = flight
+
       flight.occupants.clear
 
       Stop.delete_all(flight_id: flight.id)
@@ -225,7 +233,7 @@ class LogtenSixParser < Parser
     rows.each do |(flight_id, *crew)|
       next unless crew.any? and flight_id
 
-      flight = user.flights.where(logbook_id: flight_id).first
+      flight = @flight_ids[flight_id]
       unless flight
         Rails.logger.warn "Skipping ZFLIGHTCREW due to missing flight: #{flight_id}"
         next
@@ -234,7 +242,7 @@ class LogtenSixParser < Parser
       crew.zip(FLIGHT_CREW).each do |(person_id, role)|
         next unless person_id
         role ||= "Crewmember"
-        person = user.people.where(logbook_id: person_id).first
+        person = @person_ids[person_id]
         unless person
           Rails.logger.warn "Skipping ZFLIGHTCREW crewmember due to missing person: #{[flight_id, person_id].inspect}"
           next
@@ -274,14 +282,14 @@ class LogtenSixParser < Parser
       pax.compact!
       next unless pax.any? and flight_id
 
-      flight = user.flights.where(logbook_id: flight_id).first
+      flight = @flight_ids[flight_id]
       unless flight
         Rails.logger.warn "Skipping ZFLIGHTPASSENGERS due to missing flight: #{[flight_id].inspect}"
         next
       end
 
       pax.each do |person_id|
-        person = user.people.where(logbook_id: person_id).first
+        person = @person_ids[person_id]
         unless person
           Rails.logger.warn "Skipping ZFLIGHTPASSENGERS due to missing person: #{[flight_id, person_id].inspect}"
           next

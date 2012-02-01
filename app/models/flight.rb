@@ -57,7 +57,6 @@ class Flight < ActiveRecord::Base
             numericality: { greater_than: 0.0 }
   validates :logbook_id,
             presence: true,
-            numericality: { only_integer: true },
             uniqueness: { scope: :user_id }
   validates :date,
             presence: true
@@ -73,7 +72,7 @@ class Flight < ActiveRecord::Base
   before_save { |obj| obj.has_blog = obj.blog.present?; true }
 
   attr_accessible :origin, :destination, :aircraft, :occupants, :remarks,
-                  :duration, :date, as: :importer
+                  :duration, :date, :logbook_id, as: :importer
   attr_accessible :blog, :photographs_attributes, as: :pilot
 
   accepts_nested_attributes_for :photographs, allow_destroy: true, reject_if: ->(attrs) { attrs['image'].nil? and attrs['id'].nil? }
