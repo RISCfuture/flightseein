@@ -7,7 +7,6 @@
 #
 # |                 |                                                                                                                |
 # |:----------------|:---------------------------------------------------------------------------------------------------------------|
-# | `logbook_id`    | The unique ID assigned to this person by the user's logbook; used for matching destinations in future imports. |
 # | `flights_count` | _(cached counter)_ The number of {Flight Flights} where this airport is an origin, destination, or stop.       |
 #
 # Metadata
@@ -49,15 +48,10 @@ class Destination < ActiveRecord::Base
     photo_fingerprint: { allow_blank: true }
   )
 
-  validates :logbook_id,
-            presence: true,
-            numericality: { only_integer: true },
-            uniqueness: { scope: :user_id }
   validates :user,
             presence: true
   validates :airport,
             presence: true
-  validate :logbook_id_unique
 
   attr_accessible :photo, :airport, as: :importer
   attr_accessible :notes, as: :pilot
@@ -83,12 +77,5 @@ class Destination < ActiveRecord::Base
                      user.flights.where(origin_id: id).count +
                        user.flights.where(destination_id: id).count +
                        Stop.where(destination_id: id).count
-  end
-
-  private
-
-  def logbook_id_unique
-    return unless logbook_id_changed?
-    errors.add(:logbook_id, :taken) if user.destinations.where(logbook_id: logbook_id).count > 0
   end
 end

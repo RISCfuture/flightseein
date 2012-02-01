@@ -130,7 +130,6 @@ ALTER SEQUENCE airports_id_seq OWNED BY airports.id;
 --
 
 CREATE TABLE destinations (
-    logbook_id integer NOT NULL,
     user_id integer NOT NULL,
     airport_id integer NOT NULL,
     metadata_id integer,
@@ -647,13 +646,6 @@ CREATE INDEX dest_user_photo ON destinations USING btree (user_id, has_photo);
 
 
 --
--- Name: destinations_logbook_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX destinations_logbook_id ON destinations USING btree (user_id, logbook_id);
-
-
---
 -- Name: destinations_pkey; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -969,6 +961,8 @@ INSERT INTO schema_migrations (version) VALUES ('20120126091925');
 INSERT INTO schema_migrations (version) VALUES ('20120126093353');
 
 INSERT INTO schema_migrations (version) VALUES ('20120126093404');
+
+INSERT INTO schema_migrations (version) VALUES ('20120201082606');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

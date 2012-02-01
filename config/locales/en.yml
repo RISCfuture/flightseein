@@ -71,7 +71,6 @@ en:
         site_number: FADDS site number
         state: State code
       destination:
-        logbook_id: Logbook unique identifier
         notes: Notes
         photo_content_type: Photo
         photo_file_name: Photo

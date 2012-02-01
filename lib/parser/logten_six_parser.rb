@@ -18,6 +18,8 @@ class LogtenSixParser < Parser
 
   def process
     @db = SQLite3::Database.new(File.join(@path, 'LogTenCoreDataStore.sql'))
+    @destination_logbook_ids = Hash.new
+
     Rails.logger.tagged(self.class.name) do
       import_aircraft
       import_airports
@@ -81,14 +83,9 @@ class LogtenSixParser < Parser
         Rails.logger.warn "Skipping ZPLACE due to missing airport: #{[id, lid, icao, iata, image_path].inspect}"
         next
       end
-      Destination.transaction do
-        if dest = user.destinations.where(airport_id: airport.id).where("logbook_id != ?", id).first then
-          Rails.logger.info "Duplicate places for airport #{airport.identifier}; consolidating"
-          dest.update_attributes({ photo: image }, as: :importer)
-        else
-          user.destinations.where(logbook_id: id).create_or_update!({ airport: airport, photo: image }, as: :importer)
-        end
-      end
+
+      destination = user.destinations.where(airport_id: airport.id).create_or_update!({ photo: image }, as: :importer)
+      @destination_logbook_ids[id] = destination
     end
   end
 
@@ -145,13 +142,13 @@ class LogtenSixParser < Parser
         next
       end
 
-      origin = user.destinations.where(logbook_id: origin_id).first
+      origin = @destination_logbook_ids[origin_id]
       unless origin
         Rails.logger.warn "Skipping ZFLIGHT due to missing origin: #{[pkey, duration, remarks, ident, origin_id, destination_id].inspect}"
         next
       end
 
-      destination = user.destinations.where(logbook_id: destination_id).first
+      destination = @destination_logbook_ids[destination_id]
       unless destination
         Rails.logger.warn "Skipping ZFLIGHT due to missing destination: #{[pkey, duration, remarks, ident, origin_id, destination_id].inspect}"
         next
