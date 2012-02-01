@@ -33,34 +33,6 @@ describe Flight do
     end
   end
 
-  describe "#update_people!" do
-    it "should automatically add the PIC" do
-      flight = FactoryGirl.create(:flight)
-      flight.people.should include(flight.pic)
-    end
-
-    it "should automatically add the SIC" do
-      user = FactoryGirl.create(:user)
-      flight = FactoryGirl.create(:flight, user: user, sic: FactoryGirl.create(:person, user: user))
-      flight.people.should include(flight.sic)
-    end
-
-    it "should not call update_people! unless the PIC or SIC is changed" do
-      flight = FactoryGirl.create(:flight)
-      flight.should_not_receive(:update_people!)
-      flight.blog = "hello!"
-      flight.save!
-    end
-
-    it "should automatically add the passengers" do
-      flight = FactoryGirl.create(:flight)
-      flight.passengers << FactoryGirl.create(:person, user: flight.user)
-      flight.passengers << FactoryGirl.create(:person, user: flight.user)
-      flight.update_people!
-      flight.passengers.each { |pax| flight.people.should include(pax) }
-    end
-  end
-
   describe "#previous" do
     before :each do
       @flight = FactoryGirl.create(:flight)

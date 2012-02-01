@@ -150,8 +150,6 @@ CREATE TABLE flights (
     user_id integer NOT NULL,
     origin_id integer NOT NULL,
     destination_id integer NOT NULL,
-    pic_id integer,
-    sic_id integer,
     aircraft_id integer NOT NULL,
     duration double precision NOT NULL,
     date date NOT NULL,
@@ -180,26 +178,6 @@ CREATE SEQUENCE flights_id_seq
 --
 
 ALTER SEQUENCE flights_id_seq OWNED BY flights.id;
-
-
---
--- Name: flights_passengers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE flights_passengers (
-    flight_id integer NOT NULL,
-    person_id integer NOT NULL
-);
-
-
---
--- Name: flights_people; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE flights_people (
-    flight_id integer NOT NULL,
-    person_id integer NOT NULL
-);
 
 
 --
@@ -261,6 +239,37 @@ CREATE SEQUENCE metadata_id_seq
 --
 
 ALTER SEQUENCE metadata_id_seq OWNED BY metadata.id;
+
+
+--
+-- Name: occupants; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE occupants (
+    id integer NOT NULL,
+    flight_id integer NOT NULL,
+    person_id integer NOT NULL,
+    role character varying(126) DEFAULT NULL::character varying
+);
+
+
+--
+-- Name: occupants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE occupants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: occupants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE occupants_id_seq OWNED BY occupants.id;
 
 
 --
@@ -460,6 +469,13 @@ ALTER TABLE ONLY metadata ALTER COLUMN id SET DEFAULT nextval('metadata_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY occupants ALTER COLUMN id SET DEFAULT nextval('occupants_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY people ALTER COLUMN id SET DEFAULT nextval('people_id_seq'::regclass);
 
 
@@ -530,6 +546,14 @@ ALTER TABLE ONLY imports
 
 ALTER TABLE ONLY metadata
     ADD CONSTRAINT metadata_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: occupants_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY occupants
+    ADD CONSTRAINT occupants_pkey PRIMARY KEY (id);
 
 
 --
@@ -644,20 +668,6 @@ CREATE UNIQUE INDEX flights_logbook_id ON flights USING btree (user_id, logbook_
 
 
 --
--- Name: flights_passengers_pkey; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX flights_passengers_pkey ON flights_passengers USING btree (flight_id, person_id);
-
-
---
--- Name: flights_people_pkey; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX flights_people_pkey ON flights_people USING btree (flight_id, person_id);
-
-
---
 -- Name: flights_user; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -683,6 +693,20 @@ CREATE INDEX flights_user_dest ON flights USING btree (user_id, destination_id, 
 --
 
 CREATE INDEX imports_user ON imports USING btree (user_id, state);
+
+
+--
+-- Name: occupants_flight; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX occupants_flight ON occupants USING btree (flight_id);
+
+
+--
+-- Name: occupants_person; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX occupants_person ON occupants USING btree (person_id);
 
 
 --
@@ -813,54 +837,6 @@ ALTER TABLE ONLY flights
 
 
 --
--- Name: flights_passengers_flight_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY flights_passengers
-    ADD CONSTRAINT flights_passengers_flight_id_fkey FOREIGN KEY (flight_id) REFERENCES flights(id) ON DELETE CASCADE;
-
-
---
--- Name: flights_passengers_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY flights_passengers
-    ADD CONSTRAINT flights_passengers_person_id_fkey FOREIGN KEY (person_id) REFERENCES people(id) ON DELETE RESTRICT;
-
-
---
--- Name: flights_people_flight_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY flights_people
-    ADD CONSTRAINT flights_people_flight_id_fkey FOREIGN KEY (flight_id) REFERENCES flights(id) ON DELETE CASCADE;
-
-
---
--- Name: flights_people_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY flights_people
-    ADD CONSTRAINT flights_people_person_id_fkey FOREIGN KEY (person_id) REFERENCES people(id) ON DELETE RESTRICT;
-
-
---
--- Name: flights_pic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY flights
-    ADD CONSTRAINT flights_pic_id_fkey FOREIGN KEY (pic_id) REFERENCES people(id) ON DELETE RESTRICT;
-
-
---
--- Name: flights_sic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY flights
-    ADD CONSTRAINT flights_sic_id_fkey FOREIGN KEY (sic_id) REFERENCES people(id) ON DELETE RESTRICT;
-
-
---
 -- Name: flights_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -898,6 +874,22 @@ ALTER TABLE ONLY imports
 
 ALTER TABLE ONLY imports
     ADD CONSTRAINT imports_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: occupants_flight_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY occupants
+    ADD CONSTRAINT occupants_flight_id_fkey FOREIGN KEY (flight_id) REFERENCES flights(id) ON DELETE CASCADE;
+
+
+--
+-- Name: occupants_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY occupants
+    ADD CONSTRAINT occupants_person_id_fkey FOREIGN KEY (person_id) REFERENCES people(id) ON DELETE RESTRICT;
 
 
 --
@@ -971,6 +963,12 @@ INSERT INTO schema_migrations (version) VALUES ('20110727071803');
 INSERT INTO schema_migrations (version) VALUES ('20110728041552');
 
 INSERT INTO schema_migrations (version) VALUES ('20120126073137');
+
+INSERT INTO schema_migrations (version) VALUES ('20120126091925');
+
+INSERT INTO schema_migrations (version) VALUES ('20120126093353');
+
+INSERT INTO schema_migrations (version) VALUES ('20120126093404');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

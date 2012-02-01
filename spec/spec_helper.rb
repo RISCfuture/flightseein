@@ -13,8 +13,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.before(:all) do
-    Flight.find_each { |flight| flight.people.clear }
-    Flight.find_each { |flight| flight.passengers.clear }
+    Flight.find_each { |flight| flight.occupants.clear }
     User.delete_all # allows us to delete airports
     Airport.delete_all # prevents FADDS number conflicts
   end

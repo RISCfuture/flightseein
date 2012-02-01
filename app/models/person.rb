@@ -26,12 +26,11 @@
 # Associations
 # ------------
 #
-# |                   |                                                               |
-# |:------------------|:--------------------------------------------------------------|
-# | `user`            | The {User} who imported this person.                          |
-# | `command_flights` | The {Flight Flights} this person commanded.                   |
-# | `sic_flights`     | The {Flight Flights} this person was second-in-command for.   |
-# | `flights`         | The {Flight Flights} this person was a passenger or pilot on. |
+# |                   |                                                                    |
+# |:------------------|:-------------------------------------------------------------------|
+# | `user`            | The {User} who imported this person.                               |
+# | `occupantships`   | The times this person acted as a {Crewmember} on a flight.         |
+# | `flights`         | The {Flight Flights} this person was a passenger or crewmember on. |
 
 class Person < ActiveRecord::Base
   include HasMetadata
@@ -41,9 +40,8 @@ class Person < ActiveRecord::Base
   slugged :name, scope: ->(person) { person.user.subdomain }, slugifier: ->(str) { str.remove_formatting.replace_whitespace('_').collapse('_') }
 
   belongs_to :user, inverse_of: :people
-  has_many :command_flights, class_name: 'Flight', foreign_key: 'pic_id', dependent: :restrict, inverse_of: :pic
-  has_many :sic_flights, class_name: 'Flight', foreign_key: 'sic_id', dependent: :restrict, inverse_of: :sic
-  has_and_belongs_to_many :flights, uniq: true
+  has_many :occupantships, class_name: 'Occupant', inverse_of: :person, dependent: :restrict
+  has_many :flights, through: :occupantships
 
   has_metadata(
     name: { presence: true, length: { maximum: 100 } },

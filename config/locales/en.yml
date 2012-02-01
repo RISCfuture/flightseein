@@ -82,7 +82,6 @@ en:
         duration: Duration
         logbook_id: Logbook unique identifier
         origin: Origin
-        pic: Pilot-in-command
         remarks: Remarks
         user: User account
       import:

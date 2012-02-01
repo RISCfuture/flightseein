@@ -50,9 +50,9 @@ class Logbook
         imageBtnNext: '<%= image_path "lightbox/next.gif" %>'
         imageBlank: '<%= image_path "lightbox/blank.gif" %>'
         txtImage: ''
-      if flight.people.length > 0
+      if flight.occupants.length > 0
         $('<br/>').appendTo remarks
-        for person in flight.people
+        for person in flight.occupants
           link = $('<a/>').attr(href: person.url, alt: person.name).appendTo remarks
           $('<img/>').attr('src', person.photo).appendTo link
 

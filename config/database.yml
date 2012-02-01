@@ -16,7 +16,7 @@ test:
   encoding: unicode
   database: flightseein_test
   pool: 5
-  username: www
+  username: tmorgan
   password:
 
 production: &prod

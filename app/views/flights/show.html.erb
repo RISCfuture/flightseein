@@ -33,41 +33,16 @@
       </div>
     </div>
 
-    <% if @flight.pic %>
-        <h2>Pilot in command</h2>
-        <div class="stat">
-          <%= link_to image_tag(@flight.pic.photo.url(:stat)), @flight.pic %>
-          <div>
-            <h3><%= link_to @flight.pic.name, @flight.pic %></h3>
-            <p><%= pluralize_with_delimiter @flight.pic.flights.count, 'flight' %></p>
-          </div>
-        </div>
-    <% end %>
-
-    <% if @flight.sic %>
-        <h2>Second in command</h2>
-        <div class="stat">
-          <%= link_to image_tag(@flight.sic.photo.url(:stat)), @flight.sic %>
-          <div>
-            <h3><%= link_to @flight.sic.name, @flight.sic %></h3>
-            <p><%= pluralize_with_delimiter @flight.sic.flights.count, 'flight' %></p>
-          </div>
-        </div>
-    <% end %>
-
-    <% unless @flight.passengers.empty? %>
-        <h2>Passengers</h2>
-        <% @flight.passengers.includes(:metadata, :slugs).limit(20).each do |person| %>
+    <% @flight.occupants(includes: { person: :metadata }).sort { |c1, c2| precedence(c2.role) <=> precedence(c1.role) }.group_by(&:role).each do |role, occupants| %>
+        <h2><%= occupants.many? ? role.pluralize : role %></h2>
+        <% occupants.each do |occupant| %>
             <div class="stat">
-              <%= link_to image_tag(person.photo.url(:stat)), person %>
+              <%= link_to image_tag(occupant.person.photo.url(:stat)), occupant.person %>
               <div>
-                <h3><%= link_to person.name, person %></h3>
-                <p><%= pluralize_with_delimiter person.flights.count, 'flight' %></p>
+                <h3><%= link_to occupant.person.name, occupant.person %></h3>
+                <p><%= pluralize_with_delimiter occupant.person.flights.count, 'flight' %></p>
               </div>
             </div>
-        <% end %>
-        <% if @flight.passengers.count > 20 %>
-            <p>&hellip; and more &hellip;</p>
         <% end %>
     <% end %>
 

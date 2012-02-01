@@ -62,7 +62,7 @@ class FlightsController < ApplicationController
         end
 
         @flights = @flights.
-          includes(:metadata, aircraft: :metadata, photographs: :metadata, people: :metadata, pic: :metadata, sic: :metadata).
+          includes(:metadata, aircraft: :metadata, photographs: :metadata, occupants: { person: :metadata }).
           order('sequence DESC').
           limit(50)
         @flights = @flights.where(has_blog: true) if params['filter'] == 'blog'
@@ -168,11 +168,11 @@ class FlightsController < ApplicationController
             caption: photo.caption
           }
         end,
-        people: flight.people.map do |person|
+        occupants: flight.occupants.includes(person: :metadata).map do |occupant|
           {
-            photo: view_context.image_path(person.photo.url(:logbook)),
-            url: person_url(person),
-            name: person.name
+            photo: view_context.image_path(occupant.person.photo.url(:logbook)),
+            url: person_url(occupant.person),
+            name: occupant.person.name
           }
         end
       }

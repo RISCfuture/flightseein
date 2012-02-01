@@ -28,7 +28,7 @@ describe FlightsController do
           @flights = Flight.where(id: (@blog_flights + noblog_flights).map(&:id)).order('sequence DESC').all
 
           100.times { FactoryGirl.create :photograph, flight: @flights.sample }
-          50.times { @flights.sample.passengers << FactoryGirl.create(:person, user: @user) }
+          50.times { FactoryGirl.create :passenger, flight: @flights.sample, person: FactoryGirl.create(:person, user: @user) }
         end
 
         it "should use filter=all by default" do
@@ -60,9 +60,9 @@ describe FlightsController do
                     attrs['caption'] == photo.caption
                 end.should_not be_nil
               end
-              json['people'].size.should eql(flight.people.count)
-              json['people'].each do |attrs|
-                flight.people.detect do |person|
+              json['occupants'].size.should eql(flight.occupants.count)
+              json['occupants'].each do |attrs|
+                flight.occupants.map(&:person).detect do |person|
                   attrs['name'] == person.name &&
                     attrs['url'] =~ /\/people\/#{Regexp.escape person.slug}$/ &&
                     attrs['photo'].include?(person.photo.url(:logbook))
@@ -113,9 +113,9 @@ describe FlightsController do
                     attrs['caption'] == photo.caption
                 end.should_not be_nil
               end
-              json['people'].size.should eql(flight.people.count)
-              json['people'].each do |attrs|
-                flight.people.detect do |person|
+              json['occupants'].size.should eql(flight.occupants.count)
+              json['occupants'].each do |attrs|
+                flight.occupants.map(&:person).detect do |person|
                   attrs['name'] == person.name &&
                     attrs['url'] =~ /\/people\/#{Regexp.escape person.slug}$/ &&
                     attrs['photo'].include?(person.photo.url(:logbook))
@@ -147,19 +147,16 @@ describe FlightsController do
       describe "[people nested resource]" do
         before :all do
           @person = FactoryGirl.create(:person, user: @user)
-          pic_flights = 20.times.map { FactoryGirl.create :flight, user: @user, pic: @person, date: Date.today - rand(400) }
-          sic_flights = 20.times.map { FactoryGirl.create :flight, user: @user, sic: @person, date: Date.today - rand(400) }
-          pax_flights = 20.times.map do
+          flights = 60.times.map do
             flight = FactoryGirl.create(:flight, user: @user, date: Date.today - rand(400))
-            flight.passengers << @person
-            flight.update_people!
+            FactoryGirl.create :passenger, flight: flight, person: @person
             flight
           end
           @user.update_flight_sequence!
-          @flights = Flight.where(id: (pic_flights + sic_flights + pax_flights).map(&:id)).order('sequence DESC').all
+          @flights = Flight.where(id: flights.map(&:id)).order('sequence DESC').all
         end
 
-        it "should return the first 50 flights by date where that person was a pilot, copilot, or passenger" do
+        it "should return the first 50 flights by date where that person was an occupant" do
           get :index, format: 'json', person_id: @person.slug
           response.status.should eql(200)
           JSON.parse(response.body).size.should eql(50)

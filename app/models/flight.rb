@@ -28,26 +28,20 @@
 # Associations
 # ------------
 #
-# |              |                                                                    |
-# |:-------------|:-------------------------------------------------------------------|
-# | `user`       | The {User} account owning the flight.                              |
-# | `pic`        | The {Person} who was primarily pilot-in-command during the flight. |
-# | `sic`        | The {Person} who was the second-in-command during the flight.      |
-# | `aircraft`   | The {Aircraft} the flight was taken in.                            |
-# | `passengers` | The {Person passengers} on board the flight.                       |
-# | `people`     | All {Person people} present on the flight (PIC and SIC included).  |
+# |             |                                                                         |
+# |:------------|:------------------------------------------------------------------------|
+# | `user`      | The {User} account owning the flight.                                   |
+# | `aircraft`  | The {Aircraft} the flight was taken in.                                 |
+# | `occupants` | All {Occupant Occupants} present on the flight (PIC and SIC included).  |
 
 class Flight < ActiveRecord::Base
   include HasMetadata
   
   belongs_to :user, inverse_of: :flights
-  belongs_to :pic, class_name: 'Person', foreign_key: 'pic_id', inverse_of: :command_flights
-  belongs_to :sic, class_name: 'Person', foreign_key: 'sic_id', inverse_of: :sic_flights
   belongs_to :aircraft, inverse_of: :flights
   has_many :photographs, inverse_of: :flight, dependent: :delete_all
   has_many :stops, inverse_of: :flight, dependent: :delete_all
-  has_and_belongs_to_many :people, uniq: true
-  has_and_belongs_to_many :passengers, uniq: true, join_table: 'flights_passengers', class_name: 'Person'
+  has_many :occupants, inverse_of: :flight, dependent: :delete_all
 
   has_metadata(
     remarks: { length: { maximum: 500 }, allow_blank: true },
@@ -77,10 +71,9 @@ class Flight < ActiveRecord::Base
             allow_blank: true
 
   before_save { |obj| obj.has_blog = obj.blog.present?; true }
-  after_save :update_people!, if: ->(obj) { obj.pic_id_changed? or obj.sic_id_changed? }
 
-  attr_accessible :origin, :destination, :pic, :sic, :aircraft, :people,
-                  :remarks, :duration, :date, as: :importer
+  attr_accessible :origin, :destination, :aircraft, :occupants, :remarks,
+                  :duration, :date, as: :importer
   attr_accessible :blog, :photographs_attributes, as: :pilot
 
   accepts_nested_attributes_for :photographs, allow_destroy: true, reject_if: ->(attrs) { attrs['image'].nil? and attrs['id'].nil? }
@@ -119,12 +112,5 @@ class Flight < ActiveRecord::Base
   def next
     return nil unless sequence
     @next ||= user.flights.where(sequence: sequence + 1).first
-  end
-
-  # Ensures that the PIC, SIC, and all passengers are included in the `people`
-  # association.
-
-  def update_people!
-    self.people = [ pic, sic, *passengers ].compact.uniq_by(&:id)
   end
 end

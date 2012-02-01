@@ -1,8 +1,8 @@
 require 'parser'
 
-# A {Parser} that imports Coradine's LogTen Pro logbook files.
+# A {Parser} that imports Coradine's LogTen 6 logbook files.
 
-class LogtenParser < Parser
+class LogtenSixParser < Parser
   # Ordered hash mapping LogTen names of certificate levels to internal I18n
   # keys. The hash is ordered by decreasing achievement level of the
   # certificate.
@@ -118,8 +118,7 @@ class LogtenParser < Parser
     importing_flights!
 
     import_flight_records
-    import_flight_pics
-    import_flight_sics
+    import_flight_crew
     import_flight_pax
 
     user.destinations.each(&:update_flights_count!)
@@ -131,10 +130,12 @@ class LogtenParser < Parser
   def import_flight_records
     rows = @db.execute <<-SQL
       SELECT ZFLIGHT.Z_PK, ZFLIGHT_TOTALTIME, ZFLIGHT_REMARKS,
-             ZAIRCRAFT_AIRCRAFTID, ZFLIGHT_FROMPLACE,
-             ZFLIGHT_TOPLACE, ZFLIGHT_FLIGHTDATE, ZFLIGHT_ROUTE
+             ZAIRCRAFT_AIRCRAFTID,
+             ZFLIGHT_FROMPLACE, ZFLIGHT_TOPLACE,
+             ZFLIGHT_FLIGHTDATE, ZFLIGHT_ROUTE
         FROM ZFLIGHT
         LEFT JOIN ZAIRCRAFT ON ZAIRCRAFT.Z_PK = ZFLIGHT_AIRCRAFT
+        ORDER BY ZFLIGHT_FLIGHTDATE ASC
     SQL
 
     rows.each do |(pkey, duration, remarks, ident, origin_id, destination_id, time, route)|
@@ -173,14 +174,13 @@ class LogtenParser < Parser
 
       Stop.delete_all(flight_id: flight.id)
       if route.present? then
-        route.split('-')
-        route.split('-')[1..-2].each_with_index do |stop, index|
+        route.split('-').each_with_index do |stop, index|
           airport = Airport.with_ident(stop, stop, stop).first
           unless airport
             Rails.logger.warn "Skipping unknown route ident #{stop}"
             next
           end
-          destination = user.destinations.where(airport_id: airport.id).find_or_create!
+          destination = user.destinations.where(airport_id: airport.id).first_or_create!
           begin
             flight.stops.create!(destination: destination, sequence: index + 1)
           rescue ActiveRecord::RecordNotUnique
@@ -191,69 +191,106 @@ class LogtenParser < Parser
     end
   end
 
-  def import_flight_pics
+  FLIGHT_CREW = [
+      'Pilot in command',
+      'Second in command',
+      'Commander',
+      'Flight attendant',
+      'Flight attendant',
+      'Flight attendant',
+      'Flight attendant',
+      'Engineer',
+      'Flight instructor',
+      'Observer',
+      'Observer',
+      'Relief pilot',
+      'Relief pilot',
+      'Relief pilot',
+      'Relief pilot',
+      'Student pilot'
+  ]
+
+  def import_flight_crew
     rows = @db.execute <<-SQL
-      SELECT ZPERSON, ZFLIGHT
-        FROM ZPIC
+      SELECT ZFLIGHTCREW_FLIGHT,
+             ZFLIGHTCREW_PIC, ZFLIGHTCREW_SIC, ZFLIGHTCREW_COMMANDER,
+             ZFLIGHTCREW_FLIGHTATTENDANT1, ZFLIGHTCREW_FLIGHTATTENDANT2,
+             ZFLIGHTCREW_FLIGHTATTENDANT3, ZFLIGHTCREW_FLIGHTATTENDANT4,
+             ZFLIGHTCREW_FLIGHTENGINEER, ZFLIGHTCREW_INSTRUCTOR,
+             ZFLIGHTCREW_OBSERVER1, ZFLIGHTCREW_OBSERVER2,
+             ZFLIGHTCREW_RELIEF1, ZFLIGHTCREW_RELIEF2, ZFLIGHTCREW_RELIEF3,
+             ZFLIGHTCREW_RELIEF4, ZFLIGHTCREW_STUDENT, ZFLIGHTCREW_CUSTOM1,
+             ZFLIGHTCREW_CUSTOM2, ZFLIGHTCREW_CUSTOM3, ZFLIGHTCREW_CUSTOM4,
+             ZFLIGHTCREW_CUSTOM5
+        FROM ZFLIGHTCREW
     SQL
 
-    rows.each do |(person_id, flight_id)|
-      next unless person_id and flight_id
+    rows.each do |(flight_id, *crew)|
+      next unless crew.any? and flight_id
+
       flight = user.flights.where(logbook_id: flight_id).first
       unless flight
-        Rails.logger.warn "Skipping ZPIC due to missing flight: #{[flight_id, person_id].inspect}"
+        Rails.logger.warn "Skipping ZFLIGHTCREW due to missing flight: #{flight_id}"
         next
       end
-      person = user.people.where(logbook_id: person_id).first
-      unless person
-        Rails.logger.warn "Skipping ZPIC due to missing person: #{[flight_id, person_id].inspect}"
-        next
-      end
-      flight.occupants.create!(role: "Pilot in command", person: person)
-    end
-  end
 
-  def import_flight_sics
-    rows = @db.execute <<-SQL
-      SELECT ZPERSON, ZFLIGHT
-        FROM ZSIC
-    SQL
-
-    rows.each do |(person_id, flight_id)|
-      next unless person_id and flight_id
-      flight = user.flights.where(logbook_id: flight_id).first
-      unless flight
-        Rails.logger.warn "Skipping ZSIC due to missing flight: #{[flight_id, person_id].inspect}"
-        next
+      crew.zip(FLIGHT_CREW).each do |(person_id, role)|
+        next unless person_id
+        role ||= "Crewmember"
+        person = user.people.where(logbook_id: person_id).first
+        unless person
+          Rails.logger.warn "Skipping ZFLIGHTCREW crewmember due to missing person: #{[flight_id, person_id].inspect}"
+          next
+        end
+        flight.occupants.create!({ person: person, role: role }, as: :importer)
       end
-      person = user.people.where(logbook_id: person_id).first
-      unless person
-        Rails.logger.warn "Skipping ZSIC due to missing person: #{[flight_id, person_id].inspect}"
-        next
-      end
-      flight.occupants.create!(role: "Second in command", person: person)
     end
   end
 
   def import_flight_pax
     rows = @db.execute <<-SQL
-      SELECT ZPAX_FLIGHT, ZPAX_PERSON
-        FROM ZPASSENGER
+      SELECT ZFLIGHTPASSENGERS_FLIGHT,
+             ZFLIGHTPASSENGERS_PAX1,
+             ZFLIGHTPASSENGERS_PAX2,
+             ZFLIGHTPASSENGERS_PAX3,
+             ZFLIGHTPASSENGERS_PAX4,
+             ZFLIGHTPASSENGERS_PAX5,
+             ZFLIGHTPASSENGERS_PAX6,
+             ZFLIGHTPASSENGERS_PAX7,
+             ZFLIGHTPASSENGERS_PAX8,
+             ZFLIGHTPASSENGERS_PAX9,
+             ZFLIGHTPASSENGERS_PAX10,
+             ZFLIGHTPASSENGERS_PAX11,
+             ZFLIGHTPASSENGERS_PAX12,
+             ZFLIGHTPASSENGERS_PAX13,
+             ZFLIGHTPASSENGERS_PAX14,
+             ZFLIGHTPASSENGERS_PAX15,
+             ZFLIGHTPASSENGERS_PAX16,
+             ZFLIGHTPASSENGERS_PAX17,
+             ZFLIGHTPASSENGERS_PAX18,
+             ZFLIGHTPASSENGERS_PAX19,
+             ZFLIGHTPASSENGERS_PAX20
+        FROM ZFLIGHTPASSENGERS
     SQL
 
-    rows.each do |(flight_id, person_id)|
-      next unless person_id and flight_id
+    rows.each do |(flight_id, *pax)|
+      pax.compact!
+      next unless pax.any? and flight_id
+
       flight = user.flights.where(logbook_id: flight_id).first
       unless flight
-        Rails.logger.warn "Skipping ZPASSENGER due to missing flight: #{[flight_id, person_id].inspect}"
+        Rails.logger.warn "Skipping ZFLIGHTPASSENGERS due to missing flight: #{[flight_id].inspect}"
         next
       end
-      person = user.people.where(logbook_id: person_id).first
-      unless person
-        Rails.logger.warn "Skipping ZPASSENGER due to missing person: #{[flight_id, person_id].inspect}"
-        next
+
+      pax.each do |person_id|
+        person = user.people.where(logbook_id: person_id).first
+        unless person
+          Rails.logger.warn "Skipping ZFLIGHTPASSENGERS due to missing person: #{[flight_id, person_id].inspect}"
+          next
+        end
+        flight.occupants.create({ person: person }, as: :importer)
       end
-      flight.occupants.create!(person: person)
     end
   end
 

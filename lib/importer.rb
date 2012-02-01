@@ -13,7 +13,8 @@ class Importer
   SUPPORTED_ARCHIVE_FORMATS = %w( .zip .gz .tar .bz2 .tgz .tbz )
   # Supported logbook formats.
   SUPPORTED_LOGBOOK_FORMATS = {
-    '.logten' => 'LogtenParser'
+    /\.logten$/ => 'LogtenParser',
+    /^LogTenProData$/ => 'LogtenSixParser'
   }
 
   # Creates a new importer.
@@ -41,8 +42,11 @@ class Importer
 
     Dir.entries(@work_dir).each do |entry|
       next if entry.starts_with?('.')
-      next unless SUPPORTED_LOGBOOK_FORMATS.include?(File.extname(entry))
-      process_file File.join(@work_dir, entry)
+      SUPPORTED_LOGBOOK_FORMATS.each do |rx, parser_name|
+        if entry =~ rx then
+          parser_name.constantize.new(@import, File.join(@work_dir, entry)).process
+        end
+      end
     end
 
     @import.update_attribute :state, :completed
@@ -89,9 +93,5 @@ class Importer
     else
       return path
     end
-  end
-
-  def process_file(path)
-    SUPPORTED_LOGBOOK_FORMATS[File.extname(path)].constantize.new(@import, path).process
   end
 end

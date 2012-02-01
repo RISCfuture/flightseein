@@ -6,7 +6,7 @@ describe Person do
       user = FactoryGirl.create(:user)
       person = FactoryGirl.create(:person, user: user)
       flights = FactoryGirl.create_list(:flight, 10, user: user)
-      flights.each { |flight| person.flights << flight }
+      flights.each { |flight| FactoryGirl.create :passenger, flight: flight, person: person }
 
       person.update_hours!
 

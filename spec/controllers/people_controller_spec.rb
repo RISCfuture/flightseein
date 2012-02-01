@@ -21,7 +21,7 @@ describe PeopleController do
     describe ".json" do
       before :all do
         @people = FactoryGirl.create_list(:person, 60, user: @user)
-        @people.each { |pers| FactoryGirl.create :flight, user: @user, pic: pers }
+        @people.each { |pers| FactoryGirl.create :passenger, person: pers, flight: FactoryGirl.create(:flight, user: @user) }
         @people.each(&:update_hours!)
         @people = @people.sort_by { |pers| [ pers.hours, pers.id ] }.reverse
       end

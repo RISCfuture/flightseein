@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :flight do
     association :user
-    association :pic, factory: :person
 
     duration { (rand*5 + 1).round(1) }
     sequence :logbook_id
