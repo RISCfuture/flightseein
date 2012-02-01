@@ -31,6 +31,7 @@ gem 'resque'
 
 # ASSETS
 gem 'aws-s3', require: 'aws/s3'
+gem 'aws-sdk'
 
 group :development do
   # DEVELOPMENT
