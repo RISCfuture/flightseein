@@ -52,17 +52,17 @@ class FlightsController < ApplicationController
       format.json do
         if params['person_id'] then
           person = Person.find_from_slug(params['person_id'], request.subdomain)
-          @flights = person.flights
+          @flights = person.flights.includes(:slugs, occupants: { person: [ :metadata, :slugs ] })
         elsif params['airport_id'] then
           airport = Airport.with_ident(params['airport_id']).first || raise(ActiveRecord::RecordNotFound)
           destination = subdomain_owner.destinations.find_by_airport_id(airport.id) || raise(ActiveRecord::RecordNotFound)
-          @flights = subdomain_owner.flights.where(destination_id: destination.id)
+          @flights = subdomain_owner.flights.includes(:slugs, occupants: { person: [ :metadata, :slugs ] }).where(destination_id: destination.id)
         else
-          @flights = subdomain_owner.flights
+          @flights = subdomain_owner.flights.includes(:slugs, occupants: { person: [ :metadata, :slugs ] })
         end
 
         @flights = @flights.
-          includes(:metadata, aircraft: :metadata, photographs: :metadata, occupants: { person: :metadata }).
+          includes(:metadata, aircraft: :metadata, photographs: :metadata, occupants: { person: [ :metadata, :slugs ] }).
           order('sequence DESC').
           limit(50)
         @flights = @flights.where(has_blog: true) if params['filter'] == 'blog'
@@ -87,9 +87,9 @@ class FlightsController < ApplicationController
   # Path Parameters
   # ---------------
   #
-  # |      |                         |
-  # |:-----|:------------------------|
-  # | `id` | The ID of the {Flight}. |
+  # |      |                           |
+  # |:-----|:--------------------------|
+  # | `id` | The slug of the {Flight}. |
 
   def show
     respond_with @flight
@@ -106,9 +106,9 @@ class FlightsController < ApplicationController
   # Path Parameters
   # ---------------
   #
-  # |      |                         |
-  # |:-----|:------------------------|
-  # | `id` | The ID of the {Flight}. |
+  # |      |                           |
+  # |:-----|:--------------------------|
+  # | `id` | The slug of the {Flight}. |
 
   def edit
     @flight.photographs.build
@@ -126,9 +126,9 @@ class FlightsController < ApplicationController
   # Path Parameters
   # ---------------
   #
-  # |      |                         |
-  # |:-----|:------------------------|
-  # | `id` | The ID of the {Flight}. |
+  # |      |                           |
+  # |:-----|:--------------------------|
+  # | `id` | The slug of the {Flight}. |
   #
   # Parameterized Hashes
   # --------------------
@@ -146,7 +146,7 @@ class FlightsController < ApplicationController
   private
 
   def find_flight
-    @flight = subdomain_owner.flights.find_by_id(params[:id]) || raise(ActiveRecord::RecordNotFound)
+    @flight = subdomain_owner.flights.find_from_slug(params[:id], request.subdomain)
   end
 
   def build_json(flights)
@@ -168,7 +168,7 @@ class FlightsController < ApplicationController
             caption: photo.caption
           }
         end,
-        occupants: flight.occupants.includes(person: :metadata).map do |occupant|
+        occupants: flight.occupants.map do |occupant|
           {
             photo: view_context.image_path(occupant.person.photo.url(:logbook)),
             url: person_url(occupant.person),

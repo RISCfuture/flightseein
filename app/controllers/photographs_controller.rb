@@ -29,9 +29,9 @@ class PhotographsController < ApplicationController
   # Path Parameters
   # ---------------
   #
-  # |             |                                                                                       |
-  # |:------------|:--------------------------------------------------------------------------------------|
-  # | `flight_id` | The ID for a {Flight}. Flights are limited to those belonging to the subdomain owner. |
+  # |             |                                                                                         |
+  # |:------------|:----------------------------------------------------------------------------------------|
+  # | `flight_id` | The slug for a {Flight}. Flights are limited to those belonging to the subdomain owner. |
 
   def index
     respond_to do |format|
@@ -63,7 +63,7 @@ class PhotographsController < ApplicationController
 
   def find_flight
     return true unless subdomain_owner
-    @flight = subdomain_owner.flights.find_by_id(params[:flight_id]) || raise(ActiveRecord::RecordNotFound)
+    @flight = subdomain_owner.flights.find_from_slug(params[:flight_id], request.subdomain)
   end
 
   def build_json(photos)

@@ -50,7 +50,7 @@ describe FlightsController do
               [ :type, :ident ].each do |attr|
                 json['aircraft'][attr.to_s].should eql(flight.aircraft.send(attr))
               end
-              json['url'].should =~ /\/flights\/#{flight.id}$/
+              json['url'].should =~ /\/flights\/#{flight.to_param}$/
               json['date'].should eql(I18n.l(flight.date, format: :logbook))
               json['photos'].size.should <= 4
               json['photos'].each do |attrs|
@@ -103,7 +103,7 @@ describe FlightsController do
               [ :type, :ident ].each do |attr|
                 json['aircraft'][attr.to_s].should eql(flight.aircraft.send(attr))
               end
-              json['url'].should =~ /\/flights\/#{flight.id}$/
+              json['url'].should =~ /\/flights\/#{flight.to_param}$/
               json['date'].should eql(I18n.l(flight.date, format: :logbook))
               json['photos'].size.should <= 4
               json['photos'].each do |attrs|
@@ -233,7 +233,7 @@ describe FlightsController do
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      get :show, id: FactoryGirl.create(:flight).id
+      get :show, id: FactoryGirl.create(:flight).to_param
       response.status.should eql(404)
     end
 
@@ -243,12 +243,12 @@ describe FlightsController do
       end
 
       it "should set @flight to the flight" do
-        get :show, id: @flight.id
+        get :show, id: @flight.to_param
         assigns(:flight).should eql(@flight)
       end
 
       it "should render the show template" do
-        get :show, id: @flight.id
+        get :show, id: @flight.to_param
         response.status.should eql(200)
         response.should render_template('show')
       end
@@ -267,7 +267,7 @@ describe FlightsController do
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      get :edit, id: FactoryGirl.create(:flight).id
+      get :edit, id: FactoryGirl.create(:flight).to_param
       response.status.should eql(404)
     end
 
@@ -277,17 +277,17 @@ describe FlightsController do
       end
 
       it "should set @flight to the flight" do
-        get :edit, id: @flight.id
+        get :edit, id: @flight.to_param
         assigns(:flight).should eql(@flight)
       end
 
       it "should add an unsaved photograph to the flight" do
-        get :edit, id: @flight.id
+        get :edit, id: @flight.to_param
         assigns(:flight).photographs.last.should be_new_record
       end
 
       it "should render the edit template" do
-        get :edit, id: @flight.id
+        get :edit, id: @flight.to_param
         response.status.should eql(200)
         response.should render_template('edit')
       end
@@ -306,7 +306,7 @@ describe FlightsController do
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      put :update, id: FactoryGirl.create(:flight).id
+      put :update, id: FactoryGirl.create(:flight).to_param
       response.status.should eql(404)
     end
 
@@ -317,18 +317,18 @@ describe FlightsController do
 
       context "[valid attributes]" do
         it "should update the flight from the parameter hash" do
-          put :update, id: @flight.id, flight: { blog: "new blog entry" }
+          put :update, id: @flight.to_param, flight: { blog: "new blog entry" }
           @flight.reload.blog.should eql("new blog entry")
         end
 
         it "should redirect to the flight URL" do
-          put :update, id: @flight.id, flight: { blog: "new blog entry" }
+          put :update, id: @flight.to_param, flight: { blog: "new blog entry" }
           response.should redirect_to(flight_url(@flight))
         end
 
         it "should update photographs as well" do
           photo = FactoryGirl.create(:photograph, flight: @flight, caption: 'foo')
-          put :update, id: @flight.id, flight: { blog: 'new 2', photographs_attributes: { '0' => { caption: 'bar', _destroy: '0', id: photo.id.to_s } } }
+          put :update, id: @flight.to_param, flight: { blog: 'new 2', photographs_attributes: { '0' => { caption: 'bar', _destroy: '0', id: photo.id.to_s } } }
           photo.reload.caption.should eql('bar')
         end
       end
@@ -337,13 +337,13 @@ describe FlightsController do
         it "should leave the flight unchanged" do
           pending "No invalid attributes"
           attrs = @flight.attributes
-          put :update, id: @flight.id, flight: { blog: 'halp?' }
+          put :update, id: @flight.to_param, flight: { blog: 'halp?' }
           @flight.reload.attributes.should eql(attrs)
         end
 
         it "should render the edit template" do
           pending "No invalid attributes"
-          put :update, id: @flight.id, flight: { blog: 'halp?' }
+          put :update, id: @flight.to_param, flight: { blog: 'halp?' }
           response.should render_template('edit')
         end
       end

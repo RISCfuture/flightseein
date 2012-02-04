@@ -30,7 +30,8 @@ SET search_path = public, pg_catalog;
 
 CREATE TYPE slugged_class AS ENUM (
     'Person',
-    'Destination'
+    'Destination',
+    'Flight'
 );
 
 
@@ -351,12 +352,12 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE slugs (
     id integer NOT NULL,
-    sluggable_type slugged_class NOT NULL,
     sluggable_id integer NOT NULL,
     active boolean DEFAULT true NOT NULL,
     slug character varying(126) NOT NULL,
     scope character varying(126),
     created_at timestamp without time zone,
+    sluggable_type slugged_class,
     CONSTRAINT slugs_slug_check CHECK ((char_length((slug)::text) > 0))
 );
 
@@ -730,20 +731,6 @@ CREATE INDEX photographs_flight ON photographs USING btree (flight_id);
 
 
 --
--- Name: slugs_for_record; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX slugs_for_record ON slugs USING btree (sluggable_type, sluggable_id, active);
-
-
---
--- Name: slugs_unique; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX slugs_unique ON slugs USING btree (sluggable_type, scope, slug);
-
-
---
 -- Name: stops_in_sequence; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -965,6 +952,8 @@ INSERT INTO schema_migrations (version) VALUES ('20120126093404');
 INSERT INTO schema_migrations (version) VALUES ('20120201082606');
 
 INSERT INTO schema_migrations (version) VALUES ('20120201090431');
+
+INSERT INTO schema_migrations (version) VALUES ('20120203233542');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

@@ -36,12 +36,17 @@
 
 class Flight < ActiveRecord::Base
   include HasMetadata
+  include Slugalicious
   
   belongs_to :user, inverse_of: :flights
   belongs_to :aircraft, inverse_of: :flights
   has_many :photographs, inverse_of: :flight, dependent: :delete_all
   has_many :stops, inverse_of: :flight, dependent: :delete_all
   has_many :occupants, inverse_of: :flight, dependent: :delete_all
+
+  slugged ->(flight) { "#{flight.date.strftime '%Y-%m-%d'} #{flight.destinations.map(&:airport).map(&:identifier).join('-')}" },
+          scope: ->(flight) { flight.user.subdomain },
+          slugifier: ->(str) { str.remove_formatting.replace_whitespace('_').collapse('_') }
 
   has_metadata(
     remarks: { length: { maximum: 500 }, allow_blank: true },
@@ -112,4 +117,7 @@ class Flight < ActiveRecord::Base
     return nil unless sequence
     @next ||= user.flights.where(sequence: sequence + 1).first
   end
+
+  # @private
+  def to_param() slug end
 end

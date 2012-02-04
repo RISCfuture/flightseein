@@ -17,7 +17,7 @@ describe PhotographsController do
       end
 
       it "should return the first 50 photos by hours" do
-        get :index, flight_id: @flight.id, format: 'json'
+        get :index, flight_id: @flight.to_param, format: 'json'
         response.status.should eql(200)
         JSON.parse(response.body).size.should eql(10)
         JSON.parse(response.body).zip(@photographs[0, 10]).each do |(json, photo)|
@@ -29,7 +29,7 @@ describe PhotographsController do
       end
 
       it "should paginate using the last_record parameter" do
-        get :index, flight_id: @flight.id, format: 'json', last_record: @photographs[9].id
+        get :index, flight_id: @flight.to_param, format: 'json', last_record: @photographs[9].id
         response.status.should eql(200)
         JSON.parse(response.body).size.should eql(5)
         JSON.parse(response.body).zip(@photographs[10, 5]).each do |(json, photo)|
@@ -38,7 +38,7 @@ describe PhotographsController do
       end
 
       it "should not blow up if given an invalid last_record" do
-        get :index, flight_id: @flight.id, format: 'json', last_record: 'abc'
+        get :index, flight_id: @flight.to_param, format: 'json', last_record: 'abc'
         response.status.should eql(200)
         JSON.parse(response.body).size.should eql(10)
         JSON.parse(response.body).zip(@photographs[0, 10]).each do |(json, photo)|
@@ -53,7 +53,7 @@ describe PhotographsController do
       end
 
       it "should create a photograph from the 'photograph' parameter hash" do
-        post :create, flight_id: @flight.id, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg') }, format: 'json'
+        post :create, flight_id: @flight.to_param, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg') }, format: 'json'
         response.status.should eql(201)
         @flight.photographs(true).size.should eql(1)
         @flight.photographs.first.image_file_name.should eql('image.jpg')
@@ -61,7 +61,7 @@ describe PhotographsController do
 
       it "should encode errors in the JSON response" do
         pending "Thanks Rails 3.2, for breaking this one!"
-        post :create, flight_id: @flight.id, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain') }, format: 'json'
+        post :create, flight_id: @flight.to_param, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain') }, format: 'json'
         response.status.should eql(422)
         JSON.parse(response.body).should eql('image_content_type' => [ 'must be an image file (such as JPEG)' ])
       end
@@ -87,7 +87,7 @@ describe PhotographsController do
               json['preview_url'] == photo.image.url(:carousel) &&
                 json['caption'] == photo.caption
             end.should_not be_nil
-            json['url'].should =~ /\/flights\/#{flight.id}/
+            json['url'].should =~ /\/flights\/#{flight.to_param}/
           end
         end
 

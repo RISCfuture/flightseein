@@ -37,7 +37,7 @@ class UsersController < ApplicationController
         if @user.valid? then
           redirect_to root_url(subdomain: @user.subdomain)
         else
-          @flights = Flight.includes(:user, :metadata).where(has_photos: true).order('date DESC').limit(5)
+          @flights = Flight.includes(:user, :metadata, :slugs).where(has_photos: true).order('date DESC').limit(5)
           render 'new'
         end
       end
