@@ -9,7 +9,7 @@
       </li>
 
       <li><h2>Add photos from your adventure</h2></li>
-      <div id="uploader"></div>
+      <div id="easyuploader"></div>
 
       <%= f.fields_for :photographs do |fp| %>
           <li <%= 'id="new_photo"'.html_safe if fp.object.new_record? %>>
@@ -33,62 +33,9 @@
     <script type="text/javascript">
         $(window).ready(function() {
             var currentRow;
-            var uploader = $('#uploader').uploader("<%= raw j(flight_photographs_url(@flight, format: 'json')) %>", "photograph[image]", {
+            var uploader = $('#easyuploader').easyUploader("<%= raw j(flight_photographs_url(@flight, format: 'json')) %>", "photograph[image]", {
                 maxSimultaneousUploads: 1,
-                csrfProtection: [ "<%= raw j(request_forgery_protection_token.to_s) %>", "<%= raw j(form_authenticity_token.to_s) %>" ],
-                startHandler: function(uid, file) {
-                    if (!currentRow || currentRow.find('>div.file').length == 5)
-                        currentRow = $('<div/>').addClass('file-row').appendTo($('#uploader'));
-
-                    // preload images
-                    new Image().src = "<%= raw j(image_path('document-empty.png')) %>";
-                    new Image().src = "<%= raw j(image_path('document-filled.png')) %>";
-
-                    var fileDiv = $('<div/>').addClass('file').attr('id', 'file_' + uid).appendTo(currentRow);
-                    var empty = $('<div/>').addClass('empty').appendTo(fileDiv);
-                    $('<div/>').addClass('filled').appendTo(empty);
-                    var name = $('<p/>').text(file.fileName).appendTo(fileDiv);
-
-                    name.qtip({
-                        content: {
-                            text: file.fileName
-                        },
-                        position: {
-                            my: 'top center',
-                            at: 'bottom center',
-                            target: name
-                        },
-                        style: {
-                            classes: 'ui-tooltip-blue ui-tooltip-shadow ui-tooltip-rounded'
-                        }
-                    });
-                },
-                progressHandler: function(uid, phase, position, total) {
-                    if (phase == 'upload') {
-                        var amount = Math.round((position/total)*44);
-                        $('#file_' + uid + ' .filled').css('width', '' + amount + 'px');
-                    }
-                },
-                loadHandler: function(uid, xhr) {
-                    if (Math.round(xhr.status/100) == 2)
-                        $('#file_' + uid).addClass('finished');
-                    else {
-                        $('#file_' + uid).addClass('error');
-                        if (xhr.status == 422) {
-                            var errors = JSON.parse(xhr.responseText);
-                            var errorList = [];
-                            $.each(errors, function(_, fieldErrors) { errorList = errorList.concat(fieldErrors); });
-                            $('<p/>').addClass('message').text(errorList.join(', ')).appendTo($('#file_' + uid));
-                        }
-                        else $('<p/>').addClass('message').text(xhr.statusText).appendTo($('#file_' + uid));
-                    }
-
-                    if (uploader.isFinished() && !uploader.isFailed()) window.location.reload();
-                },
-                errorHandler: function(uid, xhr) {
-                    $('#file_' + uid).addClass('error');
-                    if (uploader.isFinished() && !uploader.isFailed()) window.location.reload();
-                }
+                data: {"<%= raw j(request_forgery_protection_token.to_s) %>": "<%= raw j(form_authenticity_token.to_s) %>"}
             });
         });
     </script>

@@ -25,6 +25,7 @@ gem 'sass'
 gem 'uglifier'
 gem 'redcarpet'#, require: 'RedCarpet' # also for documentation
 gem 'carousel'
+gem 'multiuploader'
 
 # IMPORTING
 gem 'sqlite3'

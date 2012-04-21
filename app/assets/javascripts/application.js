@@ -20,4 +20,5 @@
 //= require href
 //= require logbook
 //= require progrid
-//= require uploader
+//= require multiuploader
+//= require easyuploader

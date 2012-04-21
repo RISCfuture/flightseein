@@ -6,5 +6,6 @@
  *= require jquery.lightbox-0.5
  *= require jquery.qtip
  *= require carousel
+ *= require easyuploader
  *= require_tree .
 */
