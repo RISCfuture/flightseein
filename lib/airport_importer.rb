@@ -97,9 +97,9 @@ class AirportImporter
         state: { range: [49,2] },
         city: { range: [94,40] },
         name: { range: [134,42] },
-        lat: { range: [531,12], parser: :angular_distance },
-        lon: { range: [558,12], parser: :angular_distance },
-        icao: { range: [1255,7] }
+        lat: { range: [539,12], parser: :angular_distance },
+        lon: { range: [566,12], parser: :angular_distance },
+        icao: { range: [1211,7] }
       }
     end
 
