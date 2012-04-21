@@ -24,6 +24,7 @@ gem 'jquery-rails'
 gem 'sass'
 gem 'uglifier'
 gem 'redcarpet'#, require: 'RedCarpet' # also for documentation
+gem 'carousel'
 
 # IMPORTING
 gem 'sqlite3'

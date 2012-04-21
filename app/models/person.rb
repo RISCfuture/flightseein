@@ -44,36 +44,34 @@ class Person < ActiveRecord::Base
   has_many :flights, through: :occupantships
 
   has_metadata(
-    name: { presence: true, length: { maximum: 100 } },
-    notes: { length: { maximum: 1000 }, allow_blank: true },
+    name:               { presence: true, length: { maximum: 100 } },
+    notes:              { length: { maximum: 1000 }, allow_blank: true },
 
-    photo_file_name: { allow_blank: true },
+    photo_file_name:    { allow_blank: true },
     photo_content_type: { allow_blank: true, format: { with: /^image\// } },
-    photo_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    photo_updated_at: { type: Time, allow_blank: true },
-    photo_fingerprint: { allow_blank: true }
+    photo_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
+    photo_updated_at:   { type: Time, allow_blank: true },
+    photo_fingerprint:  { allow_blank: true }
   )
 
   validates :user,
             presence: true
   validates :hours,
-            presence: true,
+            presence:     true,
             numericality: { greater_than_or_equal_to: 0.0 }
   validates :logbook_id,
-            presence: true,
+            presence:   true,
             uniqueness: { scope: :user_id }
 
   attr_accessible :name, :photo, :me, :logbook_id, as: :importer
 
-  has_attached_file :photo,
-                    processors: [ :round_corners ],
-                    styles: {
-                      profile:  '200x200>',
-                      logbook:  '32x32#',
-                      stat:     '64x64#',
-                      carousel: { geometry: '140x100#', format: :png, border_radius: 8 }
-                    },
-                    default_url: "person/:style-missing.png"
+  has_attached_file :photo, Carousel.paperclip_options(
+    styles:      {
+                   profile: '200x200>',
+                   logbook: '32x32#',
+                   stat:    '64x64#',
+                 },
+    default_url: "person/:style-missing.png")
   check_for_duplicate_attached_file :photo
 
   scope :randomly, order('RANDOM()')

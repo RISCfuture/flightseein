@@ -39,13 +39,13 @@ class Destination < ActiveRecord::Base
   belongs_to :airport, inverse_of: :destinations
 
   has_metadata(
-    notes: { length: { maximum: 1000 }, allow_blank: true },
+    notes:              { length: { maximum: 1000 }, allow_blank: true },
 
-    photo_file_name: { allow_blank: true },
+    photo_file_name:    { allow_blank: true },
     photo_content_type: { allow_blank: true, format: { with: /^image\// } },
-    photo_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    photo_updated_at: { type: Time, allow_blank: true },
-    photo_fingerprint: { allow_blank: true }
+    photo_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
+    photo_updated_at:   { type: Time, allow_blank: true },
+    photo_fingerprint:  { allow_blank: true }
   )
 
   validates :user,
@@ -57,15 +57,13 @@ class Destination < ActiveRecord::Base
   attr_accessible :notes, as: :pilot
   attr_readonly :airport
 
-  has_attached_file :photo,
-                    processors: [:round_corners],
-                    styles: {
-                      profile:  '200x200>',
-                      logbook:  '32x32#',
-                      stat:     '64x64#',
-                      carousel: { geometry: '140x100#', format: :png, border_radius: 8 }
-                    },
-                    default_url: "airport/:style-missing.png"
+  has_attached_file :photo, Carousel.paperclip_options(
+    styles:      {
+                   profile: '200x200>',
+                   logbook: '32x32#',
+                   stat:    '64x64#',
+                 },
+    default_url: "airport/:style-missing.png")
   check_for_duplicate_attached_file :photo
 
   scope :randomly, order('RANDOM()')
