@@ -16,6 +16,7 @@ gem 'paperclip'
 gem 'pg'
 gem 'slugalicious'
 gem 'find_or_create_on_scopes'
+gem 'paperclip_duplicate_check'
 
 # VIEWS
 gem 'coffee-script'

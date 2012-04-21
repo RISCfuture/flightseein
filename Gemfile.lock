@@ -123,6 +123,8 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (>= 0.0.2)
       mime-types
+    paperclip_duplicate_check (1.0.0)
+      paperclip
     pg (0.13.2)
     polyglot (0.3.3)
     rack (1.4.1)
@@ -230,6 +232,7 @@ DEPENDENCIES
   multiuploader
   nokogiri
   paperclip
+  paperclip_duplicate_check
   pg
   rails (>= 3.2)
   rails3-generators
