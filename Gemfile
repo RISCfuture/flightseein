@@ -5,6 +5,9 @@ gem 'rake'
 gem 'rails', '>= 3.2'
 gem 'configoro'
 
+# ROUTING
+gem 'subdomain_router'
+
 # MIDDLEWARE
 gem 'user-agent'
 

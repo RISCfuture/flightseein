@@ -6,7 +6,7 @@ Flightseein::Application.routes.draw do
     match '*glob' => redirect { |_, request| "http://www.#{request.host_with_port}#{request.fullpath}" }
   end
 
-  constraints(subdomain: Flightseein::Configuration.routing.default_subdomain) do
+  constraints(subdomain: SubdomainRouter::Config.default_subdomain) do
     resources :users, only: [ :new, :create ]
     resource :session, only: [ :new, :create, :destroy ]
     resources :photographs, only: :index

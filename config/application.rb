@@ -35,3 +35,14 @@ module Flightseein
     end
   end
 end
+
+# Subdomain routing
+
+SubdomainRouter::Config.domain = 'flightsee.in' if Rails.env.production? || Rails.env.deploy?
+SubdomainRouter::Config.subdomain_matcher = lambda do |subdomain, request|
+  user = Rails.cache.fetch("User/#{subdomain}") do
+    User.active.for_subdomain(subdomain).first
+  end
+  request.env['subdomain_router.subdomain_owner'] = user
+  user
+end

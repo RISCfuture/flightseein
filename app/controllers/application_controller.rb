@@ -19,6 +19,16 @@ class ApplicationController < ActionController::Base
   rescue_from(ActiveRecord::RecordNotFound) { render(file: Rails.root.join('public', '404.html'), status: :not_found) }
   rescue_from(ActiveRecord::RecordInvalid) { render(file: Rails.root.join('public', '422.html'), status: :unprocessable_entity) }
 
+  protected
+
+  # @return [User, nil] The user that owns the current subdomain, or `nil` for
+  #   the default subdomain (e.g., "www").
+
+  def subdomain_owner
+    request.env['subdomain_router.subdomain_owner'] || User.active.for_subdomain(request.subdomain).first
+  end
+  helper_method :subdomain_owner
+
   private
 
   def warn_for_incompatible_browsers
