@@ -39,8 +39,10 @@ class SessionsController < ApplicationController
 
     @user = User.with_email(params[:user][:email]).first
     if User.authenticated?(@user, params[:user][:password]) then
+      next_url = session[:next_url]
+      session[:next_url] = nil
       log_in @user
-      redirect_to root_url(subdomain: @user.subdomain), notice: t('controllers.sessions.create.success', name: @user.best_name)
+      redirect_to (next_url || root_url(subdomain: @user.subdomain)), notice: t('controllers.sessions.create.success', name: @user.best_name)
     else
       flash[:alert] = t('controllers.sessions.create.bad_credentials')
       @user ||= User.new

@@ -72,6 +72,7 @@ module AuthenticationHelpers
     if logged_in? then
       return true
     else
+      session[:next_url] = request.fullpath
       redirect_to new_session_url(subdomain: false), notice: t('controllers.application.login_required.notice')
       return false
     end
