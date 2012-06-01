@@ -41,15 +41,6 @@ namespace :deploy do
    end
 end
 
-# PERMISSIONS
-
-namespace :permissions do
-  task :chown, roles: :app do
-    sudo "chown -R #{runner}:wheel #{release_path}"
-  end
-end
-after "assets:precompile", "permissions:chown"
-
 # BUNDLER
 
 require 'bundler/capistrano'
