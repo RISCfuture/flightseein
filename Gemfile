@@ -60,7 +60,7 @@ end
 
 group :production do
   # EXECJS
-  gem 'therubyracer', require: 'v8'
+  gem 'therubyracer', '~> 0.10.2', require: 'v8'
 
   # CACHING
   gem 'memcache-client'

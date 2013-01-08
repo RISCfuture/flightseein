@@ -23,7 +23,7 @@ ssh_options[:keys] = %w{ ~/.ssh/id_rsa }
 # USERS
 
 set :user, 'tmorgan'
-set :runner, 'apache'
+set :runner, 'www-data'
 
 # ROLES
 
@@ -47,9 +47,4 @@ require 'bundler/capistrano'
 
 # ASSETS
 
-namespace :assets do
-  task :precompile, roles: :app do
-    run "cd #{release_path} && bundle exec rake assets:precompile RAILS_ENV=deploy"
-  end
-end
-after "bundle:install", "assets:precompile"
+load 'deploy/assets'
