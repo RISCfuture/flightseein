@@ -48,3 +48,7 @@ require 'bundler/capistrano'
 # ASSETS
 
 load 'deploy/assets'
+
+# SIDEKIQ
+
+require 'sidekiq/capistrano'

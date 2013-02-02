@@ -15,8 +15,8 @@ require 'importer'
 # | `completed`            | Processing completed successfully.             |
 # | `failed`               | An error occurred during processing.           |
 #
-# Resque handles the actual importing, which is queued by calling the {#enqueue}
-# method.
+# Sidekiq handles the actual importing, which is queued by calling the
+# {#enqueue} method.
 #
 # Fields
 # --------
@@ -75,12 +75,7 @@ class Import < ActiveRecord::Base
   # {Importer}.
 
   def enqueue
-    Resque.enqueue Import, self.id
-  end
-
-  # @private
-  def self.perform(id)
-    find(id).perform!
+    Importer.perform_async self.id
   end
 
   # @return [Fixnum] A number from 0 to 6 indicating the progress of the import,
@@ -98,12 +93,5 @@ class Import < ActiveRecord::Base
       when :completed then 7
       else -1
     end
-  end
-
-  # Performs the import operation. Typically called by Resque, though you can
-  # perform an import inline by calling this method.
-
-  def perform!
-    Importer.new(self).perform
   end
 end

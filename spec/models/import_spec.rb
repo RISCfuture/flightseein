@@ -2,30 +2,11 @@ require 'spec_helper'
 
 describe Import do
   describe "#enqueue" do
-    it "should use Resque to enqueue an import operation" do
+    it "should use Sidekiq to enqueue an import operation" do
+      Importer.drain
       import = FactoryGirl.create(:import)
-      Resque.should_receive(:enqueue).once.with(Import, import.id)
       import.enqueue
-    end
-  end
-
-  describe ".perform" do
-    it "should locate a record by ID and import it" do
-      import = FactoryGirl.create(:import)
-      importer = mock('Importer')
-      importer.should_receive(:perform).once
-      Importer.should_receive(:new).once.with(import).and_return(importer)
-      Import.perform(import.id)
-    end
-  end
-
-  describe "#perform!" do
-    it "should create an Importer and call #perform" do
-      import = FactoryGirl.create(:import)
-      importer = mock('Importer')
-      importer.should_receive(:perform).once
-      Importer.should_receive(:new).once.with(import).and_return(importer)
-      import.perform!
+      Importer.jobs.size.should eql(1)
     end
   end
 end

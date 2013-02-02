@@ -46,3 +46,5 @@ SubdomainRouter::Config.subdomain_matcher = lambda do |subdomain, request|
   request.env['subdomain_router.subdomain_owner'] = user
   user
 end
+
+Dir.glob(Rails.root.join('lib', 'parser', '*.rb')).each { |f| require f }

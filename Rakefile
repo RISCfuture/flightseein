@@ -6,8 +6,6 @@ require File.expand_path('../config/application', __FILE__)
 
 Flightseein::Application.load_tasks
 
-require 'resque/tasks'
-
 if Rails.env.development? then
     require 'yard'
     YARD::Rake::YardocTask.new do |doc|

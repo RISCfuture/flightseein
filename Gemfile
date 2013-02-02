@@ -33,7 +33,7 @@ gem 'multiuploader'
 
 # IMPORTING
 gem 'sqlite3'
-gem 'resque'
+gem 'sidekiq'
 
 # ASSETS
 gem 'aws-s3', require: 'aws/s3'

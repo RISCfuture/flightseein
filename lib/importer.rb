@@ -1,14 +1,12 @@
 require 'securerandom'
 require 'open-uri'
 
-# Resque does weird things for requires, so let's do it manually
-Dir.glob(Rails.root.join('lib', '**', '*.rb')).each { |f| require f }
-Dir.glob(Rails.root.join('app', 'models', '**', '*.rb')).each { |f| require f }
-
 # Prepares an uploaded logbook file for importing and delegates the importing
 # to the appropriate {Parser}.
 
 class Importer
+  include Sidekiq::Worker
+  
   # Supported archive formats that can be decompressed.
   SUPPORTED_ARCHIVE_FORMATS = %w( .zip .gz .tar .bz2 .tgz .tbz )
   # Supported logbook formats.
@@ -16,23 +14,19 @@ class Importer
     /\.logten$/ => 'LogtenParser',
     /^LogTenProData$/ => 'LogtenSixParser'
   }
-
-  # Creates a new importer.
-  #
-  # @param [Import] import The import record.
-
-  def initialize(import)
-    @import = import
-    @uuid = SecureRandom.uuid
-    @work_dir = Rails.root.join('tmp', 'work', @uuid).to_s
-  end
   
   # Attempts to decompress the logbook file (if necessary), then invokes the
   # correct {Parser} to do the importing.
   #
   # Should any exception occur, the import will be moved to the "failed" state.
+  #
+  # @param [Fixnum] import_id The ID of an {Import}.
 
-  def perform
+  def perform(import_id)
+    @import = Import.find(import_id)
+    @uuid = SecureRandom.uuid
+    @work_dir = Rails.root.join('tmp', 'work', @uuid).to_s
+    
     @import.update_attribute :state, :starting
 
     path = download_file
@@ -51,10 +45,10 @@ class Importer
 
     @import.update_attribute :state, :completed
   rescue Exception
-    @import.update_attribute :state, :failed
+    @import.update_attribute :state, :failed if @import
     raise
   ensure
-    FileUtils.rm_rf @work_dir
+    FileUtils.rm_rf @work_dir if @work_dir
   end
 
   private

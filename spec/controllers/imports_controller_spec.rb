@@ -1,9 +1,8 @@
 require 'spec_helper'
+require 'sidekiq/testing'
 
 describe ImportsController do
-  before :each do
-    Import.stub(:perform)
-  end
+  before(:each) { Importer.jobs.clear }
 
   describe "#new" do
     it "should redirect if no user is logged in" do
@@ -71,8 +70,8 @@ describe ImportsController do
         end
 
         it "should enqueue the Import" do
-          Resque.should_receive(:enqueue).once.with(Import, an_instance_of(Fixnum))
           post :create, import: @attributes
+          Importer.jobs.size.should eql(1)
         end
 
         it "should redirect to the import progress page" do
@@ -105,8 +104,8 @@ describe ImportsController do
         end
 
         it "should not enqueue anything" do
-          Resque.should_not_receive(:enqueue)
           post :create, import: @attributes
+          Importer.jobs.should be_empty
         end
       end
     end
