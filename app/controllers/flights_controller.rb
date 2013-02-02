@@ -51,7 +51,7 @@ class FlightsController < ApplicationController
       format.html
       format.json do
         if params['person_id'] then
-          person = Person.find_from_slug(params['person_id'], request.subdomain)
+          person = Person.find_from_slug!(params['person_id'], request.subdomain)
           @flights = person.flights.includes(:slugs, occupants: { person: [ :metadata, :slugs ] })
         elsif params['airport_id'] then
           airport = Airport.with_ident(params['airport_id']).first || raise(ActiveRecord::RecordNotFound)
@@ -146,7 +146,7 @@ class FlightsController < ApplicationController
   private
 
   def find_flight
-    @flight = subdomain_owner.flights.find_from_slug(params[:id], request.subdomain)
+    @flight = subdomain_owner.flights.find_from_slug!(params[:id], request.subdomain)
   end
 
   def build_json(flights)

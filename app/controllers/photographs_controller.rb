@@ -63,7 +63,7 @@ class PhotographsController < ApplicationController
 
   def find_flight
     return true unless subdomain_owner
-    @flight = subdomain_owner.flights.find_from_slug(params[:flight_id], request.subdomain)
+    @flight = subdomain_owner.flights.find_from_slug!(params[:flight_id], request.subdomain)
   end
 
   def build_json(photos)

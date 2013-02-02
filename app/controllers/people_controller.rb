@@ -83,6 +83,6 @@ class PeopleController < ApplicationController
   end
 
   def find_person
-    @person = Person.find_from_slug(params[:id], request.subdomain)
+    @person = Person.find_from_slug!(params[:id], request.subdomain)
   end
 end
