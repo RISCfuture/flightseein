@@ -49,6 +49,19 @@ require 'bundler/capistrano'
 
 load 'deploy/assets'
 
+namespace :ownership do
+  task(:fix_current) do
+    sudo "chown -R www-data:wheel #{release_path}"
+    sudo "chmod -R 777 #{release_path}/tmp"
+  end
+  task(:change_assets) { sudo "chown -R tmorgan:wheel #{shared_path}/assets" }
+  task(:fix_assets) { sudo "chown -R www-data:wheel #{shared_path}/assets" }
+end
+
+before 'deploy:assets:update_asset_mtimes','ownership:change_assets'
+after 'deploy:assets:update_asset_mtimes', 'ownership:fix_assets'
+after 'deploy:finalize_update', 'ownership:fix_current'
+
 # SIDEKIQ
 
 require 'sidekiq/capistrano'
