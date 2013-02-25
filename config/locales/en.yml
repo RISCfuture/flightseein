@@ -157,9 +157,9 @@ en:
       not_an_integer: not an integer
       odd: must be odd
       taken: already taken
-      too_long: must be shorter than %{count} characters
-      too_short: must be longer than %{count} characters
-      wrong_length: must be be %{count} characters long
+      too_long: must be %{count} characters or shorter
+      too_short: must be %{count} characters or longer
+      wrong_length: must be %{count} characters long
   helpers:
     application:
       pluralize_with_delimiter:
