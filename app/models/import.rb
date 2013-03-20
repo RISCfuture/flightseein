@@ -8,7 +8,7 @@ require 'importer'
 # | `pending`              | Processing has not yet begun.                  |
 # | `starting`             | Processing is being initialized.               |
 # | `importing_aircraft`   | {Aircraft} records are being imported.         |
-# | `importing_airports`   | {Airport} records are being imported.         |
+# | `importing_airports`   | {Airport} records are being imported.          |
 # | `importing_passengers` | {Person} records are being imported.           |
 # | `importing_flights`    | {Flight} records are being imported.           |
 # | `uploading_photos`     | Images are being converted and uploaded to S3. |

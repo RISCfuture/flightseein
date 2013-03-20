@@ -28,11 +28,11 @@
 # Associations
 # ------------
 #
-# |             |                                                                         |
-# |:------------|:------------------------------------------------------------------------|
-# | `user`      | The {User} account owning the flight.                                   |
-# | `aircraft`  | The {Aircraft} the flight was taken in.                                 |
-# | `occupants` | All {Occupant Occupants} present on the flight (PIC and SIC included).  |
+# |             |                                                                        |
+# |:------------|:-----------------------------------------------------------------------|
+# | `user`      | The {User} account owning the flight.                                  |
+# | `aircraft`  | The {Aircraft} the flight was taken in.                                |
+# | `occupants` | All {Occupant Occupants} present on the flight (PIC and SIC included). |
 
 class Flight < ActiveRecord::Base
   include HasMetadata

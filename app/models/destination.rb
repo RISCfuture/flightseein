@@ -5,9 +5,9 @@
 # Fields
 # ------
 #
-# |                 |                                                                                                                |
-# |:----------------|:---------------------------------------------------------------------------------------------------------------|
-# | `flights_count` | _(cached counter)_ The number of {Flight Flights} where this airport is an origin, destination, or stop.       |
+# |                 |                                                                                                          |
+# |:----------------|:---------------------------------------------------------------------------------------------------------|
+# | `flights_count` | _(cached counter)_ The number of {Flight Flights} where this airport is an origin, destination, or stop. |
 #
 # Metadata
 # --------
@@ -24,10 +24,10 @@
 # Associations
 # ------------
 #
-# |                       |                                                         |
-# |:----------------------|:--------------------------------------------------------|
-# | `user`                | The {User} who imported this destination.               |
-# | `airport`             | The {Airport} referenced by this destination.           |
+# |           |                                               |
+# |:----------|:----------------------------------------------|
+# | `user`    | The {User} who imported this destination.     |
+# | `airport` | The {Airport} referenced by this destination. |
 
 class Destination < ActiveRecord::Base
   include HasMetadata

@@ -4,11 +4,11 @@
 # Fields
 # ------
 #
-# |                 |                                                                                                              |
-# |:----------------|:-------------------------------------------------------------------------------------------------------------|
-# | `hours`         | _(cached counter)_ The total number of hours this person has logged as pilot or passenger.                   |
-# | `logbook_id`    | The unique ID assigned to this person by the user's logbook; used for matching passengers in future imports. |
-# | `me`            | Id `true`, this is the `Person` record for the associated {User}.                                            |
+# |              |                                                                                                              |
+# |:-------------|:-------------------------------------------------------------------------------------------------------------|
+# | `hours`      | _(cached counter)_ The total number of hours this person has logged as pilot or passenger.                   |
+# | `logbook_id` | The unique ID assigned to this person by the user's logbook; used for matching passengers in future imports. |
+# | `me`         | Id `true`, this is the `Person` record for the associated {User}.                                            |
 #
 # Metadata
 # --------
@@ -26,11 +26,11 @@
 # Associations
 # ------------
 #
-# |                   |                                                                    |
-# |:------------------|:-------------------------------------------------------------------|
-# | `user`            | The {User} who imported this person.                               |
-# | `occupantships`   | The times this person acted as a {Crewmember} on a flight.         |
-# | `flights`         | The {Flight Flights} this person was a passenger or crewmember on. |
+# |                 |                                                                    |
+# |:----------------|:-------------------------------------------------------------------|
+# | `user`          | The {User} who imported this person.                               |
+# | `occupantships` | The times this person acted as a {Crewmember} on a flight.         |
+# | `flights`       | The {Flight Flights} this person was a passenger or crewmember on. |
 
 class Person < ActiveRecord::Base
   include HasMetadata
