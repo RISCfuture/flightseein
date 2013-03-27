@@ -51,7 +51,7 @@ load 'deploy/assets'
 
 namespace :ownership do
   task(:fix_current) do
-    sudo "chown -R www-data:wheel #{release_path}"
+    sudo "chown -R www-data:wheel #{deploy_to}"
     sudo "chmod -R 777 #{release_path}/tmp"
   end
   task(:change_assets) { sudo "chown -R tmorgan:wheel #{shared_path}/assets" }
@@ -61,6 +61,7 @@ end
 before 'deploy:assets:update_asset_mtimes','ownership:change_assets'
 after 'deploy:assets:update_asset_mtimes', 'ownership:fix_assets'
 after 'deploy:finalize_update', 'ownership:fix_current'
+after 'deploy:restart', 'ownership:fix_current' # twice for good luck?
 
 # SIDEKIQ
 
