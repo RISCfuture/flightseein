@@ -51,11 +51,11 @@ load 'deploy/assets'
 
 namespace :ownership do
   task(:fix_current) do
-    sudo "chown -R www-data:wheel #{deploy_to}"
+    sudo "chown -R www-data:sudo #{deploy_to}"
     sudo "chmod -R 777 #{release_path}/tmp"
   end
-  task(:change_assets) { sudo "chown -R tmorgan:wheel #{shared_path}/assets" }
-  task(:fix_assets) { sudo "chown -R www-data:wheel #{shared_path}/assets" }
+  task(:change_assets) { sudo "chown -R tmorgan:sudo #{shared_path}/assets" }
+  task(:fix_assets) { sudo "chown -R www-data:sudo #{shared_path}/assets" }
 end
 
 before 'deploy:assets:update_asset_mtimes','ownership:change_assets'
