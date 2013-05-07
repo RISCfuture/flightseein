@@ -65,4 +65,6 @@ after 'deploy:restart', 'ownership:fix_current' # twice for good luck?
 
 # SIDEKIQ
 
+set :sidekiq_cmd, "#{fetch :bundle_cmd, 'bundle'} exec sidekiq"
+set :sidekiqctl_cmd, "#{fetch :bundle_cmd, 'bundle'} exec sidekiqctl"
 require 'sidekiq/capistrano'
