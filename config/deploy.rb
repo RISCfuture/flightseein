@@ -41,6 +41,12 @@ namespace :deploy do
    end
 end
 
+# RVM
+
+set :rvm_type, :system
+set :rvm_ruby_string, '2.0.0-p195@flightseein'
+require 'rvm/capistrano'
+
 # BUNDLER
 
 require 'bundler/capistrano'

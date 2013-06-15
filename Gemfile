@@ -44,7 +44,8 @@ group :development do
   gem 'rails3-generators'
   
   # DEPLOY
-  gem 'capistrano'
+  gem 'capistrano', require: nil
+  gem 'rvm-capistrano', require: nil
 
   # DOCUMENTATION
   gem 'yard', require: nil
