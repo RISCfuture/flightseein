@@ -1,7 +1,7 @@
 # GENERAL
 
 set :application, 'www.flightsee.in'
-set :repository, "gitosis@www.flightsee.in:flightseein.git"
+set :repository, "git@www.timothymorgan.info:flightseein.git"
 
 # SCM
 
