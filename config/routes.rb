@@ -15,7 +15,7 @@ Flightseein::Application.routes.draw do
 
     require 'admin_constraint'
     require 'sidekiq/web'
-    mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
+    mount Sidekiq::Web => 'sidekiq'#, constraints: AdminConstraint.new
   end
 
   constraints(SubdomainRouter::Constraint) do
