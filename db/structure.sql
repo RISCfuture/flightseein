@@ -406,6 +406,7 @@ CREATE TABLE users (
     has_avatar boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
+    admin boolean DEFAULT false NOT NULL,
     CONSTRAINT users_email_check CHECK ((char_length((email)::text) > 0)),
     CONSTRAINT users_subdomain_check CHECK ((char_length((subdomain)::text) >= 2))
 );
@@ -923,6 +924,8 @@ ALTER TABLE ONLY users
 -- PostgreSQL database dump complete
 --
 
+SET search_path TO "$user",public;
+
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -954,6 +957,8 @@ INSERT INTO schema_migrations (version) VALUES ('20120201082606');
 INSERT INTO schema_migrations (version) VALUES ('20120201090431');
 
 INSERT INTO schema_migrations (version) VALUES ('20120203233542');
+
+INSERT INTO schema_migrations (version) VALUES ('20130724060907');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

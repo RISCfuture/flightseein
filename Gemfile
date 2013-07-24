@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '>= 3.2'
+gem 'rails', '< 4.0'
 gem 'configoro'
 
 # ROUTING
@@ -34,6 +34,9 @@ gem 'multiuploader'
 # IMPORTING
 gem 'sqlite3'
 gem 'sidekiq'
+gem 'slim', '>= 1.1.0'
+# if you require 'sinatra' you get the DSL extended to Object
+gem 'sinatra', '>= 1.3.0', require: nil
 
 # ASSETS
 gem 'aws-s3', require: 'aws/s3'
@@ -42,7 +45,7 @@ gem 'aws-sdk'
 group :development do
   # DEVELOPMENT
   gem 'rails3-generators'
-  
+
   # DEPLOY
   gem 'capistrano', require: nil
   gem 'rvm-capistrano', require: nil

@@ -21,6 +21,7 @@ require 'digest/sha1'
 # | `email`     | The user's email address and their login identifier.                           |
 # | `subdomain` | The user's subdomain.                                                          |
 # | `active`    | Whether or not the user account is active. Inactive accounts are inaccessible. |
+# | `admin`     | Whether or not the user is an administrator. Admins can view Sidekiq jobs.     |
 #
 # Metadata
 # --------
@@ -52,7 +53,7 @@ require 'digest/sha1'
 
 class User < ActiveRecord::Base
   include HasMetadata
-  
+
   attr_accessor :password
 
   has_many :aircraft, dependent: :delete_all, inverse_of: :user
@@ -149,7 +150,7 @@ class User < ActiveRecord::Base
 
   # Recalculates the `hours` metadata attribute by summing up the durations of
   # all {Flight Flights}.
-  
+
   def update_hours!
     update_attribute :hours, flights.sum(:duration)
   end
