@@ -2,10 +2,6 @@ require 'subdomain_router'
 
 Flightseein::Application.routes.draw do
   constraints(subdomain: '') do
-    require 'admin_constraint'
-    require 'sidekiq/web'
-    mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
-
     match '' => redirect { |_, request| "http://www.#{request.host_with_port}" }
     match '*glob' => redirect { |_, request| "http://www.#{request.host_with_port}#{request.fullpath}" }
   end
@@ -16,6 +12,10 @@ Flightseein::Application.routes.draw do
     resources :photographs, only: :index
 
     root(to: 'users#new')
+
+    require 'admin_constraint'
+    require 'sidekiq/web'
+    mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
   end
 
   constraints(SubdomainRouter::Constraint) do
