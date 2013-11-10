@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '< 4.0'
+gem 'rails', '3.2.15'
 gem 'configoro'
 
 # ROUTING
@@ -64,7 +64,7 @@ end
 
 group :production do
   # EXECJS
-  gem 'therubyracer', '~> 0.10.2', require: 'v8'
+  gem 'therubyracer', require: 'v8'
 
   # CACHING
   gem 'memcache-client'

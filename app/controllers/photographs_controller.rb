@@ -54,9 +54,7 @@ class PhotographsController < ApplicationController
   end
 
   def create
-    respond_with(@photograph = @flight.photographs.create(params[:photograph], as: :pilot)) do |format|
-      format.json { render(json: @photograph.to_json, status: :created) }
-    end
+    respond_with(@photograph = @flight.photographs.create(params[:photograph], as: :pilot))
   end
 
   private
