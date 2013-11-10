@@ -1,7 +1,7 @@
 # GENERAL
 
 set :application, 'www.flightsee.in'
-set :repository, "git@www.timothymorgan.info:flightseein.git"
+set :repository, 'git@www.timothymorgan.info:flightseein.git'
 
 # SCM
 
@@ -44,7 +44,7 @@ end
 # RVM
 
 set :rvm_type, :system
-set :rvm_ruby_string, '2.0.0-p195@flightseein'
+set :rvm_ruby_string, '2.0.0-p247@flightseein'
 require 'rvm/capistrano'
 
 # BUNDLER
