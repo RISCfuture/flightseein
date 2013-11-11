@@ -60,7 +60,7 @@ class LogtenParser < Parser
               else
                 nil
               end
-      user.aircraft.where(ident: ident).create_or_update!({ year: year, type: type, long_type: long_type, notes: notes, image: image }, as: :importer)
+      user.aircraft.where(ident: ident).create_or_update!(year: year, type: type, long_type: long_type, notes: notes, image: image)
     end
   end
 
@@ -86,7 +86,7 @@ class LogtenParser < Parser
         next
       end
 
-      destination = user.destinations.where(airport_id: airport.id).create_or_update!({ photo: image }, as: :importer)
+      destination = user.destinations.where(airport_id: airport.id).create_or_update!(photo: image)
       @destination_ids[id] = destination
     end
   end
@@ -120,7 +120,7 @@ class LogtenParser < Parser
         # or create a new one
         person ||= user.people.build
         # in any case, update the logbook ID to the new UUID system
-        person.update_attributes!({ logbook_id: uuid, name: name, photo: image, me: is_me.parse_bool }, as: :importer)
+        person.update_attributes!(logbook_id: uuid, name: name, photo: image, me: is_me.parse_bool)
       end
 
       @person_ids[pkey] = person
@@ -191,7 +191,7 @@ class LogtenParser < Parser
         # or create a new one
         flight ||= user.flights.build
         # in any case, update the logbook ID to the new UUID system
-        flight.update_attributes!({ logbook_id: uuid, duration: duration, remarks: remarks.try(:chomp).try(:strip), aircraft: aircraft, origin: origin, destination: destination, date: date }, as: :importer)
+        flight.update_attributes!(logbook_id: uuid, duration: duration, remarks: remarks.try(:chomp).try(:strip), aircraft: aircraft, origin: origin, destination: destination, date: date)
       end
       @flight_ids[pkey] = flight
 
@@ -235,7 +235,7 @@ class LogtenParser < Parser
         Rails.logger.warn "Skipping ZPIC due to missing person: #{[flight_id, person_id].inspect}"
         next
       end
-      flight.occupants.create!({ role: "Pilot in command", person: person }, as: :importer)
+      flight.occupants.create!(role: "Pilot in command", person: person)
     end
   end
 
@@ -257,7 +257,7 @@ class LogtenParser < Parser
         Rails.logger.warn "Skipping ZSIC due to missing person: #{[flight_id, person_id].inspect}"
         next
       end
-      flight.occupants.create!({ role: "Second in command", person: person }, as: :importer)
+      flight.occupants.create!(role: "Second in command", person: person)
     end
   end
 
@@ -279,7 +279,7 @@ class LogtenParser < Parser
         Rails.logger.warn "Skipping ZPASSENGER due to missing person: #{[flight_id, person_id].inspect}"
         next
       end
-      flight.occupants.create!({ person: person }, as: :importer)
+      flight.occupants.create!(person: person)
     end
   end
 

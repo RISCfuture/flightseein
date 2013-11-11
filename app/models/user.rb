@@ -63,33 +63,33 @@ class User < ActiveRecord::Base
   has_many :people, dependent: :delete_all, inverse_of: :user
 
   has_metadata(
-    encrypted_password: { presence: true },
-    salt: { presence: true },
+      encrypted_password:  { presence: true },
+      salt:                { presence: true },
 
-    name: { length: { maximum: 100 }, allow_blank: true },
-    quote: { length: { maximum: 500 }, allow_blank: true },
-    hours: { type: Float, default: 0.0, numericality: { greater_than_or_equal_to: 0 } },
-    certificate: { allow_blank: true },
-    has_instrument: { type: Boolean, default: false },
-    certification_date: { type: Date, allow_blank: true },
+      name:                { length: { maximum: 100 }, allow_blank: true },
+      quote:               { length: { maximum: 500 }, allow_blank: true },
+      hours:               { type: Float, default: 0.0, numericality: { greater_than_or_equal_to: 0 } },
+      certificate:         { allow_blank: true },
+      has_instrument:      { type: Boolean, default: false },
+      certification_date:  { type: Date, allow_blank: true },
 
-    old_subdomain: { allow_blank: true },
+      old_subdomain:       { allow_blank: true },
 
-    avatar_file_name: { allow_blank: true },
-    avatar_content_type: { allow_blank: true, format: { with: /^image\// } },
-    avatar_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    avatar_updated_at: { type: Time, allow_blank: true },
-    avatar_fingerprint: { allow_blank: true }
+      avatar_file_name:    { allow_blank: true },
+      avatar_content_type: { allow_blank: true, format: { with: /\Aimage\// } },
+      avatar_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
+      avatar_updated_at:   { type: Time, allow_blank: true },
+      avatar_fingerprint:  { allow_blank: true }
   )
 
   validates :email,
-            presence: true,
-            email: true,
+            presence:   true,
+            email:      true,
             uniqueness: true
   validates :subdomain,
-            presence: true,
-            format: { with: /^[a-z0-9][a-z0-9_\-][a-z0-9]+$/ },
-            length: { minimum: 2, maximum: 32 },
+            presence:   true,
+            format:     { with: /\A[a-z0-9][a-z0-9_\-][a-z0-9]+\z/ },
+            length:     { minimum: 2, maximum: 32 },
             uniqueness: true
 
   before_validation :set_salt, on: :create
@@ -100,15 +100,14 @@ class User < ActiveRecord::Base
   after_save :update_cache
   after_destroy :invalidate_cache
 
-  attr_accessible :email, :password, :name, :quote, :subdomain, :avatar, as: :pilot
   attr_readonly :email
 
-  scope :active, where(active: true)
+  scope :active, -> { where(active: true) }
   scope :with_email, ->(email) { where(email: email.try(:downcase)) }
   scope :for_subdomain, ->(subdomain) { where(subdomain: subdomain.try(:downcase)) }
 
   has_attached_file :avatar,
-                    styles: { profile: '200x200>', profile_small: '100x100>' },
+                    styles:      { profile: '200x200>', profile_small: '100x100>' },
                     default_url: "user/:style-missing.png"
 
   # Determines if a provided password matches the password stored for a user.
@@ -213,7 +212,7 @@ class User < ActiveRecord::Base
 
   def relinquish_subdomain
     self.old_subdomain = subdomain
-    self.subdomain = SecureRandom.urlsafe_base64(24)[0, 32]
+    self.subdomain     = SecureRandom.urlsafe_base64(24)[0, 32]
   end
 
   def update_cache

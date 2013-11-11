@@ -27,12 +27,12 @@ class Photograph < ActiveRecord::Base
   belongs_to :flight, inverse_of: :photographs
 
   has_metadata(
-      caption: {allow_blank: true, length: {maximum: 300}},
-      image_file_name: {presence: true},
-      image_content_type: {presence: true, format: {with: /^image\//}},
-      image_file_size: {type: Fixnum, presence: true, numericality: {less_than: 2.megabytes}},
-      image_updated_at: {type: Time, presence: true},
-      image_fingerprint: {presence: true}
+      caption:            { allow_blank: true, length: { maximum: 300 } },
+      image_file_name:    { presence: true },
+      image_content_type: { presence: true, format: { with: /\Aimage\// } },
+      image_file_size:    { type: Fixnum, presence: true, numericality: { less_than: 2.megabytes } },
+      image_updated_at:   { type: Time, presence: true },
+      image_fingerprint:  { presence: true }
   )
 
   validates :flight,
@@ -40,12 +40,11 @@ class Photograph < ActiveRecord::Base
 
   after_save { |obj| obj.flight.update_attribute :has_photos, true }
 
-  attr_accessible :image, :caption, as: :pilot
   attr_readonly :image
 
   has_attached_file :image, Carousel.paperclip_options(
-      styles: {
-          blog: '200x200>',
+      styles:                           {
+          blog:    '200x200>',
           logbook: '32x32#',
       },
       check_validity_before_processing: false

@@ -14,5 +14,5 @@
 
 <p>
   <%= link_to "&larr; Return to your home page".html_safe, root_url, class: 'button-small' %>
-  <%= link_to "Delete my account", account_url, method: :delete, confirm: "This will prevent anyone from viewing your account. Are you sure?", class: 'button-small' %>
+  <%= link_to "Delete my account", account_url, method: :delete, data: { confirm: "This will prevent anyone from viewing your account. Are you sure?" }, class: 'button-small' %>
 </p>

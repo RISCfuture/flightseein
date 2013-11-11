@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   # | `user` | The information for the new user account. |
 
   def create
-    @user = User.create(params[:user], as: :pilot)
+    @user = User.create(user_params)
     log_in(@user) if @user.valid?
     respond_with @user do |format|
       format.html do
@@ -42,5 +42,11 @@ class UsersController < ApplicationController
         end
       end
     end
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:email, :password, :name, :quote, :subdomain, :avatar)
   end
 end

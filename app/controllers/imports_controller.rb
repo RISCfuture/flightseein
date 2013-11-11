@@ -32,7 +32,7 @@ class ImportsController < ApplicationController
   # | `logbook` | The digital logbook. |
 
   def create
-    @import = current_user.imports.create(params[:import], as: :pilot)
+    @import = current_user.imports.create(import_params)
     @import.enqueue if @import.persisted?
 
     [ :logbook_content_type, :logbook_file_size ].each do |field|
@@ -67,5 +67,9 @@ class ImportsController < ApplicationController
 
   def find_import
     @import = current_user.imports.find_by_id(params[:id]) || raise(ActiveRecord::RecordNotFound)
+  end
+
+  def import_params
+    params.require(:import).permit(:logbook)
   end
 end

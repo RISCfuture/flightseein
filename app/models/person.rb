@@ -40,18 +40,18 @@ class Person < ActiveRecord::Base
   slugged :name, scope: ->(person) { person.user.subdomain }, slugifier: ->(str) { str.remove_formatting.replace_whitespace('_').collapse('_') }
 
   belongs_to :user, inverse_of: :people
-  has_many :occupantships, class_name: 'Occupant', inverse_of: :person, dependent: :restrict
+  has_many :occupantships, class_name: 'Occupant', inverse_of: :person, dependent: :restrict_with_exception
   has_many :flights, through: :occupantships
 
   has_metadata(
-    name:               { presence: true, length: { maximum: 100 } },
-    notes:              { length: { maximum: 1000 }, allow_blank: true },
+      name:               { presence: true, length: { maximum: 100 } },
+      notes:              { length: { maximum: 1000 }, allow_blank: true },
 
-    photo_file_name:    { allow_blank: true },
-    photo_content_type: { allow_blank: true, format: { with: /^image\// } },
-    photo_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    photo_updated_at:   { type: Time, allow_blank: true },
-    photo_fingerprint:  { allow_blank: true }
+      photo_file_name:    { allow_blank: true },
+      photo_content_type: { allow_blank: true, format: { with: /\Aimage\// } },
+      photo_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
+      photo_updated_at:   { type: Time, allow_blank: true },
+      photo_fingerprint:  { allow_blank: true }
   )
 
   validates :user,
@@ -63,20 +63,18 @@ class Person < ActiveRecord::Base
             presence:   true,
             uniqueness: { scope: :user_id }
 
-  attr_accessible :name, :photo, :me, :logbook_id, as: :importer
-
   has_attached_file :photo, Carousel.paperclip_options(
-    styles:      {
-                   profile: '200x200>',
-                   logbook: '32x32#',
-                   stat:    '64x64#',
-                 },
-    default_url: "person/:style-missing.png")
+      styles:      {
+          profile: '200x200>',
+          logbook: '32x32#',
+          stat:    '64x64#',
+      },
+      default_url: "person/:style-missing.png")
   check_for_duplicate_attached_file :photo
 
-  scope :randomly, order('RANDOM()')
-  scope :participating, where('hours > 0')
-  scope :not_me, where(me: false)
+  scope :randomly, -> { order('RANDOM()') }
+  scope :participating, -> { where('hours > 0') }
+  scope :not_me, -> { where(me: false) }
 
   # Updates this person's `hours` field from their flights, and saves the
   # record.

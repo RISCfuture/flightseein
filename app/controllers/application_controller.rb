@@ -25,7 +25,8 @@ class ApplicationController < ActionController::Base
   #   the default subdomain (e.g., "www").
 
   def subdomain_owner
-    request.env['subdomain_router.subdomain_owner'] || User.active.for_subdomain(request.subdomain).first
+    user_id = request.env['subdomain_router.subdomain_owner']
+    user_id ? User.find(user_id) : User.active.for_subdomain(request.subdomain).first
   end
   helper_method :subdomain_owner
 

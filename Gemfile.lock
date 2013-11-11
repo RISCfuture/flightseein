@@ -1,34 +1,32 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (3.2.15)
-      actionpack (= 3.2.15)
+    actionmailer (4.0.1)
+      actionpack (= 4.0.1)
       mail (~> 2.5.4)
-    actionpack (3.2.15)
-      activemodel (= 3.2.15)
-      activesupport (= 3.2.15)
-      builder (~> 3.0.0)
+    actionpack (4.0.1)
+      activesupport (= 4.0.1)
+      builder (~> 3.1.0)
       erubis (~> 2.7.0)
-      journey (~> 1.0.4)
-      rack (~> 1.4.5)
-      rack-cache (~> 1.2)
-      rack-test (~> 0.6.1)
-      sprockets (~> 2.2.1)
-    activemodel (3.2.15)
-      activesupport (= 3.2.15)
-      builder (~> 3.0.0)
-    activerecord (3.2.15)
-      activemodel (= 3.2.15)
-      activesupport (= 3.2.15)
-      arel (~> 3.0.2)
-      tzinfo (~> 0.3.29)
-    activeresource (3.2.15)
-      activemodel (= 3.2.15)
-      activesupport (= 3.2.15)
-    activesupport (3.2.15)
+      rack (~> 1.5.2)
+      rack-test (~> 0.6.2)
+    activemodel (4.0.1)
+      activesupport (= 4.0.1)
+      builder (~> 3.1.0)
+    activerecord (4.0.1)
+      activemodel (= 4.0.1)
+      activerecord-deprecated_finders (~> 1.0.2)
+      activesupport (= 4.0.1)
+      arel (~> 4.0.0)
+    activerecord-deprecated_finders (1.0.3)
+    activesupport (4.0.1)
       i18n (~> 0.6, >= 0.6.4)
-      multi_json (~> 1.0)
-    arel (3.0.2)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    arel (4.0.1)
+    atomic (1.1.14)
     aws-s3 (0.6.3)
       builder
       mime-types
@@ -38,13 +36,17 @@ GEM
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
     boolean (1.0.1)
-    builder (3.0.4)
-    capistrano (2.15.5)
-      highline
-      net-scp (>= 1.0.0)
-      net-sftp (>= 2.0.0)
-      net-ssh (>= 2.0.14)
-      net-ssh-gateway (>= 1.1.0)
+    builder (3.1.4)
+    capistrano (3.0.1)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (>= 0.0.23)
+    capistrano-bundler (1.0.0)
+      capistrano (>= 3.0.0.pre)
+    capistrano-rails (1.0.0)
+      capistrano
+    capistrano-rvm (0.0.3)
+      capistrano
     carousel (1.0.0)
       compass
       jquery-rails
@@ -56,24 +58,30 @@ GEM
       activesupport (>= 3.0)
     cocaine (0.5.3)
       climate_control (>= 0.0.3, < 1.0)
+    coffee-rails (4.0.1)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0, < 5.0)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
     coffee-script-source (1.6.3)
-    compass (0.11.4)
+    compass (0.12.2)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
       sass (~> 3.1)
+    compass-rails (2.0.alpha.0)
+      compass (>= 0.12.2, < 0.14)
     configoro (1.3.0)
       activesupport
     connection_pool (1.1.0)
+    dalli (2.6.4)
     diff-lcs (1.2.5)
     email_validation (1.1.1)
       localized_each_validator (>= 1.0.1)
-    enum_type (2.1.0)
+    enum_type (2.1.2)
       activerecord
-      activerecord (>= 3.0)
-      activesupport (>= 3.0)
+      activerecord (>= 4.0)
+      activesupport (>= 4.0)
     erubis (2.7.0)
     execjs (2.0.2)
     factory_girl (4.3.0)
@@ -86,10 +94,8 @@ GEM
     has_metadata (1.6.1)
       boolean
       rails (>= 3.2)
-    highline (1.6.20)
     hike (1.2.3)
     i18n (0.6.5)
-    journey (1.0.4)
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
@@ -101,9 +107,9 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    memcache-client (1.8.5)
     mime-types (1.25)
     mini_portile (0.5.2)
+    minitest (4.7.5)
     multi_json (1.8.2)
     multiuploader (1.0.1)
       compass
@@ -111,11 +117,7 @@ GEM
       rails
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
-    net-sftp (2.1.2)
-      net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
-    net-ssh-gateway (1.2.0)
-      net-ssh (>= 2.6.5)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     paperclip (3.5.2)
@@ -127,35 +129,27 @@ GEM
       paperclip
     pg (0.17.0)
     polyglot (0.3.3)
-    rack (1.4.5)
-    rack-cache (1.2)
-      rack (>= 0.4)
+    rack (1.5.2)
     rack-protection (1.5.1)
-      rack
-    rack-ssl (1.3.3)
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rails (3.2.15)
-      actionmailer (= 3.2.15)
-      actionpack (= 3.2.15)
-      activerecord (= 3.2.15)
-      activeresource (= 3.2.15)
-      activesupport (= 3.2.15)
-      bundler (~> 1.0)
-      railties (= 3.2.15)
+    rails (4.0.1)
+      actionmailer (= 4.0.1)
+      actionpack (= 4.0.1)
+      activerecord (= 4.0.1)
+      activesupport (= 4.0.1)
+      bundler (>= 1.3.0, < 2.0)
+      railties (= 4.0.1)
+      sprockets-rails (~> 2.0.0)
     rails3-generators (1.0.0)
       railties (>= 3.0.0)
-    railties (3.2.15)
-      actionpack (= 3.2.15)
-      activesupport (= 3.2.15)
-      rack-ssl (~> 1.3.2)
+    railties (4.0.1)
+      actionpack (= 4.0.1)
+      activesupport (= 4.0.1)
       rake (>= 0.8.7)
-      rdoc (~> 3.4)
-      thor (>= 0.14.6, < 2.0)
+      thor (>= 0.18.1, < 2.0)
     rake (10.1.0)
-    rdoc (3.12.2)
-      json (~> 1.4)
     redcarpet (3.0.0)
     redis (3.0.6)
     redis-namespace (1.3.2)
@@ -172,9 +166,11 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
-    rvm-capistrano (1.5.1)
-      capistrano (~> 2.15.4)
     sass (3.2.12)
+    sass-rails (4.0.1)
+      railties (>= 4.0.0, < 5.0)
+      sass (>= 3.1.10)
+      sprockets-rails (~> 2.0.0)
     sidekiq (2.16.1)
       celluloid (>= 0.15.2)
       connection_pool (>= 1.0.0)
@@ -188,25 +184,38 @@ GEM
     slim (2.0.2)
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
-    slugalicious (2.0.0)
-      rails (>= 3.1)
+    slugalicious (2.1.0)
+      rails (>= 4.0)
       stringex
-    sprockets (2.2.2)
+    sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    sprockets-rails (2.0.1)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      sprockets (~> 2.8)
     sqlite3 (1.3.8)
+    sshkit (1.1.0)
+      net-scp
+      net-ssh
+      term-ansicolor
     stringex (2.1.0)
     subdomain_router (1.0.0)
       rails
     temple (0.6.7)
+    term-ansicolor (1.2.2)
+      tins (~> 0.8)
     therubyracer (0.12.0)
       libv8 (~> 3.16.14.0)
       ref
     thor (0.18.1)
+    thread_safe (0.1.3)
+      atomic
     tilt (1.4.1)
     timers (1.1.0)
+    tins (0.13.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -226,10 +235,14 @@ DEPENDENCIES
   aws-s3
   aws-sdk
   capistrano
+  capistrano-bundler
+  capistrano-rails
+  capistrano-rvm
   carousel
-  coffee-script
-  compass (= 0.11.4)
+  coffee-rails
+  compass-rails (= 2.0.alpha.0)
   configoro
+  dalli
   email_validation
   enum_type
   factory_girl
@@ -237,19 +250,17 @@ DEPENDENCIES
   find_or_create_on_scopes
   has_metadata
   jquery-rails
-  memcache-client
   multiuploader
   nokogiri
   paperclip
   paperclip_duplicate_check
   pg
-  rails (= 3.2.15)
+  rails (= 4.0.1)
   rails3-generators
   rake
   redcarpet
   rspec-rails
-  rvm-capistrano
-  sass
+  sass-rails
   sidekiq
   sinatra (>= 1.3.0)
   slim (>= 1.1.0)

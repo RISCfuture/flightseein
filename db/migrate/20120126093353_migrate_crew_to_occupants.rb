@@ -5,9 +5,9 @@ class MigrateCrewToOccupants < ActiveRecord::Migration
 
   def up
     Flight.find_each do |flight|
-      flight.occupants.create!({ person: flight.pic, role: "Pilot in command" }, as: :importer) if flight.pic
-      flight.occupants.create!({ person: flight.sic, role: "Second in command" }, as: :importer) if flight.sic
-      flight.passengers.each { |pax| flight.occupants.create!({ person: pax }, as: :importer) }
+      flight.occupants.create!(person: flight.pic, role: "Pilot in command") if flight.pic
+      flight.occupants.create!(person: flight.sic, role: "Second in command") if flight.sic
+      flight.passengers.each { |pax| flight.occupants.create!(person: pax) }
     end
   end
 

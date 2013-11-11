@@ -26,30 +26,30 @@ class Slug < ActiveRecord::Base
 
   scope :for, ->(object_or_type, object_id=nil) {
     object_type = object_id ? object_or_type : object_or_type.class.to_s
-    object_id ||= object_or_type.id
+    object_id   ||= object_or_type.id
     where(sluggable_type: object_type, sluggable_id: object_id)
   }
   scope :for_class, ->(model) { where(sluggable_type: model.to_s) }
   scope :from_slug, ->(klass, scope, slug) {
     where(sluggable_type: klass.to_s, slug: slug, scope: scope)
   }
-  scope :active, where(active: true)
-  scope :inactive, where(active: false)
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
 
   validates :sluggable_type,
             presence: true
   validates :sluggable_id,
-            presence: true,
+            presence:     true,
             numericality: { only_integer: true }
   validates :slug,
-            presence: true,
-            length: { maximum: 126 },
-            uniqueness: { case_sensitive: false, scope: [ :scope, :sluggable_type ] } #TODO validate scope case-insensitively
+            presence:   true,
+            length:     { maximum: 126 },
+            uniqueness: { case_sensitive: false, scope: [:scope, :sluggable_type] } #TODO validate scope case-insensitively
   validates :scope,
-            length: { maximum: 126 },
+            length:      { maximum: 126 },
             allow_blank: true
   validate :one_active_slug_per_object
-  
+
   # Marks a slug as active and deactivates all other slugs assigned to the
   # record.
 

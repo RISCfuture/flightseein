@@ -121,7 +121,7 @@ class FlightsController < ApplicationController
   # Routes
   # ------
   #
-  # * `PUT /flights/[id]/edit`
+  # * `PATCH /flights/[id]/edit`
   #
   # Path Parameters
   # ---------------
@@ -139,14 +139,14 @@ class FlightsController < ApplicationController
   # | `flight[photograph]` | Nested attributes for the associated photographs. (Creating and destroying photographs is allowed.) |
 
   def update
-    @flight.update_attributes params[:flight], as: :pilot
+    @flight.update_attributes flight_params
     respond_with @flight
   end
 
   private
 
   def find_flight
-    @flight = subdomain_owner.flights.find_from_slug!(params[:id], request.subdomain)
+    @flight = Flight.find_from_slug!(params[:id], request.subdomain)
   end
 
   def build_json(flights)
@@ -177,5 +177,9 @@ class FlightsController < ApplicationController
         end
       }
     end
+  end
+
+  def flight_params
+    params.require(:flight).permit(:blog, photographs_attributes: [:image, :caption, :_destroy, :id])
   end
 end

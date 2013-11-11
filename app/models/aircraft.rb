@@ -36,45 +36,44 @@ class Aircraft < ActiveRecord::Base
   include CheckForDuplicateAttachedFile
 
   belongs_to :user, inverse_of: :aircraft
-  has_many :flights, inverse_of: :aircraft, dependent: :restrict
+  has_many :flights, inverse_of: :aircraft, dependent: :restrict_with_exception
 
   has_metadata(
-    year: {
-      type: Fixnum,
-      inclusion: { in: 1903..2100 },
-      allow_blank: true },
-    type: {
-      length: { maximum: 10 },
-      format: { with: /^[A-Z0-9\-_\/ ]+$/ },
-      allow_blank: true },
-    long_type: {
-      length: { maximum: 500 },
-      allow_blank: true },
-    notes: {
-      length: { maximum: 500 },
-      allow_blank: true },
+      year:               {
+          type:        Fixnum,
+          inclusion:   { in: 1903..2100 },
+          allow_blank: true },
+      type:               {
+          length:      { maximum: 10 },
+          format:      { with: /\A[A-Z0-9\-_\/ ]+\z/ },
+          allow_blank: true },
+      long_type:          {
+          length:      { maximum: 500 },
+          allow_blank: true },
+      notes:              {
+          length:      { maximum: 500 },
+          allow_blank: true },
 
-  image_file_name: { allow_blank: true },
-    image_content_type: { allow_blank: true, format: { with: /^image\// } },
-    image_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
-    image_updated_at: { type: Time, allow_blank: true },
-    image_fingerprint: { allow_blank: true }
+      image_file_name:    { allow_blank: true },
+      image_content_type: { allow_blank: true, format: { with: /\Aimage\// } },
+      image_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
+      image_updated_at:   { type: Time, allow_blank: true },
+      image_fingerprint:  { allow_blank: true }
   )
 
   validates :ident,
-            presence: true,
-            format: { with: /^[A-Z0-9\-]+$/ },
+            presence:   true,
+            format:     { with: /\A[A-Z0-9\-]+\z/ },
             uniqueness: { scope: :user_id }
 
   before_validation(on: :create) do |aircraft|
     aircraft.ident = aircraft.ident.upcase if aircraft.ident
   end
 
-  attr_accessible :ident, :year, :type, :long_type, :notes, :image, as: :importer
   attr_readonly :ident
 
   has_attached_file :image,
-                    styles: { stat: '64x64#' },
+                    styles:      { stat: '64x64#' },
                     default_url: "aircraft/:style-missing.png"
   check_for_duplicate_attached_file :image
 end

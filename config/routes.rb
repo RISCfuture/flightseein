@@ -2,8 +2,8 @@ require 'subdomain_router'
 
 Flightseein::Application.routes.draw do
   constraints(subdomain: '') do
-    match '' => redirect { |_, request| "http://www.#{request.host_with_port}" }
-    match '*glob' => redirect { |_, request| "http://www.#{request.host_with_port}#{request.fullpath}" }
+    get '' => redirect { |_, request| "http://www.#{request.host_with_port}" }
+    get '*glob' => redirect { |_, request| "http://www.#{request.host_with_port}#{request.fullpath}" }
   end
 
   constraints(subdomain: SubdomainRouter::Config.default_subdomain) do
@@ -31,6 +31,6 @@ Flightseein::Application.routes.draw do
       resources :flights, only: :index
     end
 
-    root(to: 'accounts#show')
+    get '' => 'accounts#show'
   end
 end

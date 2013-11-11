@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '3.2.15'
+gem 'rails', '4.0.1'
 gem 'configoro'
 
 # ROUTING
@@ -22,11 +22,7 @@ gem 'find_or_create_on_scopes'
 gem 'paperclip_duplicate_check'
 
 # VIEWS
-gem 'coffee-script'
-gem 'compass', '0.11.4', require: false # 0.11.5 has a bug in the reset module
 gem 'jquery-rails'
-gem 'sass'
-gem 'uglifier'
 gem 'redcarpet'#, require: 'RedCarpet' # also for documentation
 gem 'carousel'
 gem 'multiuploader'
@@ -41,6 +37,11 @@ gem 'sinatra', '>= 1.3.0', require: nil
 # ASSETS
 gem 'aws-s3', require: 'aws/s3'
 gem 'aws-sdk'
+gem 'therubyracer', require: 'v8'
+gem 'compass-rails', '2.0.alpha.0' # rails 4 support
+gem 'sass-rails'
+gem 'uglifier'
+gem 'coffee-rails'
 
 group :development do
   # DEVELOPMENT
@@ -48,7 +49,9 @@ group :development do
 
   # DEPLOY
   gem 'capistrano', require: nil
-  gem 'rvm-capistrano', require: nil
+  gem 'capistrano-rvm', require: nil
+  gem 'capistrano-bundler', require: nil
+  gem 'capistrano-rails', require: nil
 
   # DOCUMENTATION
   gem 'yard', require: nil
@@ -63,9 +66,6 @@ group :test do
 end
 
 group :production do
-  # EXECJS
-  gem 'therubyracer', require: 'v8'
-
   # CACHING
-  gem 'memcache-client'
+  gem 'dalli'
 end

@@ -24,8 +24,8 @@ describe FlightsController do
           @blog_flights = 60.times.map { FactoryGirl.create :flight, user: @user, blog: "Hello, world!", date: Date.today - rand(600) }
           noblog_flights = 60.times.map { FactoryGirl.create :flight, user: @user, blog: nil, date: Date.today - rand(600) }
           @user.update_flight_sequence!
-          @blog_flights = Flight.where(id: @blog_flights.map(&:id)).order('sequence DESC').all
-          @flights = Flight.where(id: (@blog_flights + noblog_flights).map(&:id)).order('sequence DESC').all
+          @blog_flights = Flight.where(id: @blog_flights.map(&:id)).order('sequence DESC')
+          @flights = Flight.where(id: (@blog_flights + noblog_flights).map(&:id)).order('sequence DESC')
 
           100.times { FactoryGirl.create :photograph, flight: @flights.sample }
           50.times { FactoryGirl.create :passenger, flight: @flights.sample, person: FactoryGirl.create(:person, user: @user) }
@@ -153,7 +153,7 @@ describe FlightsController do
             flight
           end
           @user.update_flight_sequence!
-          @flights = Flight.where(id: flights.map(&:id)).order('sequence DESC').all
+          @flights = Flight.where(id: flights.map(&:id)).order('sequence DESC')
         end
 
         it "should return the first 50 flights by date where that person was an occupant" do
@@ -193,7 +193,7 @@ describe FlightsController do
           FactoryGirl.create :stop, destination: @destination, sequence: 1
 
           @user.update_flight_sequence!
-          @flights = Flight.where(id: @flights.map(&:id)).order('sequence DESC').all
+          @flights = Flight.where(id: @flights.map(&:id)).order('sequence DESC')
         end
 
         it "should return the first 50 flights by date to that airport" do
@@ -299,14 +299,14 @@ describe FlightsController do
       session[:user_id] = @user
       request.host = "#{@user.subdomain}.test.host"
     end
-    
+
     it "should 404 if an invalid flight ID is provided" do
-      put :update, id: 'not-found'
+      patch :update, id: 'not-found'
       response.status.should eql(404)
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      put :update, id: FactoryGirl.create(:flight).to_param
+      patch :update, id: FactoryGirl.create(:flight).to_param
       response.status.should eql(404)
     end
 
@@ -317,18 +317,18 @@ describe FlightsController do
 
       context "[valid attributes]" do
         it "should update the flight from the parameter hash" do
-          put :update, id: @flight.to_param, flight: { blog: "new blog entry" }
+          patch :update, id: @flight.to_param, flight: { blog: "new blog entry" }
           @flight.reload.blog.should eql("new blog entry")
         end
 
         it "should redirect to the flight URL" do
-          put :update, id: @flight.to_param, flight: { blog: "new blog entry" }
+          patch :update, id: @flight.to_param, flight: { blog: "new blog entry" }
           response.should redirect_to(flight_url(@flight))
         end
 
         it "should update photographs as well" do
           photo = FactoryGirl.create(:photograph, flight: @flight, caption: 'foo')
-          put :update, id: @flight.to_param, flight: { blog: 'new 2', photographs_attributes: { '0' => { caption: 'bar', _destroy: '0', id: photo.id.to_s } } }
+          patch :update, id: @flight.to_param, flight: { blog: 'new 2', photographs_attributes: { '0' => { caption: 'bar', _destroy: '0', id: photo.id.to_s } } }
           photo.reload.caption.should eql('bar')
         end
       end
@@ -337,13 +337,13 @@ describe FlightsController do
         it "should leave the flight unchanged" do
           pending "No invalid attributes"
           attrs = @flight.attributes
-          put :update, id: @flight.to_param, flight: { blog: 'halp?' }
+          patch :update, id: @flight.to_param, flight: { blog: 'halp?' }
           @flight.reload.attributes.should eql(attrs)
         end
 
         it "should render the edit template" do
           pending "No invalid attributes"
-          put :update, id: @flight.to_param, flight: { blog: 'halp?' }
+          patch :update, id: @flight.to_param, flight: { blog: 'halp?' }
           response.should render_template('edit')
         end
       end

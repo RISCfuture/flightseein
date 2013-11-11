@@ -45,7 +45,7 @@ class AccountsController < ApplicationController
   # Routes
   # ------
   #
-  # * `PUT /account`
+  # * `PATCH /account`
   #
   # Parameterized Hashes
   # --------------------
@@ -55,7 +55,7 @@ class AccountsController < ApplicationController
   # | `user` | The information for the user account. |
 
   def update
-    current_user.update_attributes(params[:user], as: :pilot)
+    current_user.update_attributes(user_params)
     respond_with current_user do |format|
       format.html do
         if current_user.valid? then
@@ -77,9 +77,15 @@ class AccountsController < ApplicationController
   def destroy
     current_user.update_attribute :active, false
     log_out
-    
+
     respond_to do |format|
       format.html { redirect_to root_url, notice: t('controllers.accounts.destroy.done') }
     end
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:password, :name, :quote, :subdomain, :avatar)
   end
 end

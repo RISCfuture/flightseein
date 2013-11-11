@@ -54,23 +54,24 @@ class PhotographsController < ApplicationController
   end
 
   def create
-    respond_with(@photograph = @flight.photographs.create(params[:photograph], as: :pilot))
+    respond_with (@photograph = @flight.photographs.create(photograph_params)),
+                 location: flight_url(@flight, subdomain: @flight.user.subdomain)
   end
 
   private
 
   def find_flight
     return true unless subdomain_owner
-    @flight = subdomain_owner.flights.find_from_slug!(params[:flight_id], request.subdomain)
+    @flight = Flight.find_from_slug!(params[:flight_id], request.subdomain)
   end
 
   def build_json(photos)
     photos.map do |photo|
       {
-        id: photo.id,
-        url: view_context.image_path(photo.image.url),
-        preview_url: view_context.image_path(photo.image.url(:carousel)),
-        caption: photo.caption
+          id:          photo.id,
+          url:         view_context.image_path(photo.image.url),
+          preview_url: view_context.image_path(photo.image.url(:carousel)),
+          caption:     photo.caption
       }
     end
   end
@@ -78,11 +79,15 @@ class PhotographsController < ApplicationController
   def build_json_from_flights(flights)
     flights.map { |f| f.photographs.limit(5).sample }.map do |photo|
       {
-        id: photo.id,
-        url: flight_url(photo.flight, subdomain: photo.flight.user.subdomain),
-        preview_url: view_context.image_path(photo.image.url(:carousel)),
-        caption: photo.caption
+          id:          photo.id,
+          url:         flight_url(photo.flight, subdomain: photo.flight.user.subdomain),
+          preview_url: view_context.image_path(photo.image.url(:carousel)),
+          caption:     photo.caption
       }
     end
+  end
+
+  def photograph_params
+    params.require(:photograph).permit(:image, :caption)
   end
 end

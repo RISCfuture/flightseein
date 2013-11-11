@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'parser/logten_parser'
+require 'importer'
 
 describe Importer do
   context "[decompression]" do

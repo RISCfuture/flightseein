@@ -47,7 +47,7 @@ class Import < ActiveRecord::Base
   include HasMetadata
   extend EnumType
 
-  @queue = :"import_#{Rails.env}"
+  @queue          = :"import_#{Rails.env}"
 
   # Supported logbook file MIME types.
   SUPPORTED_TYPES = %w( application/zip application/x-gzip application/x-tar
@@ -56,18 +56,16 @@ class Import < ActiveRecord::Base
   belongs_to :user, inverse_of: :imports
 
   has_metadata(
-    logbook_file_name: { allow_blank: true },
-    logbook_content_type: { allow_blank: true, inclusion: { in: SUPPORTED_TYPES } },
-    logbook_file_size: { type: Fixnum, allow_blank: true, numericality: { less_than: 50.megabytes } },
-    logbook_updated_at: { type: Time, allow_blank: true },
-    logbook_fingerprint: { allow_blank: true }
+      logbook_file_name:    { allow_blank: true },
+      logbook_content_type: { allow_blank: true, inclusion: { in: SUPPORTED_TYPES } },
+      logbook_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 50.megabytes } },
+      logbook_updated_at:   { type: Time, allow_blank: true },
+      logbook_fingerprint:  { allow_blank: true }
   )
   enum_type :state, values: %w( pending starting importing_aircraft
                                 importing_airports importing_passengers
                                 importing_flights uploading_photos completed
                                 failed )
-
-  attr_accessible :logbook, as: :pilot
 
   has_attached_file :logbook
 

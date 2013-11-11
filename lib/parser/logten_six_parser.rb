@@ -60,7 +60,7 @@ class LogtenSixParser < Parser
               else
                 nil
               end
-      user.aircraft.where(ident: ident).create_or_update!({ year: year, type: type, long_type: long_type, notes: notes, image: image }, as: :importer)
+      user.aircraft.where(ident: ident).create_or_update!(year: year, type: type, long_type: long_type, notes: notes, image: image)
     end
   end
 
@@ -86,7 +86,7 @@ class LogtenSixParser < Parser
         next
       end
 
-      destination = user.destinations.where(airport_id: airport.id).create_or_update!({ photo: image }, as: :importer)
+      destination = user.destinations.where(airport_id: airport.id).create_or_update!(photo: image)
       @destination_ids[id] = destination
     end
   end
@@ -110,7 +110,7 @@ class LogtenSixParser < Parser
                 nil
               end
       name = name1.present? ? name1 : name2
-      person = user.people.where(logbook_id: uuid).create_or_update!({ name: name, photo: image, me: is_me.parse_bool }, as: :importer)
+      person = user.people.where(logbook_id: uuid).create_or_update!(name: name, photo: image, me: is_me.parse_bool)
 
       @person_ids[pkey] = person
     end
@@ -172,7 +172,7 @@ class LogtenSixParser < Parser
         next
       end
 
-      flight = user.flights.where(logbook_id: uuid).create_or_update!({ duration: duration, remarks: remarks.try(:chomp).try(:strip), aircraft: aircraft, origin: origin, destination: destination, date: date }, as: :importer)
+      flight = user.flights.where(logbook_id: uuid).create_or_update!(duration: duration, remarks: remarks.try(:chomp).try(:strip), aircraft: aircraft, origin: origin, destination: destination, date: date)
       @flight_ids[pkey] = flight
 
       flight.occupants.clear
@@ -247,7 +247,7 @@ class LogtenSixParser < Parser
           Rails.logger.warn "Skipping ZFLIGHTCREW crewmember due to missing person: #{[flight_id, person_id].inspect}"
           next
         end
-        flight.occupants.create!({ person: person, role: role }, as: :importer)
+        flight.occupants.create!(person: person, role: role)
       end
     end
   end
@@ -294,7 +294,7 @@ class LogtenSixParser < Parser
           Rails.logger.warn "Skipping ZFLIGHTPASSENGERS due to missing person: #{[flight_id, person_id].inspect}"
           next
         end
-        flight.occupants.create({ person: person }, as: :importer)
+        flight.occupants.create(person: person)
       end
     end
   end

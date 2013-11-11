@@ -25,10 +25,8 @@ class Occupant < ActiveRecord::Base
   validates :flight,
             presence: true
   validates :role,
-            length: { maximum: 126 },
+            length:      { maximum: 126 },
             allow_blank: true
-
-  attr_accessible :person, :flight, :role, as: :importer
 
   # Overrides the `role` attribute to default to "Passenger".
 

@@ -1,76 +1,17 @@
-# GENERAL
+set :application, 'flightseein'
+set :repo_url, 'git@www.timothymorgan.info:flightseein.git'
 
-set :application, 'www.flightsee.in'
-set :repository, 'git@www.timothymorgan.info:flightseein.git'
+set :deploy_to, '/var/www/www.flightsee.in'
 
-# SCM
-
-set :scm, :git
-set :git_shallow_copy, true
-set :branch, 'master'
-
-# DEPLOY
-
-set :deploy_to, File.join('', 'var', 'www', application)
-set :deploy_via, :copy
-set :copy_cache, true
-
-# AUTHENTICATION
-
-ssh_options[:forward_agent] = true
-ssh_options[:keys] = %w{ ~/.ssh/id_rsa }
-
-# USERS
-
-set :user, 'tmorgan'
-set :runner, 'www-data'
-
-# ROLES
-
-role :web, 'www.flightsee.in'
-role :app, 'www.flightsee.in'
-role :db, 'www.flightsee.in', primary: true
-
-# PASSENGER
+set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 namespace :deploy do
-   task :start do ; end
-   task :stop do ; end
-   task :restart, roles: :app, except: { no_release: true } do
-     sudo "/etc/init.d/apache2 restart"
-   end
-end
-
-# RVM
-
-set :rvm_type, :system
-set :rvm_ruby_string, '2.0.0-p247@flightseein'
-require 'rvm/capistrano'
-
-# BUNDLER
-
-require 'bundler/capistrano'
-
-# ASSETS
-
-load 'deploy/assets'
-
-namespace :ownership do
-  task(:fix_current) do
-    sudo "chown -R www-data:sudo #{deploy_to}"
-    sudo "chmod -R 777 #{release_path}/tmp"
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :touch, release_path.join('tmp', 'restart.txt')
+    end
   end
-  task(:change_assets) { sudo "chown -R tmorgan:sudo #{shared_path}/assets" }
-  task(:fix_assets) { sudo "chown -R www-data:sudo #{shared_path}/assets" }
+
+  after :finishing, 'deploy:cleanup'
 end
-
-before 'deploy:assets:update_asset_mtimes','ownership:change_assets'
-after 'deploy:assets:update_asset_mtimes', 'ownership:fix_assets'
-after 'deploy:finalize_update', 'ownership:fix_current'
-after 'deploy:restart', 'ownership:fix_current' # twice for good luck?
-
-# SIDEKIQ
-
-set :sidekiq_cmd, "#{fetch :bundle_cmd, 'bundle'} exec sidekiq"
-set :sidekiqctl_cmd, "#{fetch :bundle_cmd, 'bundle'} exec sidekiqctl"
-require 'sidekiq/capistrano'

@@ -34,7 +34,7 @@ describe AccountsController do
       FactoryGirl.create(:flight, user: @user, destination: @user.destinations.first)
 
       get :show
-      
+
       assigns(:airport_count).should eql(19) # 9 flights * 2 destinations + flight w/1 unique destination
     end
 
@@ -152,14 +152,14 @@ describe AccountsController do
   describe "#update" do
     it "should redirect if logged out" do
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      put :update, user: FactoryGirl.attributes_for(:user)
+      patch :update, user: FactoryGirl.attributes_for(:user)
       response.should be_redirect
     end
 
     it "should redirect if the current user is not the account owner" do
       session[:user_id] = FactoryGirl.create(:user).id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      put :update, user: FactoryGirl.attributes_for(:user)
+      patch :update, user: FactoryGirl.attributes_for(:user)
       response.should be_redirect
     end
 
@@ -172,8 +172,8 @@ describe AccountsController do
 
       context "[valid values]" do
         before :each do
-          @attributes = FactoryGirl.attributes_for(:user).slice(*User._accessible_attributes.to_a)
-          put :update, user: @attributes
+          @attributes = FactoryGirl.attributes_for(:user).slice(:password, :name, :quote, :subdomain, :avatar)
+          patch :update, user: @attributes
         end
 
         it "should update the user" do
@@ -182,14 +182,14 @@ describe AccountsController do
         end
 
         it "should redirect to the account page" do
-          response.should redirect_to(root_url(subdomain: @user.subdomain))
+          response.should redirect_to(root_url(subdomain: @user.reload.subdomain))
         end
       end
 
       context "[invalid values]" do
         before :each do
           @attributes = { subdomain: 'invalid/subdomain' }
-          put :update, user: @attributes
+          patch :update, user: @attributes
         end
 
         it "should leave the user untouched" do

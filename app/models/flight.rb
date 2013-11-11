@@ -37,7 +37,7 @@
 class Flight < ActiveRecord::Base
   include HasMetadata
   include Slugalicious
-  
+
   belongs_to :user, inverse_of: :flights
   belongs_to :aircraft, inverse_of: :flights
   has_many :photographs, inverse_of: :flight, dependent: :delete_all
@@ -45,12 +45,12 @@ class Flight < ActiveRecord::Base
   has_many :occupants, inverse_of: :flight, dependent: :delete_all
 
   slugged ->(flight) { "#{flight.date.strftime '%Y-%m-%d'} #{flight.destinations.map(&:airport).map(&:identifier).join('-')}" },
-          scope: ->(flight) { flight.user.subdomain },
+          scope:     ->(flight) { flight.user.subdomain },
           slugifier: ->(str) { str.remove_formatting.replace_whitespace('_').collapse('_') }
 
   has_metadata(
-    remarks: { length: { maximum: 500 }, allow_blank: true },
-    blog: { allow_blank: true }
+      remarks: { length: { maximum: 500 }, allow_blank: true },
+      blog:    { allow_blank: true }
   )
 
   validates :user,
@@ -58,10 +58,10 @@ class Flight < ActiveRecord::Base
   validates :aircraft,
             presence: true
   validates :duration,
-            presence: true,
+            presence:     true,
             numericality: { greater_than: 0.0 }
   validates :logbook_id,
-            presence: true,
+            presence:   true,
             uniqueness: { scope: :user_id }
   validates :date,
             presence: true
@@ -71,14 +71,10 @@ class Flight < ActiveRecord::Base
             presence: true
   validates :sequence,
             numericality: { only_integer: true, greater_than_or_equal_to: 1 },
-            uniqueness: { scope: :user_id },
-            allow_blank: true
+            uniqueness:   { scope: :user_id },
+            allow_blank:  true
 
   before_save { |obj| obj.has_blog = obj.blog.present?; true }
-
-  attr_accessible :origin, :destination, :aircraft, :occupants, :remarks,
-                  :duration, :date, :logbook_id, as: :importer
-  attr_accessible :blog, :photographs_attributes, as: :pilot
 
   accepts_nested_attributes_for :photographs, allow_destroy: true, reject_if: ->(attrs) { attrs['image'].nil? and attrs['id'].nil? }
 
@@ -95,10 +91,10 @@ class Flight < ActiveRecord::Base
   #   stops, ordered in sequence.
 
   def destinations
-    ids = [ origin_id, stops.order('sequence ASC').map(&:destination_id), destination_id ].flatten.compact
+    ids   = [origin_id, stops.order('sequence ASC').map(&:destination_id), destination_id].flatten.compact
     scope = user.destinations.where(airport_id: ids)
     scope = yield(scope) if block_given?
-    dests = scope.all
+    dests = scope.to_a
     ids.map { |id| dests.detect { |dest| dest.airport_id == id } }
   end
 

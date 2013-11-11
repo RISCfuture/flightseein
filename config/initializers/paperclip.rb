@@ -17,8 +17,8 @@ class ActiveRecord::Base
 
     if column_names.include?("has_#{name}") then
       before_save { |obj| obj.send :"has_#{name}=", obj.send(name).original_filename.to_bool; true }
-      scope :"with_#{name}", where(:"has_#{name}" => true)
-      scope :"without_#{name}", where(:"has_#{name}" => false)
+      scope :"with_#{name}", -> { where(:"has_#{name}" => true) }
+      scope :"without_#{name}", -> { where(:"has_#{name}" => false) }
     end
   end
 

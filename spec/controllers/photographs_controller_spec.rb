@@ -12,7 +12,7 @@ describe PhotographsController do
 
     describe "#index" do
       before :all do
-        @flight = FactoryGirl.create(:flight, user: @user)
+        @flight      = FactoryGirl.create(:flight, user: @user)
         @photographs = FactoryGirl.create_list(:photograph, 15, flight: @flight).sort_by(&:id)
       end
 
@@ -60,10 +60,9 @@ describe PhotographsController do
       end
 
       it "should encode errors in the JSON response" do
-        pending "Thanks Rails 3.2, for breaking this one!"
         post :create, flight_id: @flight.to_param, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain') }, format: 'json'
         response.status.should eql(422)
-        JSON.parse(response.body).should eql('image_content_type' => [ 'must be an image file (such as JPEG)' ])
+        JSON.parse(response.body)['errors']['image_content_type'].should eql(['must be an image file (such as JPEG)'])
       end
     end
   end
@@ -73,11 +72,11 @@ describe PhotographsController do
       describe ".json" do
         before :all do
           Flight.delete_all
-          @flights = 10.times.map { |i| FactoryGirl.create(:flight, date: Date.today - i ) }.sort_by(&:date).reverse
+          @flights = 10.times.map { |i| FactoryGirl.create(:flight, date: Date.today - i) }.sort_by(&:date).reverse
           @flights.each { |flight| FactoryGirl.create_list :photograph, 5, flight: flight }
           5.times.map { |i| FactoryGirl.create :flight, date: Date.today - i }
         end
-  
+
         it "should return photographs from the 10 most recent flights with photos" do
           get :index, format: 'json'
           response.status.should eql(200)
@@ -85,7 +84,7 @@ describe PhotographsController do
           JSON.parse(response.body).zip(@flights[0, 5]).each do |(json, flight)|
             flight.photographs.detect do |photo|
               json['preview_url'] == photo.image.url(:carousel) &&
-                json['caption'] == photo.caption
+                  json['caption'] == photo.caption
             end.should_not be_nil
             json['url'].should =~ /\/flights\/#{flight.to_param}/
           end
