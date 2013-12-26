@@ -62,10 +62,14 @@ class Import < ActiveRecord::Base
       logbook_updated_at:   { type: Time, allow_blank: true },
       logbook_fingerprint:  { allow_blank: true }
   )
-  enum_type :state, values: %w( pending starting importing_aircraft
-                                importing_airports importing_passengers
-                                importing_flights uploading_photos completed
-                                failed )
+
+  extend EnumType
+  enum_type :state,
+            values:        %w( pending starting importing_aircraft
+                               importing_airports importing_passengers
+                               importing_flights uploading_photos completed
+                               failed ),
+            register_type: 'state_type'
 
   has_attached_file :logbook
 

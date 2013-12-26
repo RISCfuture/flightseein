@@ -22,6 +22,8 @@
 # | `scope`  | Freeform data scoping this slug to a certain subset of records within the model.                 |
 
 class Slug < ActiveRecord::Base
+  extend EnumType
+
   belongs_to :sluggable, polymorphic: true
 
   scope :for, ->(object_or_type, object_id=nil) {
@@ -35,6 +37,10 @@ class Slug < ActiveRecord::Base
   }
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
+
+  enum_type :sluggable_type,
+            values:        %w( Person Destination Flight ),
+            register_type: true
 
   validates :sluggable_type,
             presence: true

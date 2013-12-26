@@ -38,7 +38,7 @@ gem 'sinatra', '>= 1.3.0', require: nil
 gem 'aws-s3', require: 'aws/s3'
 gem 'aws-sdk'
 gem 'therubyracer', require: 'v8'
-gem 'compass-rails', '2.0.alpha.0' # rails 4 support
+gem 'compass-rails', github: 'Compass/compass-rails'
 gem 'sass-rails'
 gem 'uglifier'
 gem 'coffee-rails'
