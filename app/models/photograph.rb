@@ -49,4 +49,5 @@ class Photograph < ActiveRecord::Base
       },
       check_validity_before_processing: false
   )
+  do_not_validate_attachment_file_type :image
 end

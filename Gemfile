@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '4.0.2'
+gem 'rails', '4.0.3'
 gem 'configoro'
 
 # ROUTING

@@ -76,4 +76,5 @@ class Aircraft < ActiveRecord::Base
                     styles:      { stat: '64x64#' },
                     default_url: "aircraft/:style-missing.png"
   check_for_duplicate_attached_file :image
+  do_not_validate_attachment_file_type :image
 end

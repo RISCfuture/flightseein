@@ -63,6 +63,7 @@ class Destination < ActiveRecord::Base
       },
       default_url: "airport/:style-missing.png")
   check_for_duplicate_attached_file :photo
+  do_not_validate_attachment_file_type :photo
 
   scope :randomly, -> { order('RANDOM()') }
 

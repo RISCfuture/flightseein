@@ -71,6 +71,7 @@ class Person < ActiveRecord::Base
       },
       default_url: "person/:style-missing.png")
   check_for_duplicate_attached_file :photo
+  do_not_validate_attachment_file_type :photo
 
   scope :randomly, -> { order('RANDOM()') }
   scope :participating, -> { where('hours > 0') }

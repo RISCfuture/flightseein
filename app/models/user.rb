@@ -109,6 +109,7 @@ class User < ActiveRecord::Base
   has_attached_file :avatar,
                     styles:      { profile: '200x200>', profile_small: '100x100>' },
                     default_url: "user/:style-missing.png"
+  do_not_validate_attachment_file_type :avatar
 
   # Determines if a provided password matches the password stored for a user.
   #

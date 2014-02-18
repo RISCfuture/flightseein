@@ -13,7 +13,7 @@ describe Importer do
     context "[known files]" do
       before :each do
         parser = mock('LogtenParser')
-        LogtenSixParser.should_receive(:new).once.with(an_instance_of(Import), /\/LogTenProData/).and_return(parser)
+        LogtenParser.should_receive(:new).once.with(an_instance_of(Import), /\/Logbook.logten$/).and_return(parser)
         parser.should_receive(:process).once
       end
 

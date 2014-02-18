@@ -72,6 +72,7 @@ class Import < ActiveRecord::Base
             register_type: 'state_type'
 
   has_attached_file :logbook
+  do_not_validate_attachment_file_type :logbook
 
   # Enqueues this import for processing. Processing is performed by the
   # {Importer}.

@@ -37,9 +37,18 @@ Paperclip::Attachment.default_options.update Flightseein::Configuration.papercli
 Paperclip.interpolates(:content_extension) do |attachment, style_name|
   ((style = attachment.styles[style_name]) && style[:format]) || begin
     fallback = File.extname(attachment.original_filename).gsub(/^\.+/, "")
-    type = MIME::Types[attachment.content_type].first
+    type     = MIME::Types[attachment.content_type].first
     return fallback unless type
     extension = type.extensions.first
     return extension || fallback
+  end
+end
+
+# Disable spoofing (workaround until do_not_validate_attachment_file_type is
+# patched to do the same)
+
+module Paperclip
+  class MediaTypeSpoofDetector
+    def spoofed?() false end
   end
 end
