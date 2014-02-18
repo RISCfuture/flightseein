@@ -7,18 +7,18 @@ describe Destination do
 
       FactoryGirl.create_list :flight, 2, user: dest.user, origin: dest
       dest.update_flights_count!
-      dest.flights_count.should eql(2)
+      expect(dest.flights_count).to eql(2)
 
       FactoryGirl.create_list :flight, 3, user: dest.user, destination: dest
       dest.update_flights_count!
-      dest.flights_count.should eql(5)
+      expect(dest.flights_count).to eql(5)
 
       2.times do
         flight = FactoryGirl.create :flight, user: dest.user
         FactoryGirl.create :stop, flight: flight, destination: dest, sequence: 1
       end
       dest.update_flights_count!
-      dest.flights_count.should eql(7)
+      expect(dest.flights_count).to eql(7)
     end
   end
 end

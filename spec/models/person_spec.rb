@@ -10,14 +10,14 @@ describe Person do
 
       person.update_hours!
 
-      person.hours.should eql(flights.map(&:duration).sum.round(1))
+      expect(person.hours).to eql(flights.map(&:duration).sum.round(1))
     end
   end
 
   describe "#to_param" do
     it "should slug the person's name" do
-      FactoryGirl.create(:person, name: "Sancho Sample").to_param.should eql('Sancho_Sample')
-      FactoryGirl.create(:person, name: "Buford T. Justice").to_param.should eql('Buford_T_Justice')
+      expect(FactoryGirl.create(:person, name: "Sancho Sample").to_param).to eql('Sancho_Sample')
+      expect(FactoryGirl.create(:person, name: "Buford T. Justice").to_param).to eql('Buford_T_Justice')
     end
   end
 end

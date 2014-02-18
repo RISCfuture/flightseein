@@ -8,12 +8,12 @@ describe UsersController do
       user = FactoryGirl.create(:user)
       session[:user_id] = user.id
       get :new
-      response.should redirect_to(root_url(subdomain: user.subdomain))
+      expect(response).to redirect_to(root_url(subdomain: user.subdomain))
     end
 
     it "should render the signup form" do
       get :new
-      response.should render_template('new')
+      expect(response).to render_template('new')
     end
   end
 
@@ -22,7 +22,7 @@ describe UsersController do
       user = FactoryGirl.create(:user)
       session[:user_id] = user.id
       post :create, user: {}
-      response.should redirect_to(root_url(subdomain: user.subdomain))
+      expect(response).to redirect_to(root_url(subdomain: user.subdomain))
     end
 
     context "[valid values]" do
@@ -33,19 +33,19 @@ describe UsersController do
 
       it "should create the new user" do
         user = User.find_by_email(@template.email)
-        user.should_not be_nil
-        user.subdomain.should eql(@template.subdomain)
-        user.authenticated?('password').should be_true
+        expect(user).not_to be_nil
+        expect(user.subdomain).to eql(@template.subdomain)
+        expect(user.authenticated?('password')).to be_true
       end
 
       it "should log the new user in" do
         user = User.find_by_email(@template.email)
-        session[:user_id].should eql(user.id)
+        expect(session[:user_id]).to eql(user.id)
       end
 
       it "should redirect to the account URL" do
         user = User.find_by_email(@template.email)
-        response.should redirect_to(root_url(subdomain: @template.subdomain))
+        expect(response).to redirect_to(root_url(subdomain: @template.subdomain))
       end
     end
 
@@ -56,23 +56,23 @@ describe UsersController do
       end
 
       it "should render the signup form" do
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
 
       it "should preserve existing values except the password" do
         html = Nokogiri::HTML(response.body)
 
         tags = html.css('form input#user_email')
-        tags.size.should eql(1)
-        tags.first['value'].should eql(@template.email)
+        expect(tags.size).to eql(1)
+        expect(tags.first['value']).to eql(@template.email)
 
         tags = html.css('form input#user_password')
-        tags.size.should eql(1)
-        tags.first['value'].should be_nil
+        expect(tags.size).to eql(1)
+        expect(tags.first['value']).to be_nil
       end
 
       it "should not log any user in" do
-        session[:user_id].should be_nil
+        expect(session[:user_id]).to be_nil
       end
     end
   end

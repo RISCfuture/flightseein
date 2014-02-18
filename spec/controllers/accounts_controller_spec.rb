@@ -9,13 +9,13 @@ describe AccountsController do
 
     it "should render the account page for the subdomain owner" do
       get :show
-      response.should render_template('show')
+      expect(response).to render_template('show')
     end
 
     it "should set @flight_count to the number of flights" do
       FactoryGirl.create_list :flight, 7, user: @user
       get :show
-      assigns(:flight_count).should eql(7)
+      expect(assigns(:flight_count)).to eql(7)
     end
 
     it "should set @pax_count to the number of people" do
@@ -26,7 +26,7 @@ describe AccountsController do
 
       get :show
 
-      assigns(:pax_count).should eql(8)
+      expect(assigns(:pax_count)).to eql(8)
     end
 
     it "should set @airport_count to the number of airports" do
@@ -35,7 +35,7 @@ describe AccountsController do
 
       get :show
 
-      assigns(:airport_count).should eql(19) # 9 flights * 2 destinations + flight w/1 unique destination
+      expect(assigns(:airport_count)).to eql(19) # 9 flights * 2 destinations + flight w/1 unique destination
     end
 
     it "should set @flight_images to the last four flights" do
@@ -43,7 +43,7 @@ describe AccountsController do
       # reverse twice so we get a sort by date then ID
       @user.update_flight_sequence!
       get :show
-      assigns(:flight_images).map(&:id).should eql(flights[0,4].map(&:id))
+      expect(assigns(:flight_images).map(&:id)).to eql(flights[0,4].map(&:id))
     end
 
     it "should set @flight_images to the last flights if there are fewer than four" do
@@ -51,7 +51,7 @@ describe AccountsController do
       # reverse twice so we get a sort by date then ID
       @user.update_flight_sequence!
       get :show
-      assigns(:flight_images).map(&:id).should eql(flights.map(&:id))
+      expect(assigns(:flight_images).map(&:id)).to eql(flights.map(&:id))
     end
 
     it "should set @pax_images to four random people with photos" do
@@ -63,8 +63,8 @@ describe AccountsController do
 
       get :show
 
-      assigns(:pax_images).size.should eql(4)
-      people.each { |person| assigns(:pax_images).map(&:id).should include(person.id) }
+      expect(assigns(:pax_images).size).to eql(4)
+      people.each { |person| expect(assigns(:pax_images).map(&:id)).to include(person.id) }
     end
 
     it "should fill @pax_images if four people with photos aren't available" do
@@ -77,8 +77,8 @@ describe AccountsController do
 
       get :show
 
-      assigns(:pax_images).size.should eql(4)
-      people.each { |person| assigns(:pax_images).map(&:id).should include(person.id) }
+      expect(assigns(:pax_images).size).to eql(4)
+      people.each { |person| expect(assigns(:pax_images).map(&:id)).to include(person.id) }
     end
 
     it "should use as many people as are available if there are fewer than four" do
@@ -89,8 +89,8 @@ describe AccountsController do
 
       get :show
 
-      assigns(:pax_images).size.should eql(2)
-      people.each { |person| assigns(:pax_images).map(&:id).should include(person.id) }
+      expect(assigns(:pax_images).size).to eql(2)
+      people.each { |person| expect(assigns(:pax_images).map(&:id)).to include(person.id) }
     end
 
     it "should set @airport_images to four random destinations with photos" do
@@ -99,8 +99,8 @@ describe AccountsController do
 
       get :show
 
-      assigns(:airport_images).size.should eql(4)
-      dests.each { |dest| assigns(:airport_images).map(&:airport_id).should include(dest.airport_id) }
+      expect(assigns(:airport_images).size).to eql(4)
+      dests.each { |dest| expect(assigns(:airport_images).map(&:airport_id)).to include(dest.airport_id) }
     end
 
     it "should fill @airport_images if four destinations with photos aren't available" do
@@ -110,8 +110,8 @@ describe AccountsController do
 
       get :show
 
-      assigns(:airport_images).size.should eql(4)
-      dests.each { |dest| assigns(:airport_images).map(&:airport_id).should include(dest.airport_id) }
+      expect(assigns(:airport_images).size).to eql(4)
+      dests.each { |dest| expect(assigns(:airport_images).map(&:airport_id)).to include(dest.airport_id) }
     end
 
     it "should use as many destinations as are available if there are fewer than four" do
@@ -119,8 +119,8 @@ describe AccountsController do
 
       get :show
 
-      assigns(:airport_images).size.should eql(2)
-      dests.each { |dest| assigns(:airport_images).map(&:airport_id).should include(dest.airport_id) }
+      expect(assigns(:airport_images).size).to eql(2)
+      dests.each { |dest| expect(assigns(:airport_images).map(&:airport_id)).to include(dest.airport_id) }
     end
   end
 
@@ -132,20 +132,20 @@ describe AccountsController do
 
       get :edit
 
-      response.should render_template('edit')
+      expect(response).to render_template('edit')
     end
 
     it "should redirect if logged out" do
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
       get :edit
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     it "should redirect if the current user is not the account owner" do
       session[:user_id] = FactoryGirl.create(:user).id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
       get :edit
-      response.should be_redirect
+      expect(response).to be_redirect
     end
   end
 
@@ -153,14 +153,14 @@ describe AccountsController do
     it "should redirect if logged out" do
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
       patch :update, user: FactoryGirl.attributes_for(:user)
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     it "should redirect if the current user is not the account owner" do
       session[:user_id] = FactoryGirl.create(:user).id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
       patch :update, user: FactoryGirl.attributes_for(:user)
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     context "[subdomain owner]" do
@@ -178,11 +178,11 @@ describe AccountsController do
 
         it "should update the user" do
           @user.reload
-          @attributes.each { |k,v| @user.send(k).should eql(v) }
+          @attributes.each { |k,v| expect(@user.send(k)).to eql(v) }
         end
 
         it "should redirect to the account page" do
-          response.should redirect_to(root_url(subdomain: @user.reload.subdomain))
+          expect(response).to redirect_to(root_url(subdomain: @user.reload.subdomain))
         end
       end
 
@@ -193,11 +193,11 @@ describe AccountsController do
         end
 
         it "should leave the user untouched" do
-          -> { @user.reload }.should_not change(@user, :updated_at)
+          expect { @user.reload }.not_to change(@user, :updated_at)
         end
 
         it "should render the form" do
-          response.should render_template('edit')
+          expect(response).to render_template('edit')
         end
       end
     end
@@ -207,14 +207,14 @@ describe AccountsController do
     it "should redirect if logged out" do
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
       delete :destroy
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     it "should redirect if the current user is not the account owner" do
       session[:user_id] = FactoryGirl.create(:user).id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
       delete :destroy
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     context "[subdomain owner]" do
@@ -226,15 +226,15 @@ describe AccountsController do
       end
 
       it "should deactivate the user" do
-        @user.reload.should_not be_active
+        expect(@user.reload).not_to be_active
       end
 
       it "should log the user out" do
-        session[:user_id].should be_nil
+        expect(session[:user_id]).to be_nil
       end
 
       it "should redirect to the logged-out home page" do
-        response.should redirect_to(root_url)
+        expect(response).to redirect_to(root_url)
       end
     end
   end

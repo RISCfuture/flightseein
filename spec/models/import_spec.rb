@@ -6,7 +6,7 @@ describe Import do
       Importer.drain
       import = FactoryGirl.create(:import)
       import.enqueue
-      Importer.jobs.size.should eql(1)
+      expect(Importer.jobs.size).to eql(1)
     end
   end
 end

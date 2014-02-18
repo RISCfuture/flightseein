@@ -13,8 +13,8 @@ describe PeopleController do
     describe ".html" do
       it "should render the index template" do
         get :index
-        response.status.should eql(200)
-        response.should render_template('index')
+        expect(response.status).to eql(200)
+        expect(response).to render_template('index')
       end
     end
 
@@ -28,33 +28,33 @@ describe PeopleController do
 
       it "should return the first 50 people by hours" do
         get :index, format: 'json'
-        response.status.should eql(200)
-        JSON.parse(response.body).size.should eql(50)
+        expect(response.status).to eql(200)
+        expect(JSON.parse(response.body).size).to eql(50)
         JSON.parse(response.body).zip(@people[0, 50]).each do |(json, person)|
-          json['id'].should eql(person.id)
-          json['name'].should eql(person.name)
-          json['hours'].should be_within(0.05).of(person.hours)
-          json['url'].should =~ /\/people\/#{person.slug}$/
-          json['flights'].should eql(person.flights.count)
-          json['photo'].should include(person.photo.url(:carousel))
+          expect(json['id']).to eql(person.id)
+          expect(json['name']).to eql(person.name)
+          expect(json['hours']).to be_within(0.05).of(person.hours)
+          expect(json['url']).to match(/\/people\/#{person.slug}$/)
+          expect(json['flights']).to eql(person.flights.count)
+          expect(json['photo']).to include(person.photo.url(:carousel))
         end
       end
 
       it "should paginate using the last_record parameter" do
         get :index, format: 'json', last_record: @people[49].id
-        response.status.should eql(200)
-        JSON.parse(response.body).size.should eql(10)
+        expect(response.status).to eql(200)
+        expect(JSON.parse(response.body).size).to eql(10)
         JSON.parse(response.body).zip(@people[50, 10]).each do |(json, person)|
-          json['id'].should eql(person.id)
+          expect(json['id']).to eql(person.id)
         end
       end
 
       it "should not blow up if given an invalid last_record" do
         get :index, format: 'json', last_record: FactoryGirl.create(:person).id
-        response.status.should eql(200)
-        JSON.parse(response.body).size.should eql(50)
+        expect(response.status).to eql(200)
+        expect(JSON.parse(response.body).size).to eql(50)
         JSON.parse(response.body).zip(@people[0, 50]).each do |(json, person)|
-          json['id'].should eql(person.id)
+          expect(json['id']).to eql(person.id)
         end
       end
     end
@@ -63,12 +63,12 @@ describe PeopleController do
   describe "#show" do
     it "should 404 if an invalid flight ID is provided" do
       get :show, id: 'not-found'
-      response.status.should eql(404)
+      expect(response.status).to eql(404)
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
       get :show, id: FactoryGirl.create(:person).slug
-      response.status.should eql(404)
+      expect(response.status).to eql(404)
     end
 
     context "[valid person]" do
@@ -78,13 +78,13 @@ describe PeopleController do
 
       it "should set @person to the person" do
         get :show, id: @person.slug
-        assigns(:person).should eql(@person)
+        expect(assigns(:person)).to eql(@person)
       end
 
       it "should render the show template" do
         get :show, id: @person.slug
-        response.status.should eql(200)
-        response.should render_template('show')
+        expect(response.status).to eql(200)
+        expect(response).to render_template('show')
       end
     end
   end
