@@ -52,6 +52,7 @@ group :development do
   gem 'capistrano-rvm', '>= 0.1.0', require: nil
   gem 'capistrano-bundler', require: nil
   gem 'capistrano-rails', require: nil
+  gem 'capistrano-sidekiq', require: nil
 
   # DOCUMENTATION
   gem 'yard', require: nil
