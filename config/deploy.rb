@@ -1,3 +1,5 @@
+lock '3.2.1'
+
 set :application, 'flightseein'
 set :repo_url, 'git@www.timothymorgan.info:flightseein.git'
 
@@ -14,5 +16,6 @@ namespace :deploy do
     end
   end
 
+  after :finishing, 'deploy:restart'
   after :finishing, 'deploy:cleanup'
 end
