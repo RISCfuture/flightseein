@@ -1,6 +1,6 @@
 require 'subdomain_router'
 
-Flightseein::Application.routes.draw do
+Rails.application.routes.draw do
   constraints(subdomain: '') do
     get '' => redirect { |_, request| "http://www.#{request.host_with_port}" }
     get '*glob' => redirect { |_, request| "http://www.#{request.host_with_port}#{request.fullpath}" }

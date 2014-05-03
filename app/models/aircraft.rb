@@ -55,7 +55,7 @@ class Aircraft < ActiveRecord::Base
           allow_blank: true },
 
       image_file_name:    { allow_blank: true },
-      image_content_type: { allow_blank: true, format: { with: /\Aimage\// } },
+      image_content_type: { allow_blank: true },
       image_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
       image_updated_at:   { type: Time, allow_blank: true },
       image_fingerprint:  { allow_blank: true }

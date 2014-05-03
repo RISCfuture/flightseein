@@ -57,7 +57,7 @@ class Import < ActiveRecord::Base
 
   has_metadata(
       logbook_file_name:    { allow_blank: true },
-      logbook_content_type: { allow_blank: true, inclusion: { in: SUPPORTED_TYPES } },
+      logbook_content_type: { allow_blank: true },
       logbook_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 50.megabytes } },
       logbook_updated_at:   { type: Time, allow_blank: true },
       logbook_fingerprint:  { allow_blank: true }
@@ -72,7 +72,7 @@ class Import < ActiveRecord::Base
             register_type: 'state_type'
 
   has_attached_file :logbook
-  do_not_validate_attachment_file_type :logbook
+  validates_attachment_content_type :logbook, content_type: SUPPORTED_TYPES
 
   # Enqueues this import for processing. Processing is performed by the
   # {Importer}.

@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
       old_subdomain:       { allow_blank: true },
 
       avatar_file_name:    { allow_blank: true },
-      avatar_content_type: { allow_blank: true, format: { with: /\Aimage\// } },
+      avatar_content_type: { allow_blank: true },
       avatar_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
       avatar_updated_at:   { type: Time, allow_blank: true },
       avatar_fingerprint:  { allow_blank: true }
@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
   has_attached_file :avatar,
                     styles:      { profile: '200x200>', profile_small: '100x100>' },
                     default_url: "user/:style-missing.png"
-  do_not_validate_attachment_file_type :avatar
+  validates_attachment_content_type :avatar, content_type: /\Aimage\//
 
   # Determines if a provided password matches the password stored for a user.
   #

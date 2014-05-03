@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '4.0.3'
+gem 'rails', '4.1.0'
 gem 'configoro'
 
 # ROUTING
@@ -46,6 +46,7 @@ gem 'coffee-rails'
 group :development do
   # DEVELOPMENT
   gem 'rails3-generators'
+  gem 'spring'
 
   # DEPLOY
   gem 'capistrano', require: nil

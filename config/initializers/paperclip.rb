@@ -44,11 +44,12 @@ Paperclip.interpolates(:content_extension) do |attachment, style_name|
   end
 end
 
-# Disable spoofing (workaround until do_not_validate_attachment_file_type is
-# patched to do the same)
+# Disable media type spoof detection for some models.
 
-module Paperclip
-  class MediaTypeSpoofDetector
-    def spoofed?() false end
+class Paperclip::Validators::MediaTypeSpoofDetectionValidator < ActiveModel::EachValidator
+  def validate_each_with_skipping(record, attribute, value)
+    return if [Aircraft, Destination, Person].include?(record.class)
+    validate_each_without_skipping(record, attribute, value)
   end
+  alias_method_chain :validate_each, :skipping
 end

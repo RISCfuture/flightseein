@@ -48,7 +48,7 @@ class Person < ActiveRecord::Base
       notes:              { length: { maximum: 1000 }, allow_blank: true },
 
       photo_file_name:    { allow_blank: true },
-      photo_content_type: { allow_blank: true, format: { with: /\Aimage\// } },
+      photo_content_type: { allow_blank: true },
       photo_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
       photo_updated_at:   { type: Time, allow_blank: true },
       photo_fingerprint:  { allow_blank: true }

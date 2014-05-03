@@ -35,9 +35,9 @@ class ImportsController < ApplicationController
     @import = current_user.imports.create(import_params)
     @import.enqueue if @import.persisted?
 
-    [ :logbook_content_type, :logbook_file_size ].each do |field|
-      @import.errors[field].each { |error| @import.errors[:logbook] << error }
-    end
+    # [ :logbook_content_type, :logbook_file_size ].each do |field|
+    #   @import.errors[field].each { |error| @import.errors[:logbook] << error }
+    # end
 
     respond_with @import
   end

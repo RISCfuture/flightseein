@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'sidekiq/testing'
+require 'importer'
 
 describe ImportsController do
   before(:each) { Importer.jobs.clear }

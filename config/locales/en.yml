@@ -17,7 +17,7 @@ en:
         import:
           attributes:
             logbook_content_type:
-              inclusion: is not a supported logbook format
+              invalid: is not a supported logbook format
             logbook_file_size:
               less_than: must be smaller than fifty megabytes
         person:
