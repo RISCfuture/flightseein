@@ -6,7 +6,7 @@ set :repo_url, 'git@www.timothymorgan.info:flightseein.git'
 set :deploy_to, '/var/www/www.flightsee.in'
 
 set :linked_files, %w{config/secrets.yml config/environments/production/paperclip.yml}
-set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/assets}
 
 namespace :deploy do
   desc 'Restart application'
