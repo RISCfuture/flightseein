@@ -17,16 +17,20 @@ class AirportImporter
 
   def import
     File.open(path) do |f|
-      f.each_line do |line|
-        begin
-          type = line[0,3]
-          if parser = self.class.parser(type) then
-            parser.instance.line line
-          end
-        rescue
-          $stderr.puts line
-          raise
+      self.class.import_data f
+    end
+  end
+
+  def self.import_data(io)
+    io.each_line do |line|
+      begin
+        type = line[0,3]
+        if parser = parser(type) then
+          parser.instance.line line
         end
+      rescue
+        $stderr.puts line
+        raise
       end
     end
   end
@@ -128,6 +132,7 @@ class AirportImporter
         @airports.each do |_, attrs|
           Airport.create! attrs
         end
+        @airports.clear
       end
     end
 
