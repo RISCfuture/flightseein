@@ -14,7 +14,7 @@ gem 'user-agent'
 # MODELS
 gem 'email_validation'
 gem 'enum_type'
-gem 'has_metadata'
+gem 'has_metadata_column'
 gem 'paperclip'
 gem 'pg'
 gem 'slugalicious'

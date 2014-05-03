@@ -32,7 +32,7 @@
 # | `destinations` | The {Destination Destinations} referencing this airport. |
 
 class Airport < ActiveRecord::Base
-  include HasMetadata
+  include HasMetadataColumn
 
   STATES = %w( AL AK AS AZ AR CA CO CT DE DC FM FL GA GU HI ID IL IN IA KS KY LA
                ME MH MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND MP OH OK OR PW
@@ -40,7 +40,7 @@ class Airport < ActiveRecord::Base
 
   has_many :destinations, dependent: :restrict_with_exception, inverse_of: :airport
 
-  has_metadata(
+  has_metadata_column(
       name:  {
           presence: true,
           length:   { maximum: 100 } },

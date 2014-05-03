@@ -62,10 +62,10 @@ SET default_with_oids = false;
 
 CREATE TABLE aircraft (
     id integer NOT NULL,
-    metadata_id integer,
     user_id integer NOT NULL,
     ident character varying(16) NOT NULL,
     has_image boolean DEFAULT false NOT NULL,
+    metadata text,
     CONSTRAINT aircraft_ident_check CHECK ((char_length((ident)::text) > 0))
 );
 
@@ -95,11 +95,11 @@ ALTER SEQUENCE aircraft_id_seq OWNED BY aircraft.id;
 
 CREATE TABLE airports (
     id integer NOT NULL,
-    metadata_id integer,
     site_number character varying(11) NOT NULL,
     lid character varying(4),
     icao character varying(4),
     iata character varying(4),
+    metadata text,
     CONSTRAINT airports_check CHECK ((((lid IS NOT NULL) OR (icao IS NOT NULL)) OR (iata IS NOT NULL))),
     CONSTRAINT airports_iata_check CHECK ((char_length((iata)::text) > 0)),
     CONSTRAINT airports_icao_check CHECK ((char_length((icao)::text) > 0)),
@@ -133,9 +133,9 @@ ALTER SEQUENCE airports_id_seq OWNED BY airports.id;
 CREATE TABLE destinations (
     user_id integer NOT NULL,
     airport_id integer NOT NULL,
-    metadata_id integer,
     has_photo boolean DEFAULT false NOT NULL,
-    flights_count integer DEFAULT 0 NOT NULL
+    flights_count integer DEFAULT 0 NOT NULL,
+    metadata text
 );
 
 
@@ -145,7 +145,6 @@ CREATE TABLE destinations (
 
 CREATE TABLE flights (
     id integer NOT NULL,
-    metadata_id integer,
     logbook_id character varying(60) NOT NULL,
     user_id integer NOT NULL,
     origin_id integer NOT NULL,
@@ -156,6 +155,7 @@ CREATE TABLE flights (
     has_blog boolean DEFAULT false NOT NULL,
     has_photos boolean DEFAULT false NOT NULL,
     sequence integer,
+    metadata text,
     CONSTRAINT flights_duration_check CHECK ((duration > (0)::double precision)),
     CONSTRAINT flights_sequence_check CHECK ((sequence >= 1))
 );
@@ -186,10 +186,10 @@ ALTER SEQUENCE flights_id_seq OWNED BY flights.id;
 
 CREATE TABLE imports (
     id integer NOT NULL,
-    metadata_id integer,
     user_id integer NOT NULL,
     state state_type DEFAULT 'pending'::state_type NOT NULL,
-    created_at timestamp without time zone
+    created_at timestamp without time zone,
+    metadata text
 );
 
 
@@ -210,35 +210,6 @@ CREATE SEQUENCE imports_id_seq
 --
 
 ALTER SEQUENCE imports_id_seq OWNED BY imports.id;
-
-
---
--- Name: metadata; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE metadata (
-    id integer NOT NULL,
-    data text NOT NULL
-);
-
-
---
--- Name: metadata_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE metadata_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: metadata_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE metadata_id_seq OWNED BY metadata.id;
 
 
 --
@@ -279,11 +250,11 @@ ALTER SEQUENCE occupants_id_seq OWNED BY occupants.id;
 CREATE TABLE people (
     id integer NOT NULL,
     logbook_id character varying(60) NOT NULL,
-    metadata_id integer,
     user_id integer NOT NULL,
     hours double precision DEFAULT 0 NOT NULL,
     has_photo boolean DEFAULT false NOT NULL,
     me boolean DEFAULT false NOT NULL,
+    metadata text,
     CONSTRAINT people_hours_check CHECK ((hours >= (0.0)::double precision))
 );
 
@@ -314,7 +285,7 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 CREATE TABLE photographs (
     id integer NOT NULL,
     flight_id integer NOT NULL,
-    metadata_id integer
+    metadata text
 );
 
 
@@ -399,7 +370,6 @@ CREATE TABLE stops (
 
 CREATE TABLE users (
     id integer NOT NULL,
-    metadata_id integer,
     email character varying(255) NOT NULL,
     subdomain character varying(32) NOT NULL,
     active boolean DEFAULT true NOT NULL,
@@ -407,6 +377,7 @@ CREATE TABLE users (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     admin boolean DEFAULT false NOT NULL,
+    metadata text,
     CONSTRAINT users_email_check CHECK ((char_length((email)::text) > 0)),
     CONSTRAINT users_subdomain_check CHECK ((char_length((subdomain)::text) >= 2))
 );
@@ -457,13 +428,6 @@ ALTER TABLE ONLY flights ALTER COLUMN id SET DEFAULT nextval('flights_id_seq'::r
 --
 
 ALTER TABLE ONLY imports ALTER COLUMN id SET DEFAULT nextval('imports_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY metadata ALTER COLUMN id SET DEFAULT nextval('metadata_id_seq'::regclass);
 
 
 --
@@ -539,14 +503,6 @@ ALTER TABLE ONLY flights
 
 ALTER TABLE ONLY imports
     ADD CONSTRAINT imports_pkey PRIMARY KEY (id);
-
-
---
--- Name: metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY metadata
-    ADD CONSTRAINT metadata_pkey PRIMARY KEY (id);
 
 
 --
@@ -753,14 +709,6 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
--- Name: aircraft_metadata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY aircraft
-    ADD CONSTRAINT aircraft_metadata_id_fkey FOREIGN KEY (metadata_id) REFERENCES metadata(id) ON DELETE CASCADE;
-
-
---
 -- Name: aircraft_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -769,27 +717,11 @@ ALTER TABLE ONLY aircraft
 
 
 --
--- Name: airports_metadata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY airports
-    ADD CONSTRAINT airports_metadata_id_fkey FOREIGN KEY (metadata_id) REFERENCES metadata(id) ON DELETE CASCADE;
-
-
---
 -- Name: destinations_airport_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY destinations
     ADD CONSTRAINT destinations_airport_id_fkey FOREIGN KEY (airport_id) REFERENCES airports(id) ON DELETE RESTRICT;
-
-
---
--- Name: destinations_metadata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY destinations
-    ADD CONSTRAINT destinations_metadata_id_fkey FOREIGN KEY (metadata_id) REFERENCES metadata(id) ON DELETE CASCADE;
 
 
 --
@@ -806,14 +738,6 @@ ALTER TABLE ONLY destinations
 
 ALTER TABLE ONLY flights
     ADD CONSTRAINT flights_aircraft_id_fkey FOREIGN KEY (aircraft_id) REFERENCES aircraft(id) ON DELETE RESTRICT;
-
-
---
--- Name: flights_metadata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY flights
-    ADD CONSTRAINT flights_metadata_id_fkey FOREIGN KEY (metadata_id) REFERENCES metadata(id) ON DELETE CASCADE;
 
 
 --
@@ -841,14 +765,6 @@ ALTER TABLE ONLY flights
 
 
 --
--- Name: imports_metadata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY imports
-    ADD CONSTRAINT imports_metadata_id_fkey FOREIGN KEY (metadata_id) REFERENCES metadata(id) ON DELETE CASCADE;
-
-
---
 -- Name: imports_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -873,14 +789,6 @@ ALTER TABLE ONLY occupants
 
 
 --
--- Name: people_metadata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY people
-    ADD CONSTRAINT people_metadata_id_fkey FOREIGN KEY (metadata_id) REFERENCES metadata(id) ON DELETE CASCADE;
-
-
---
 -- Name: people_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -897,27 +805,11 @@ ALTER TABLE ONLY photographs
 
 
 --
--- Name: photographs_metadata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY photographs
-    ADD CONSTRAINT photographs_metadata_id_fkey FOREIGN KEY (metadata_id) REFERENCES metadata(id) ON DELETE CASCADE;
-
-
---
 -- Name: stops_flight_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY stops
     ADD CONSTRAINT stops_flight_id_fkey FOREIGN KEY (flight_id) REFERENCES flights(id) ON DELETE CASCADE;
-
-
---
--- Name: users_metadata_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY users
-    ADD CONSTRAINT users_metadata_id_fkey FOREIGN KEY (metadata_id) REFERENCES metadata(id) ON DELETE CASCADE;
 
 
 --
@@ -959,6 +851,8 @@ INSERT INTO schema_migrations (version) VALUES ('20120201090431');
 INSERT INTO schema_migrations (version) VALUES ('20120203233542');
 
 INSERT INTO schema_migrations (version) VALUES ('20130724060907');
+
+INSERT INTO schema_migrations (version) VALUES ('20140503083406');
 
 INSERT INTO schema_migrations (version) VALUES ('3');
 

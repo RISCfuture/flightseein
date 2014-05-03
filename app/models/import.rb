@@ -44,7 +44,7 @@ require 'importer'
 # | `user` | The {User} whose logbook is being imported. |
 
 class Import < ActiveRecord::Base
-  include HasMetadata
+  include HasMetadataColumn
   extend EnumType
 
   @queue          = :"import_#{Rails.env}"
@@ -55,7 +55,7 @@ class Import < ActiveRecord::Base
 
   belongs_to :user, inverse_of: :imports
 
-  has_metadata(
+  has_metadata_column(
       logbook_file_name:    { allow_blank: true },
       logbook_content_type: { allow_blank: true },
       logbook_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 50.megabytes } },

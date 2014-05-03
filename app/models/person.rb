@@ -33,7 +33,7 @@
 # | `flights`       | The {Flight Flights} this person was a passenger or crewmember on. |
 
 class Person < ActiveRecord::Base
-  include HasMetadata
+  include HasMetadataColumn
   include Slugalicious
   include CheckForDuplicateAttachedFile
 
@@ -43,7 +43,7 @@ class Person < ActiveRecord::Base
   has_many :occupantships, class_name: 'Occupant', inverse_of: :person, dependent: :restrict_with_exception
   has_many :flights, through: :occupantships
 
-  has_metadata(
+  has_metadata_column(
       name:               { presence: true, length: { maximum: 100 } },
       notes:              { length: { maximum: 1000 }, allow_blank: true },
 

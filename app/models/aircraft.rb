@@ -32,13 +32,13 @@
 # | `flights` | The {Flight flights} this aircraft has been on. |
 
 class Aircraft < ActiveRecord::Base
-  include HasMetadata
+  include HasMetadataColumn
   include CheckForDuplicateAttachedFile
 
   belongs_to :user, inverse_of: :aircraft
   has_many :flights, inverse_of: :aircraft, dependent: :restrict_with_exception
 
-  has_metadata(
+  has_metadata_column(
       year:               {
           type:        Fixnum,
           inclusion:   { in: 1903..2100 },

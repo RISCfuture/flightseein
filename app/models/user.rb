@@ -52,7 +52,7 @@ require 'digest/sha1'
 # | `people`  | The {Person People} this user has imported.  |
 
 class User < ActiveRecord::Base
-  include HasMetadata
+  include HasMetadataColumn
 
   attr_accessor :password
 
@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
   has_many :imports, dependent: :delete_all, inverse_of: :user
   has_many :people, dependent: :delete_all, inverse_of: :user
 
-  has_metadata(
+  has_metadata_column(
       encrypted_password:  { presence: true },
       salt:                { presence: true },
 

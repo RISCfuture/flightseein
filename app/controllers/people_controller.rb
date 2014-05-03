@@ -32,7 +32,7 @@ class PeopleController < ApplicationController
       format.html # index.html.erb
       format.json do
         people = subdomain_owner.people.
-          includes(:metadata, :slugs).
+          includes(:slugs).
           participating.
           not_me.
           order('hours DESC, id DESC').

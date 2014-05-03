@@ -16,14 +16,14 @@ class AccountsController < ApplicationController
     @pax_count = subdomain_owner.people.participating.not_me.count
     @airport_count = subdomain_owner.destinations.count
 
-    @flight_images = subdomain_owner.flights.includes(:metadata, :slugs).order('sequence DESC').limit(4)
+    @flight_images = subdomain_owner.flights.includes(:slugs).order('sequence DESC').limit(4)
 
-    @pax_images = subdomain_owner.people.with_photo.participating.not_me.includes(:metadata, :slugs).limit(50).sample(4)
-    @pax_images += subdomain_owner.people.without_photo.participating.not_me.includes(:metadata, :slugs).limit(50).sample(4 - @pax_images.size) unless @pax_images.size == 4
+    @pax_images = subdomain_owner.people.with_photo.participating.not_me.includes(:slugs).limit(50).sample(4)
+    @pax_images += subdomain_owner.people.without_photo.participating.not_me.includes(:slugs).limit(50).sample(4 - @pax_images.size) unless @pax_images.size == 4
     @pax_images.shuffle!
 
-    @airport_images = subdomain_owner.destinations.with_photo.includes(:metadata, airport: :metadata).limit(50).sample(4)
-    @airport_images += subdomain_owner.destinations.without_photo.includes(:metadata, airport: :metadata).limit(50).sample(4 - @airport_images.size) unless @airport_images.size == 4
+    @airport_images = subdomain_owner.destinations.with_photo.includes(:airport).limit(50).sample(4)
+    @airport_images += subdomain_owner.destinations.without_photo.includes(:airport).limit(50).sample(4 - @airport_images.size) unless @airport_images.size == 4
     @airport_images.shuffle!
 
     respond_with subdomain_owner

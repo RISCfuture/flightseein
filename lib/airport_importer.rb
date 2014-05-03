@@ -122,7 +122,7 @@ class AirportImporter
       @airports[attributes[:site_number]] = map_attributes(attributes)
 
       if @airports.size >= 100 then
-        Airport.includes(:metadata).where(site_number: @airports.keys).each do |airport|
+        Airport.where(site_number: @airports.keys).each do |airport|
           airport.update_attributes! @airports.delete(airport.site_number)
         end
         @airports.each do |_, attrs|

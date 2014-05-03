@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <% @flight.occupants(includes: { person: [ :metadata, :slugs ] }).sort { |c1, c2| precedence(c2.role) <=> precedence(c1.role) }.group_by(&:role).each do |role, occupants| %>
+    <% @flight.occupants(includes: { person: :slugs }).sort { |c1, c2| precedence(c2.role) <=> precedence(c1.role) }.group_by(&:role).each do |role, occupants| %>
         <h2><%= occupants.many? ? role.pluralize : role %></h2>
         <% occupants.each do |occupant| %>
             <div class="stat">
@@ -47,7 +47,7 @@
     <% end %>
 
     <h2>Route and stops</h2>
-    <% @flight.destinations { |d| d.includes(:metadata, airport: :metadata).limit(20) }.uniq.each do |destination| %>
+    <% @flight.destinations { |d| d.includes(:airport).limit(20) }.uniq.each do |destination| %>
         <div class="stat">
           <%= link_to image_tag(destination.photo.url(:stat)), destination.airport %>
           <div>

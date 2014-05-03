@@ -20,6 +20,10 @@ module Flightseein
       g.test_framework :rspec, fixture: true, views: false
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
+
+    # Precompile additional assets.
+    # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
+    config.assets.precompile                         += %w( ie.js *.png *.jpg *.jpeg *.gif )
   end
 end
 

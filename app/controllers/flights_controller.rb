@@ -52,17 +52,17 @@ class FlightsController < ApplicationController
       format.json do
         if params['person_id'] then
           person = Person.find_from_slug!(params['person_id'], request.subdomain)
-          @flights = person.flights.includes(:slugs, occupants: { person: [ :metadata, :slugs ] })
+          @flights = person.flights.includes(:slugs, occupants: { person: :slugs })
         elsif params['airport_id'] then
           airport = Airport.with_ident(params['airport_id']).first || raise(ActiveRecord::RecordNotFound)
           destination = subdomain_owner.destinations.find_by_airport_id(airport.id) || raise(ActiveRecord::RecordNotFound)
-          @flights = subdomain_owner.flights.includes(:slugs, occupants: { person: [ :metadata, :slugs ] }).where(destination_id: destination.id)
+          @flights = subdomain_owner.flights.includes(:slugs, occupants: { person: :slugs }).where(destination_id: destination.id)
         else
-          @flights = subdomain_owner.flights.includes(:slugs, occupants: { person: [ :metadata, :slugs ] })
+          @flights = subdomain_owner.flights.includes(:slugs, occupants: { person: :slugs })
         end
 
         @flights = @flights.
-          includes(:metadata, aircraft: :metadata, photographs: :metadata, occupants: { person: [ :metadata, :slugs ] }).
+          includes(:aircraft, :photographs, occupants: { person: :slugs }).
           order('sequence DESC').
           limit(50)
         @flights = @flights.where(has_blog: true) if params['filter'] == 'blog'

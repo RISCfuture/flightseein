@@ -35,7 +35,7 @@
 # | `occupants` | All {Occupant Occupants} present on the flight (PIC and SIC included). |
 
 class Flight < ActiveRecord::Base
-  include HasMetadata
+  include HasMetadataColumn
   include Slugalicious
 
   belongs_to :user, inverse_of: :flights
@@ -48,7 +48,7 @@ class Flight < ActiveRecord::Base
           scope:     ->(flight) { flight.user.subdomain },
           slugifier: ->(str) { str.remove_formatting.replace_whitespace('_').collapse('_') }
 
-  has_metadata(
+  has_metadata_column(
       remarks: { length: { maximum: 500 }, allow_blank: true },
       blog:    { allow_blank: true }
   )

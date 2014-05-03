@@ -22,11 +22,11 @@
 
 
 class Photograph < ActiveRecord::Base
-  include HasMetadata
+  include HasMetadataColumn
 
   belongs_to :flight, inverse_of: :photographs
 
-  has_metadata(
+  has_metadata_column(
       caption:            { allow_blank: true, length: { maximum: 300 } },
       image_file_name:    { presence: true },
       image_content_type: { presence: true },

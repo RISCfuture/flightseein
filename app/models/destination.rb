@@ -30,7 +30,7 @@
 # | `airport` | The {Airport} referenced by this destination. |
 
 class Destination < ActiveRecord::Base
-  include HasMetadata
+  include HasMetadataColumn
   include CheckForDuplicateAttachedFile
 
   self.primary_key = 'airport_id'
@@ -38,7 +38,7 @@ class Destination < ActiveRecord::Base
   belongs_to :user, inverse_of: :destinations
   belongs_to :airport, inverse_of: :destinations
 
-  has_metadata(
+  has_metadata_column(
       notes:              { length: { maximum: 1000 }, allow_blank: true },
 
       photo_file_name:    { allow_blank: true },

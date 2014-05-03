@@ -102,9 +102,9 @@ GEM
     find_or_create_on_scopes (1.4.0)
       activerecord (>= 3.1)
     fssm (0.2.10)
-    has_metadata (1.6.1)
+    has_metadata_column (1.1.3)
       boolean
-      rails (>= 3.2)
+      rails (>= 4.0)
     hike (1.2.3)
     i18n (0.6.9)
     jquery-rails (3.1.0)
@@ -264,7 +264,7 @@ DEPENDENCIES
   factory_girl
   faker
   find_or_create_on_scopes
-  has_metadata
+  has_metadata_column
   jquery-rails
   multiuploader
   nokogiri

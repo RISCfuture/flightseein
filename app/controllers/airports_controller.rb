@@ -39,9 +39,7 @@ class AirportsController < ApplicationController
 
       format.json do
         destinations = subdomain_owner.destinations.
-          includes(:metadata, airport: :metadata).
-          order('airport_id ASC').
-          limit(50)
+          includes(:airport).order('airport_id ASC').limit(50)
 
         if params['last_record'] then
           destinations = destinations.where('airport_id > ?', params['last_record'])

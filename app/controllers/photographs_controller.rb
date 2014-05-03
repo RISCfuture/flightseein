@@ -37,7 +37,7 @@ class PhotographsController < ApplicationController
     respond_to do |format|
       format.json do
         if @flight then
-          @photographs = @flight.photographs.order('id ASC').includes(:metadata).limit(10)
+          @photographs = @flight.photographs.order('id ASC').limit(10)
           if params['last_record'] and params['last_record'].to_i > 0 then
             @photographs = @photographs.where('id > ?', params['last_record'].to_i)
           end
