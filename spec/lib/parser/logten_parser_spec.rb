@@ -1,5 +1,5 @@
 require 'spec_helper'
 
 describe LogtenParser do
-  pending "TODO"
+  skip "TODO"
 end

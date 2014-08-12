@@ -1,4 +1,4 @@
 require 'spec_helper'
 
-describe Stop do
+describe Stop, type: :model do
 end

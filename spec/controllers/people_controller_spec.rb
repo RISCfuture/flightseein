@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PeopleController do
+describe PeopleController, type: :controller do
   before :all do
     @user = FactoryGirl.create(:user)
   end

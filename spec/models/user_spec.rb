@@ -1,32 +1,32 @@
 require 'spec_helper'
 
-describe User do
+describe User, type: :model do
   describe ".authenticated?" do
     it "should return false if the user is nil" do
-      expect(User.authenticated?(nil, 'foo')).to be_false
+      expect(User.authenticated?(nil, 'foo')).to be(false)
     end
 
     it "should return false if the password is nil" do
-      expect(User.authenticated?(FactoryGirl.create(:user), nil)).to be_false
+      expect(User.authenticated?(FactoryGirl.create(:user), nil)).to be(false)
     end
 
     it "should return false if the password doesn't match" do
-      expect(User.authenticated?(FactoryGirl.create(:user), 'foo')).to be_false
+      expect(User.authenticated?(FactoryGirl.create(:user), 'foo')).to be(false)
     end
 
     it "should return true if the password matches" do
       user = FactoryGirl.create(:user)
-      expect(User.authenticated?(user, 'password')).to be_true
+      expect(User.authenticated?(user, 'password')).to be(true)
     end
   end
 
   describe "#authenticated?" do
     it "should return false if the password does not match" do
-      expect(FactoryGirl.create(:user).authenticated?('foo')).to be_false
+      expect(FactoryGirl.create(:user).authenticated?('foo')).to be(false)
     end
 
     it "should return true if the password matches" do
-      expect(FactoryGirl.create(:user).authenticated?('password')).to be_true
+      expect(FactoryGirl.create(:user).authenticated?('password')).to be(true)
     end
   end
 

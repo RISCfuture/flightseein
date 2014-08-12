@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UsersController do
+describe UsersController, type: :controller do
   render_views
   
   describe "#new" do
@@ -35,7 +35,7 @@ describe UsersController do
         user = User.find_by_email(@template.email)
         expect(user).not_to be_nil
         expect(user.subdomain).to eql(@template.subdomain)
-        expect(user.authenticated?('password')).to be_true
+        expect(user.authenticated?('password')).to be(true)
       end
 
       it "should log the new user in" do

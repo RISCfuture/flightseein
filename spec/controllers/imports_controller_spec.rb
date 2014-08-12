@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'sidekiq/testing'
 require 'importer'
 
-describe ImportsController do
+describe ImportsController, type: :controller do
   before(:each) { Importer.jobs.clear }
 
   describe "#new" do

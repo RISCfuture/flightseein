@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Flight do
+describe Flight, type: :model do
   describe "#destinations" do
     before :each do
       user = FactoryGirl.create(:user)

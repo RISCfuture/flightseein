@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Destination do
+describe Destination, type: :model do
   describe "#update_flights_count!" do
     it "should set flights_count to the number of originating flights + terminating flights + enroute stops" do
       dest = FactoryGirl.create(:destination)

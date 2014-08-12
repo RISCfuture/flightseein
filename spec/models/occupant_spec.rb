@@ -1,4 +1,4 @@
 require 'spec_helper'
 
-describe Occupant do
+describe Occupant, type: :model do
 end

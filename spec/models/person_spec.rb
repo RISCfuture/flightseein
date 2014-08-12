@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Person do
+describe Person, type: :model do
   describe "#update_hours!" do
     it "should update the hours attribute to reflect the total number of hours" do
       user = FactoryGirl.create(:user)

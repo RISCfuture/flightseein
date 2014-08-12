@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AccountsController do
+describe AccountsController, type: :controller do
   describe "#show" do
     before :each do
       @user = FactoryGirl.create(:user)

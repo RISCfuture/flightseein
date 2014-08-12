@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Import do
+describe Import, type: :model do
   describe "#enqueue" do
     it "should use Sidekiq to enqueue an import operation" do
       Importer.drain

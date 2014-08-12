@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '4.1.0'
+gem 'rails', '4.1.4'
 gem 'configoro'
 
 # ROUTING
@@ -30,9 +30,9 @@ gem 'multiuploader'
 # IMPORTING
 gem 'sqlite3'
 gem 'sidekiq'
-gem 'slim', '>= 1.1.0'
+gem 'slim'
 # if you require 'sinatra' you get the DSL extended to Object
-gem 'sinatra', '>= 1.3.0', require: nil
+gem 'sinatra', require: nil
 gem 'zipruby'
 
 # ASSETS
@@ -40,7 +40,7 @@ gem 'aws-s3', require: 'aws/s3'
 gem 'aws-sdk'
 gem 'therubyracer', require: 'v8'
 gem 'compass-rails', github: 'Compass/compass-rails'
-gem 'sass-rails'
+gem 'sass-rails', '>= 4.0.3'
 gem 'uglifier'
 gem 'coffee-rails'
 
@@ -51,7 +51,7 @@ group :development do
 
   # DEPLOY
   gem 'capistrano', require: nil
-  gem 'capistrano-rvm', '>= 0.1.0', require: nil
+  gem 'capistrano-rvm', require: nil
   gem 'capistrano-bundler', require: nil
   gem 'capistrano-rails', require: nil
   gem 'capistrano-sidekiq', require: nil

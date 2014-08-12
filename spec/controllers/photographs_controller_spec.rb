@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PhotographsController do
+describe PhotographsController, type: :controller do
   context "[nested under flights]" do
     before :all do
       @user = FactoryGirl.create(:user)

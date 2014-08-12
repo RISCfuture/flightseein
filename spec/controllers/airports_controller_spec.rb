@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AirportsController do
+describe AirportsController, type: :controller do
   before :all do
     @user = FactoryGirl.create(:user)
     @destinations = FactoryGirl.create_list(:destination, 60, user: @user)

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FlightsController do
+describe FlightsController, type: :controller do
   before :all do
     @user = FactoryGirl.create(:user)
   end
@@ -335,14 +335,14 @@ describe FlightsController do
 
       context "[invalid attributes]" do
         it "should leave the flight unchanged" do
-          pending "No invalid attributes"
+          skip "No invalid attributes"
           attrs = @flight.attributes
           patch :update, id: @flight.to_param, flight: { blog: 'halp?' }
           expect(@flight.reload.attributes).to eql(attrs)
         end
 
         it "should render the edit template" do
-          pending "No invalid attributes"
+          skip "No invalid attributes"
           patch :update, id: @flight.to_param, flight: { blog: 'halp?' }
           expect(response).to render_template('edit')
         end
