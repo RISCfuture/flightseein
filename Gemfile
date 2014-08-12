@@ -66,7 +66,7 @@ end
 group :test do
   # SPECS
   gem 'rspec-rails'
-  gem 'factory_girl'
+  gem 'factory_girl_rails'
   gem 'faker'
   gem 'nokogiri'
 end

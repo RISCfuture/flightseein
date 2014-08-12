@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Aircraft, type: :model do
   describe "#ident" do

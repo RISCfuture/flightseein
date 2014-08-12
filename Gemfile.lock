@@ -98,6 +98,9 @@ GEM
     execjs (2.2.1)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
+    factory_girl_rails (4.4.1)
+      factory_girl (~> 4.4.0)
+      railties (>= 3.0.0)
     faker (1.4.2)
       i18n (~> 0.5)
     find_or_create_on_scopes (1.4.0)
@@ -311,7 +314,7 @@ DEPENDENCIES
   dalli
   email_validation
   enum_type
-  factory_girl
+  factory_girl_rails
   faker
   find_or_create_on_scopes
   has_metadata_column

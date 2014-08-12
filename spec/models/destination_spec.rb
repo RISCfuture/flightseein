@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Destination, type: :model do
   describe "#update_flights_count!" do

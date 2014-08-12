@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe PhotographsController, type: :controller do
   context "[nested under flights]" do

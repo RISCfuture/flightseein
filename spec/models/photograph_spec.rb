@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Photograph, type: :model do
   context "[save hooks]" do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Import, type: :model do
   describe "#enqueue" do
