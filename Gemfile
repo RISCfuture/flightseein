@@ -35,6 +35,9 @@ gem 'slim'
 gem 'sinatra', require: nil
 gem 'zipruby'
 
+# CRON
+gem 'whenever'
+
 # ASSETS
 gem 'aws-s3', require: 'aws/s3'
 gem 'aws-sdk'
