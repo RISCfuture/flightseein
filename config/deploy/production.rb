@@ -1,7 +1,7 @@
 set :stage, :production
 
 set :rvm_type, :system
-set :rvm_ruby_version, '2.1.1@flightseein'
+set :rvm_ruby_version, '2.1.2@flightseein'
 
 role :app, %w{www-data@www.flightsee.in}
 role :web, %w{www-data@www.flightsee.in}
