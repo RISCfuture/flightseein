@@ -11,9 +11,30 @@
 <h2>Supported logbook file formats</h2>
 
 <details>
+  <summary><em>LogTen Pro X</em> (Mac OS X)</summary>
+  <p>We&rsquo;re working on an exporter, but for now, here&rsquo;s a temporary
+    way to import your logbook:</p>
+
+  <ol>
+    <li>In Finder, choose <kbd>View | Go to Folder&hellip;</kbd></li>
+    <li>Enter (or paste)
+      <kbd>~/Library/Containers/com.coradine.LogTenProX/Data/Documents/</kbd>
+    </li>
+    <li>You should see a <samp>LogTenProData</samp> folder. Right-click this
+      folder and choose the <kbd>Compress</kbd> option.
+    </li>
+    <li>Move the new <samp>LogTenProData.zip</samp> file somewhere you can find
+      it, such as the Desktop.
+    </li>
+    <li>Upload that file here.</li>
+  </ol>
+</details>
+
+<details>
   <summary><em>LogTen Pro 6</em> (Mac OS X)</summary>
   <p>We&rsquo;re working on an exporter, but for now, here&rsquo;s a temporary
     way to import your logbook:</p>
+
   <p><strong>Very important: If you have just upgraded your logbook from version
     5.x,</strong> you must import your old 5.x logbook one more time (even if
     you haven&rsquo;t flown since your last import). This import will prepare
@@ -39,5 +60,6 @@
   <summary><em>LogTen Pro 5</em> (Mac OS X)</summary>
   <p>In some browsers (such as Google Chrome), you&rsquo;ll need to compress
     your logbook before you&rsquo;ll be able to upload it.</p>
+
   <p class="diagram"><%= image_tag 'import/logten.png', alt: "Right-click on your logbook and select 'Compress'." %></p>
 </details>

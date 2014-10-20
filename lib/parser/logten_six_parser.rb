@@ -3,19 +3,6 @@ require 'parser'
 # A {Parser} that imports Coradine's LogTen 6 logbook files.
 
 class LogtenSixParser < Parser
-  # Ordered hash mapping LogTen names of certificate levels to internal I18n
-  # keys. The hash is ordered by decreasing achievement level of the
-  # certificate.
-  IMPORTANT_CERTIFICATE_TYPES = {
-    'Airline Transport' => 'atp',
-    'Instructor' => 'cfi',
-    'Commercial' => 'commercial',
-    'Private' => 'private',
-    'Recreational' => 'recreational',
-    'Sport' => 'sport',
-    'Student' => 'student'
-  }
-
   def process
     @db = SQLite3::Database.new(File.join(@path, 'LogTenCoreDataStore.sql'))
     @destination_ids = Hash.new
@@ -60,7 +47,11 @@ class LogtenSixParser < Parser
               else
                 nil
               end
-      user.aircraft.where(ident: ident).create_or_update!(year: year, type: type, long_type: long_type, notes: notes, image: image)
+
+      ac = user.aircraft.where(ident: ident).create_or_update(year: year, type: type, long_type: long_type, notes: notes, image: image)
+      if ac.invalid?
+        user.aircraft.where(ident: ident).create_or_update!(year: year, type: type, long_type: long_type, notes: notes)
+      end
     end
   end
 
@@ -86,7 +77,10 @@ class LogtenSixParser < Parser
         next
       end
 
-      destination = user.destinations.where(airport_id: airport.id).create_or_update!(photo: image)
+      destination = user.destinations.where(airport_id: airport.id).create_or_update(photo: image)
+      if destination.invalid?
+        destination = user.destinations.where(airport_id: airport.id).create_or_update!
+      end
       @destination_ids[id] = destination
     end
   end
@@ -110,7 +104,11 @@ class LogtenSixParser < Parser
                 nil
               end
       name = name1.present? ? name1 : name2
-      person = user.people.where(logbook_id: uuid).create_or_update!(name: name, photo: image, me: is_me.parse_bool)
+
+      person = user.people.where(logbook_id: uuid).create_or_update(name: name, photo: image, me: is_me.parse_bool)
+      if person.invalid?
+        person = user.people.where(logbook_id: uuid).create_or_update!(name: name, me: is_me.parse_bool)
+      end
 
       @person_ids[pkey] = person
     end
@@ -226,7 +224,8 @@ class LogtenSixParser < Parser
              ZFLIGHTCREW_RELIEF1, ZFLIGHTCREW_RELIEF2, ZFLIGHTCREW_RELIEF3,
              ZFLIGHTCREW_RELIEF4, ZFLIGHTCREW_STUDENT, ZFLIGHTCREW_CUSTOM1,
              ZFLIGHTCREW_CUSTOM2, ZFLIGHTCREW_CUSTOM3, ZFLIGHTCREW_CUSTOM4,
-             ZFLIGHTCREW_CUSTOM5
+             ZFLIGHTCREW_CUSTOM5, ZFLIGHTCREW_CUSTOM6, ZFLIGHTCREW_CUSTOM7,
+             ZFLIGHTCREW_CUSTOM8, ZFLIGHTCREW_CUSTOM9, ZFLIGHTCREW_CUSTOM10
         FROM ZFLIGHTCREW
     SQL
 
@@ -299,6 +298,19 @@ class LogtenSixParser < Parser
     end
   end
 
+  # Ordered hash mapping LogTen names of certificate levels to internal I18n
+  # keys. The hash is ordered by decreasing achievement level of the
+  # certificate.
+  IMPORTANT_CERTIFICATE_TYPES = {
+      'Airline Transport' => 'atp',
+      'Instructor' => 'cfi',
+      'Commercial' => 'commercial',
+      'Private' => 'private',
+      'Recreational' => 'recreational',
+      'Sport' => 'sport',
+      'Student' => 'student'
+  }
+
   def import_certificates
     user.certificate = nil
     user.certification_date = nil
@@ -312,7 +324,7 @@ class LogtenSixParser < Parser
     types.flatten!
     user.has_instrument = types.include?('Instrument')
     types.select! { |type| IMPORTANT_CERTIFICATE_TYPES.keys.include? type }
-    if cert = IMPORTANT_CERTIFICATE_TYPES.keys.detect { |type| types.include?(type) } then
+    if (cert = IMPORTANT_CERTIFICATE_TYPES.keys.detect { |type| types.include?(type) }) then
       user.certificate = IMPORTANT_CERTIFICATE_TYPES[cert]
       time = rows.detect { |(type, _)| cert == type }.last
       user.certification_date = Time.utc(2001).advance(seconds: time).utc.to_date
