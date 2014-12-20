@@ -9,7 +9,7 @@ class CreateSlugs < ActiveRecord::Migration
         active BOOLEAN NOT NULL DEFAULT TRUE,
         slug CHARACTER VARYING(126) NOT NULL CHECK (CHAR_LENGTH(slug) > 0),
         scope CHARACTER VARYING(126),
-        created_at TIMESTAMP WITHOUT TIME ZONE
+        created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
       )
     SQL
 

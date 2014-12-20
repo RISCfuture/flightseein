@@ -2,7 +2,7 @@
   <%= link_to image_tag('title.jpg', alt: "flightseein&rsquo;".html_safe), root_url %>
   <p id="login">
     <% if logged_in? %>
-        <%= link_to "Log out", session_url(subdomain: false), method: :delete, class: 'button-small' %>
+        <%= link_to "Log out", session_url(subdomain: 'www'), method: :delete, class: 'button-small' %>
     <% else %>
         <%= link_to "Log in", new_session_url(subdomain: false), class: 'button-small' %>
     <% end %>

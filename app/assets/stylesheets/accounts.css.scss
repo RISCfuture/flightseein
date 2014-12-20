@@ -1,16 +1,11 @@
 @import "_vars";
-@import "compass/css3/box";
-@import "compass/css3/border-radius";
-@import "compass/css3/images";
-@import "compass/css3/text-shadow";
 
 @mixin statbox($color) {
-    //@include background-image(linear-gradient(top, lighten($color, 90%), lighten($color, 50%)));
-    @include vertical-gradient(mix(white, $color, 80%), mix(white, $color, 40%));
+    background: linear-gradient(top, mix(white, $color, 80%) 0%, mix(white, $color, 40%) 100%);
     color: darken($color, 15%);
     h1 { color: darken($color, 25%); }
 
-    @include border-radius(8px);
+    border-radius: 8px;
     text-align: center;
 
     &:hover {
@@ -24,15 +19,15 @@ article#accounts {
     // SHOW
 
     section#title {
-        @include display-box;
-        @include box-orient(horizontal);
+        display: flex;
+        flex-flow: row nowrap;
 
         width: 100%;
 
         margin-bottom: 1em;
 
         img { margin-right: 1em; }
-        div#name { @include box-flex(1); }
+        div#name { flex: 1 1 auto; }
 
         h1 {
             font-size: 36pt;
@@ -50,8 +45,8 @@ article#accounts {
         margin-top: 2em;
 
         ul {
-            @include display-box;
-            @include box-orient(horizontal);
+            display: flex;
+            flex-flow: row nowrap;
             margin-bottom: 2em;
         }
 
@@ -62,7 +57,6 @@ article#accounts {
 
             &.statbox {
                 h1 {
-                    //@include text-shadow(rgba(white, 0.75) 0 1px 1px);
                     text-shadow: 0 1px 1px rgba(white, 0.75);
                     font-size: 36pt;
                     margin-bottom: 0;
@@ -73,7 +67,6 @@ article#accounts {
                 @include statbox(gray);
 
                 h1 {
-                    //@include text-shadow(rgba(white, 0.75) 0 1px 1px);
                     text-shadow: 0 1px 1px rgba(white, 0.75);
                     font-size: 14pt;
                     margin-bottom: 0;

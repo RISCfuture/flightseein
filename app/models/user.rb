@@ -93,8 +93,8 @@ class User < ActiveRecord::Base
             uniqueness: true
 
   before_validation :set_salt, on: :create
-  before_validation(on: :create) { |u| u.email = u.email.downcase if u.email }
-  before_validation(on: :create) { |u| u.subdomain = u.subdomain.downcase if u.subdomain }
+  before_validation(on: :create) { |u| u.email.try! :downcase! }
+  before_validation(on: :create) { |u| u.subdomain.try! :downcase! }
   before_validation :encrypt_password, if: ->(obj) { obj.password.present? }
   before_update :relinquish_subdomain, if: ->(u) { u.active_changed? and not u.active? }
   after_save :update_cache

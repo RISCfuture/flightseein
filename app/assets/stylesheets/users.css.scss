@@ -1,24 +1,23 @@
 @import "_vars";
-@import "compass/css3/box";
 
 article#users {
-    #tagline {
-        color: $base-color;
-        font-size: 36pt;
-        font-weight: bold;
-    }
+  #tagline {
+    color: $base-color;
+    font-size: 36pt;
+    font-weight: bold;
+  }
 
-    #detail {
-        margin-top: 1em;
-        color: lighten($base-color, 25%);
-        font-size: 24pt;
-    }
+  #detail {
+    margin-top: 1em;
+    color: lighten($base-color, 25%);
+    font-size: 24pt;
+  }
 
-    ul#examples {
-        margin-bottom: 2em;
-    }
+  ul#examples {
+    margin-bottom: 2em;
+  }
 
-    #call-to-action {
-        color: $content-text-color;
-    }
+  #call-to-action {
+    color: $content-text-color;
+  }
 }

@@ -66,9 +66,7 @@ class Aircraft < ActiveRecord::Base
             format:     { with: /\A[A-Z0-9\-]+\z/ },
             uniqueness: { scope: :user_id }
 
-  before_validation(on: :create) do |aircraft|
-    aircraft.ident = aircraft.ident.upcase if aircraft.ident
-  end
+  before_validation(on: :create) { |aircraft| aircraft.ident.try! :upcase! }
 
   attr_readonly :ident
 

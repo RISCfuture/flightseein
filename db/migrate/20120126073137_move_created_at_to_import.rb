@@ -1,6 +1,6 @@
 class MoveCreatedAtToImport < ActiveRecord::Migration
   def up
-    execute "ALTER TABLE imports ADD created_at TIMESTAMP WITHOUT TIME ZONE"
+    execute "ALTER TABLE imports ADD created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL"
     Import.reset_column_information
     Import.includes(:metadata).find_each do |i|
       i.send :write_attribute, :created_at, i.metadata.data[:created_at]

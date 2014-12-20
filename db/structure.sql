@@ -3,6 +3,7 @@
 --
 
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -188,7 +189,7 @@ CREATE TABLE imports (
     id integer NOT NULL,
     user_id integer NOT NULL,
     state state_type DEFAULT 'pending'::state_type NOT NULL,
-    created_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
     metadata text
 );
 
@@ -313,7 +314,7 @@ ALTER SEQUENCE photographs_id_seq OWNED BY photographs.id;
 --
 
 CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
+    version character varying NOT NULL
 );
 
 
@@ -327,7 +328,7 @@ CREATE TABLE slugs (
     active boolean DEFAULT true NOT NULL,
     slug character varying(126) NOT NULL,
     scope character varying(126),
-    created_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
     sluggable_type slugged_class,
     CONSTRAINT slugs_slug_check CHECK ((char_length((slug)::text) > 0))
 );
@@ -374,8 +375,8 @@ CREATE TABLE users (
     subdomain character varying(32) NOT NULL,
     active boolean DEFAULT true NOT NULL,
     has_avatar boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     admin boolean DEFAULT false NOT NULL,
     metadata text,
     CONSTRAINT users_email_check CHECK ((char_length((email)::text) > 0)),

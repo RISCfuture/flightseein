@@ -1,6 +1,4 @@
 @import "_vars";
-@import "compass/css3/box";
-@import "compass/css3/text-shadow";
 
 article#people {
     #vitals {
@@ -28,8 +26,8 @@ article#people {
     }
 
     ul {
-        @include display-box;
-        @include box-orient(horizontal);
+        display: flex;
+        flex-flow: row nowrap;
         margin-bottom: 20px;
         
         li {
@@ -38,7 +36,6 @@ article#people {
             margin-right: 20px;
 
             h1 {
-                //@include text-shadow(black 0 0 2px);
                 text-shadow: 0 0 2px black;
                 color: white;
                 text-align: center;
@@ -46,7 +43,6 @@ article#people {
             }
 
             p {
-                //@include text-shadow(black 0 0 2px);
                 text-shadow: 0 0 2px black;
                 color: white;
                 font-size: 10pt;

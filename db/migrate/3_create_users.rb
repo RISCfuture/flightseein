@@ -8,8 +8,8 @@ class CreateUsers < ActiveRecord::Migration
         subdomain CHARACTER VARYING(32) NOT NULL UNIQUE CHECK (CHAR_LENGTH(subdomain) >= 2),
         active BOOLEAN NOT NULL DEFAULT TRUE,
         has_avatar BOOLEAN NOT NULL DEFAULT FALSE,
-        created_at TIMESTAMP WITHOUT TIME ZONE,
-        updated_at TIMESTAMP WITHOUT TIME ZONE
+        created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+        updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
       )
     SQL
   end

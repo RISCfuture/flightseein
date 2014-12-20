@@ -6,23 +6,3 @@ $content-text-color: black;
 $header-color: darken($base-color, 10%);
 $deemphasize-header-color: lighten($alternate-color, 15%);
 $link-color: $base-color;
-
-// TEMPORARY until Compass mixins works with Rails 3.1
-
-@mixin vertical-gradient($from, $to) {
-    background: -webkit-gradient(
-        linear, left top, left bottom,
-        from($from), to($to));
-    background: -moz-linear-gradient(
-        center top,
-        $from 0%, $to 100%);
-}
-
-@mixin horiz-gradient($from, $to) {
-    background: -webkit-gradient(
-        linear, left top, right top,
-        from($from), to($to));
-    background: -moz-linear-gradient(
-        left center,
-        $from 0%, $to 100%);
-}

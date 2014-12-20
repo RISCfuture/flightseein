@@ -21,15 +21,14 @@ module Flightseein
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
-    # Precompile additional assets.
-    # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
-    config.assets.precompile                         += %w( ie.js *.png *.jpg *.jpeg *.gif )
+    # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end
 
 # Subdomain routing
 
-SubdomainRouter::Config.domain = 'flightsee.in' if Rails.env.production? || Rails.env.deploy?
+SubdomainRouter::Config.domain            = 'flightsee.in' if Rails.env.production? || Rails.env.deploy?
 SubdomainRouter::Config.subdomain_matcher = lambda do |subdomain, request|
   user                                            = Rails.cache.fetch("User/#{subdomain}") do
     User.active.for_subdomain(subdomain).first.try!(:id)

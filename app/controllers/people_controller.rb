@@ -2,7 +2,7 @@
 
 class PeopleController < ApplicationController
   respond_to :html, :json
-  before_filter :find_person, only: :show
+  before_action :find_person, only: :show
 
   # HTML
   # ====

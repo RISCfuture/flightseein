@@ -1,9 +1,8 @@
 @import "_vars";
-@import "compass/css3/box";
 
 section#title {
-    @include display-box;
-    @include box-orient(horizontal);
+    display: flex;
+    flex-flow: row nowrap;
 
     width: 100%;
 
@@ -11,7 +10,7 @@ section#title {
 
     img { margin-right: 1em; }
 
-    div#name { @include box-flex(1); }
+    div#name { flex: 1 1 auto; }
 
     h1 {
         font-size: 24pt;

@@ -1,7 +1,7 @@
 # Controller for modifying and deleting a {User}'s account.
 
 class AccountsController < ApplicationController
-  before_filter :owner_login_required, only: [ :edit, :update, :destroy ]
+  before_action :owner_login_required, only: [ :edit, :update, :destroy ]
   respond_to :html
 
   # Displays information about a {User}. This serves as the user's home page.

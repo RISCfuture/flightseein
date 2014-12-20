@@ -2,8 +2,9 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '4.1.4'
+gem 'rails', '4.2.0'
 gem 'configoro'
+gem 'responders'
 
 # ROUTING
 gem 'subdomain_router'
@@ -42,8 +43,8 @@ gem 'whenever'
 gem 'aws-s3', require: 'aws/s3'
 gem 'aws-sdk'
 gem 'therubyracer', require: 'v8'
-gem 'compass-rails', github: 'Compass/compass-rails'
-gem 'sass-rails', '>= 4.0.3'
+gem 'autoprefixer-rails'
+gem 'sass-rails'
 gem 'uglifier'
 gem 'coffee-rails'
 
@@ -51,6 +52,7 @@ group :development do
   # DEVELOPMENT
   gem 'rails3-generators'
   gem 'spring'
+  gem 'web-console'
 
   # DEPLOY
   gem 'capistrano', require: nil
@@ -69,6 +71,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'faker'
   gem 'nokogiri'
+  gem 'database_cleaner'
 end
 
 group :production do

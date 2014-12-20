@@ -9,7 +9,7 @@ class ActiveRecord::Base
 
     if options[:styles] then
       define_method :check_file_size do
-        valid?
+        validate
         errors[:"#{name}_file_size"].blank?
       end
       send :"before_#{name}_post_process", :check_file_size

@@ -1,8 +1,8 @@
 # Controller for viewing a {User}'s {Flight Flights}.
 
 class FlightsController < ApplicationController
-  before_filter :find_flight, except: :index
-  before_filter :owner_login_required, only: [ :edit, :update ]
+  before_action :find_flight, except: :index
+  before_action :owner_login_required, only: [ :edit, :update ]
   respond_to :html, :json
 
   # HTML

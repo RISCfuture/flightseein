@@ -1,7 +1,4 @@
 @import "_vars";
-@import "compass/css3/border-radius";
-@import "compass/css3/box";
-@import "compass/css3/text-shadow";
 
 article#flights {
     #vitals {
@@ -28,10 +25,8 @@ article#flights {
         margin-bottom: 2em;
         
         h1 {
-            @include border-radius(5px);
-            //@include background-image(linear-gradient(top, lighten(mix($color, $alternate-color), 20%), darken(mix($color, $alternate-color), 20%)));
-            @include vertical-gradient(lighten($base-color, 10%), darken($base-color, 10%));
-            //@include text-shadow(rgba(black, 0.75) 0 -1px 1px);
+            border-radius: 5px;
+            background: linear-gradient(top, lighten($base-color, 10%) 0%, darken($base-color, 10%) 100%);
             text-shadow: 0 -1px 1px rgba(black, 0.75);
             color: white;
             font-size: 18pt;
@@ -45,7 +40,7 @@ article#flights {
         }
 
         p {
-            @include border-bottom-radius(5px);
+            border-bottom-radius: 5px;
 
             color: $content-text-color;
             background-color: lighten($alternate-color, 48%);
@@ -61,11 +56,11 @@ article#flights {
     }
 
     section#details {
-        @include display-box;
-        @include box-orient(horizontal);
+        display: flex;
+        flex-flow: row nowrap;
 
         #blog {
-            @include box-flex(1);
+            flex: 1 1 auto;
 
             /*width: 60%;*/
             padding-right: 1em;
@@ -98,11 +93,11 @@ article#flights {
             }
 
             .stat {
-                @include display-box;
-                @include box-orient(horizontal);
+                display: flex;
+                flex-flow: row nowrap;
 
                 &>div {
-                    @include box-flex(1);
+                    flex: 1 1 auto;
                     margin-left: 10px;
                 }
 

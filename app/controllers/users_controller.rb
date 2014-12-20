@@ -1,7 +1,7 @@
 # This controller lets users sign up for new accounts.
 
 class UsersController < ApplicationController
-  before_filter :login_disallowed
+  before_action :login_disallowed
   respond_to :html
 
   # Displays a form where a user can create a new account.

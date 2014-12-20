@@ -1,7 +1,7 @@
 # Controller for logging into and out of the website.
 
 class SessionsController < ApplicationController
-  before_filter :login_disallowed, only: [ :new ]
+  before_action :login_disallowed, only: [ :new ]
   respond_to :html
 
   # Displays a page where a user can log in.

@@ -1,8 +1,8 @@
 # Controller for importing digital logbooks.
 
 class ImportsController < ApplicationController
-  before_filter :owner_login_required
-  before_filter :find_import, only: [ :show ]
+  before_action :owner_login_required
+  before_action :find_import, only: [ :show ]
   respond_to :html, :json
 
   # Displays a page where the user can upload and import a digital logbook.

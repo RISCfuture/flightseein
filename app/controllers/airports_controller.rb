@@ -1,6 +1,6 @@
 class AirportsController < ApplicationController
   respond_to :html
-  before_filter :find_airport, only: :show
+  before_action :find_airport, only: :show
 
   # HTML
   # ====

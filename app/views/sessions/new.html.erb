@@ -1,7 +1,7 @@
 <%= content_for :title, "Log In" %>
 
 <p id="call-to-action">Log in to add or modify your flights:</p>
-<%= form_for @user, url: session_url(subdomain: false), method: :post do |f| %>
+<%= form_for @user, url: session_url(subdomain: 'www'), method: :post do |f| %>
     <ul>
       <li><%= f.text_field :email, type: 'email', required: true, placeholder: t('activerecord.attributes.user.email') %></li>
       <li><%= f.password_field :password, required: true, placeholder: t('activerecord.attributes.user.password') %></li>

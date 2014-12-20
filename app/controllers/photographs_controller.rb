@@ -7,7 +7,7 @@
 # returned.
 
 class PhotographsController < ApplicationController
-  before_filter :find_flight
+  before_action :find_flight
   respond_to :json
 
   # Returns information about a flight's photographs, or the photographs of any

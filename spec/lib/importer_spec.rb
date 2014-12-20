@@ -6,14 +6,15 @@ describe Importer do
   context "[decompression]" do
     it "should skip unknown files" do
       expect(LogtenSixParser).not_to receive(:new)
+      expect(LogtenParser).not_to receive(:new)
       import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.zip'), 'application/zip'))
       Importer.new.perform import.id
     end
 
     context "[known files]" do
       before :each do
-        parser = double('LogtenParser')
-        expect(LogtenParser).to receive(:new).once.with(an_instance_of(Import), /\/Logbook.logten$/).and_return(parser)
+        parser = double('LogtenSixParser')
+        expect(LogtenSixParser).to receive(:new).once.with(an_instance_of(Import), /\/LogTenProData$/).and_return(parser)
         expect(parser).to receive(:process).once
       end
 

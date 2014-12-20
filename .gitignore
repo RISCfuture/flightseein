@@ -1,5 +1,5 @@
 .bundle
 tmp/
 .sass-cache/
-.rvmrc
 .yardoc
+.capistrano

@@ -65,7 +65,7 @@ module AuthenticationHelpers
 
   protected
 
-  # `before_filter` that only allows authenticated users. Unauthenticated users
+  # `before_action` that only allows authenticated users. Unauthenticated users
   # will be redirected to the {SessionsController#new} action.
 
   def login_required
@@ -78,7 +78,7 @@ module AuthenticationHelpers
     end
   end
 
-  # `before_filter` that only allows the authenticated owner of the current
+  # `before_action` that only allows the authenticated owner of the current
   # subdomain. Unauthenticated users will be redirected to the
   # {SessionsController#new} action.
 
@@ -93,7 +93,7 @@ module AuthenticationHelpers
     end
   end
 
-  # `before_filter` that only allows unauthenticated users. Authenticated users
+  # `before_action` that only allows unauthenticated users. Authenticated users
   # will be redirected to the root URL.
 
   def login_disallowed

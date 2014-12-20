@@ -21,6 +21,7 @@ describe FlightsController, type: :controller do
     describe ".json" do
       describe "[basic route]" do
         before :all do
+          Flight.delete_all
           @blog_flights = 60.times.map { FactoryGirl.create :flight, user: @user, blog: "Hello, world!", date: Date.today - rand(600) }
           noblog_flights = 60.times.map { FactoryGirl.create :flight, user: @user, blog: nil, date: Date.today - rand(600) }
           @user.update_flight_sequence!
