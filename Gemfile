@@ -60,6 +60,7 @@ group :development do
   gem 'capistrano-bundler', require: nil
   gem 'capistrano-rails', require: nil
   gem 'capistrano-sidekiq', require: nil
+  gem 'capistrano-passenger', require: nil
 
   # DOCUMENTATION
   gem 'yard', require: nil
