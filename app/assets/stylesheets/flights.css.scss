@@ -57,12 +57,16 @@ article#flights {
 
     section#details {
         display: flex;
-        flex-flow: row nowrap;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-content: stretch;
+        align-items: flex-start;
 
         #blog {
             flex: 1 1 auto;
+            align-self: auto;
 
-            /*width: 60%;*/
             padding-right: 1em;
             margin-right: 1em;
             border-right: 2px solid lighten($alternate-color, 30%);
@@ -76,8 +80,9 @@ article#flights {
         }
 
         #stats {
-            /*width: 40%;*/
-            
+            flex: 0 0 auto;
+            align-self: auto;
+
             h2 {
                 font-size: 14pt;
                 color: $deemphasize-header-color;
