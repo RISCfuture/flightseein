@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '4.2.0'
+gem 'rails', '4.2.1'
 gem 'configoro'
 gem 'responders'
 
@@ -41,7 +41,7 @@ gem 'whenever'
 
 # ASSETS
 gem 'aws-s3', require: 'aws/s3'
-gem 'aws-sdk'
+gem 'aws-sdk', '< 2.0' # incompatibility with aws-s3
 gem 'therubyracer', require: 'v8'
 gem 'autoprefixer-rails'
 gem 'sass-rails'
