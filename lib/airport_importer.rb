@@ -23,6 +23,7 @@ class AirportImporter
 
   def self.import_data(io)
     io.each_line do |line|
+      line = line.force_encoding('ISO-8859-1').encode('UTF-8')
       begin
         type = line[0,3]
         if parser = parser(type) then
@@ -77,7 +78,7 @@ class AirportImporter
     def parse_date(string)
       matches = /^(\d{2}\/\d{2}\/\d{4})$/.match(string)
       raise "Invalid date #{string}" unless matches
-      return Date.civil(matchesp3.to_i, matches[1].to_i, matches[2].to_i)
+      return Date.civil(matches.to_i, matches[1].to_i, matches[2].to_i)
     end
 
     def parse_angular_distance(string)
@@ -138,8 +139,8 @@ class AirportImporter
 
     def map_attributes(attributes)
       {
-        name: attributes[:name].titleize,
-        city: attributes[:city].titleize,
+        name: attributes[:name].mb_chars.titleize,
+        city: attributes[:city].mb_chars.titleize,
       }.reverse_merge(attributes)
     end
   end
