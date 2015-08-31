@@ -58,7 +58,7 @@ class Import < ActiveRecord::Base
   has_metadata_column(
       logbook_file_name:    { allow_blank: true },
       logbook_content_type: { allow_blank: true },
-      logbook_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 50.megabytes } },
+      logbook_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.gigabytes } },
       logbook_updated_at:   { type: Time, allow_blank: true },
       logbook_fingerprint:  { allow_blank: true }
   )
