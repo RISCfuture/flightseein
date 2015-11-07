@@ -3,7 +3,7 @@
 @mixin flight-banner($color) {
     $start-color: lighten(mix($color, $alternate-color, 10%), 20%);
     $end-color: mix($color, $alternate-color, 10%);
-    background: linear-gradient(top, $start-color 0%, $end-color 100%);
+    background: linear-gradient(to bottom, $start-color 0%, $end-color 100%);
 }
 
 ol#logbook {

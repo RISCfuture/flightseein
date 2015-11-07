@@ -1,7 +1,7 @@
 @import "_vars";
 
 @mixin statbox($color) {
-    background: linear-gradient(top, mix(white, $color, 80%) 0%, mix(white, $color, 40%) 100%);
+    background: linear-gradient(to bottom, mix(white, $color, 80%) 0%, mix(white, $color, 40%) 100%);
     color: darken($color, 15%);
     h1 { color: darken($color, 25%); }
 

@@ -3,7 +3,7 @@
 @mixin button($enabled: true) {
     $color: $base-color;
     @if not($enabled) { $color: gray; }
-    background: linear-gradient(top, lighten($color, 40%) 0%, $color 100%);
+    background: linear-gradient(to bottom, lighten($color, 40%) 0%, $color 100%);
     border-radius: 5px;
 
     padding: 3px 10px;
@@ -17,13 +17,13 @@
 
     &:hover {
         @if $enabled {
-            background: linear-gradient(top, lighten($color, 40%) 0%, lighten($color, 10%) 100%);
+            background: linear-gradient(to bottom, lighten($color, 40%) 0%, lighten($color, 10%) 100%);
         }
     }
 
     &:active {
         @if $enabled {
-            background: linear-gradient(top, darken($color, 30%) 0%, $color 100%);
+            background: linear-gradient(to bottom, darken($color, 30%) 0%, $color 100%);
             text-shadow: 0 -1px 1px rgba(white, 0.5);
         }
     }
@@ -52,7 +52,7 @@ header {
         top: 1em;
         width: 350px;
         padding: 4px;
-        background: linear-gradient(top, rgba(white, 0.5) 0%, rgba(#ddd, 0.5) 100%);
+        background: linear-gradient(to bottom, rgba(white, 0.5) 0%, rgba(#ddd, 0.5) 100%);
 
         li {
             padding: 5px;
@@ -65,11 +65,11 @@ header {
         li:first-child { margin-top: 0; }
 
         li#flash-alert, li#unsupported {
-            background: linear-gradient(top, rgba(#fcc, 0.5) 0%, rgba(#f99, 0.5) 100%);
+            background: linear-gradient(to bottom, rgba(#fcc, 0.5) 0%, rgba(#f99, 0.5) 100%);
         }
 
         li#flash-notice {
-            background: linear-gradient(top, rgba(#cfc, 0.5) 0%, rgba(#9f9, 0.5) 100%);
+            background: linear-gradient(to bottom, rgba(#cfc, 0.5) 0%, rgba(#9f9, 0.5) 100%);
         }
     }
 }
@@ -126,7 +126,7 @@ input[type=file] {
 
 span.field-with-errors {
     &>input, &>textarea {
-        background: linear-gradient(top, white 0%, #fdd 100%);
+        background: linear-gradient(to bottom, white 0%, #fdd 100%);
     }
 }
 
