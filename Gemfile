@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '4.2.1'
+gem 'rails', '4.2.4'
 gem 'configoro'
 gem 'responders'
 
