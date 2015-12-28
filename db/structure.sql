@@ -2,12 +2,16 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.5.0
+-- Dumped by pg_dump version 9.5.0
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
@@ -58,7 +62,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: aircraft; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: aircraft; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE aircraft (
@@ -91,7 +95,7 @@ ALTER SEQUENCE aircraft_id_seq OWNED BY aircraft.id;
 
 
 --
--- Name: airports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: airports; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE airports (
@@ -101,7 +105,7 @@ CREATE TABLE airports (
     icao character varying(4),
     iata character varying(4),
     metadata text,
-    CONSTRAINT airports_check CHECK ((((lid IS NOT NULL) OR (icao IS NOT NULL)) OR (iata IS NOT NULL))),
+    CONSTRAINT airports_check CHECK (((lid IS NOT NULL) OR (icao IS NOT NULL) OR (iata IS NOT NULL))),
     CONSTRAINT airports_iata_check CHECK ((char_length((iata)::text) > 0)),
     CONSTRAINT airports_icao_check CHECK ((char_length((icao)::text) > 0)),
     CONSTRAINT airports_lid_check CHECK ((char_length((lid)::text) > 0))
@@ -128,7 +132,7 @@ ALTER SEQUENCE airports_id_seq OWNED BY airports.id;
 
 
 --
--- Name: destinations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: destinations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE destinations (
@@ -141,7 +145,7 @@ CREATE TABLE destinations (
 
 
 --
--- Name: flights; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: flights; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE flights (
@@ -182,7 +186,7 @@ ALTER SEQUENCE flights_id_seq OWNED BY flights.id;
 
 
 --
--- Name: imports; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: imports; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE imports (
@@ -214,7 +218,7 @@ ALTER SEQUENCE imports_id_seq OWNED BY imports.id;
 
 
 --
--- Name: occupants; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: occupants; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE occupants (
@@ -245,7 +249,7 @@ ALTER SEQUENCE occupants_id_seq OWNED BY occupants.id;
 
 
 --
--- Name: people; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: people; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE people (
@@ -280,7 +284,7 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 
 --
--- Name: photographs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: photographs; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE photographs (
@@ -310,7 +314,7 @@ ALTER SEQUENCE photographs_id_seq OWNED BY photographs.id;
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE schema_migrations (
@@ -319,7 +323,7 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: slugs; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: slugs; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE slugs (
@@ -354,7 +358,7 @@ ALTER SEQUENCE slugs_id_seq OWNED BY slugs.id;
 
 
 --
--- Name: stops; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: stops; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stops (
@@ -366,7 +370,7 @@ CREATE TABLE stops (
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE users (
@@ -467,7 +471,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
--- Name: aircraft_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: aircraft_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY aircraft
@@ -475,7 +479,7 @@ ALTER TABLE ONLY aircraft
 
 
 --
--- Name: airports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: airports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY airports
@@ -483,7 +487,7 @@ ALTER TABLE ONLY airports
 
 
 --
--- Name: airports_site_number_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: airports_site_number_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY airports
@@ -491,7 +495,7 @@ ALTER TABLE ONLY airports
 
 
 --
--- Name: flights_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: flights_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY flights
@@ -499,7 +503,7 @@ ALTER TABLE ONLY flights
 
 
 --
--- Name: imports_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: imports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY imports
@@ -507,7 +511,7 @@ ALTER TABLE ONLY imports
 
 
 --
--- Name: occupants_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: occupants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY occupants
@@ -515,7 +519,7 @@ ALTER TABLE ONLY occupants
 
 
 --
--- Name: people_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: people_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY people
@@ -523,7 +527,7 @@ ALTER TABLE ONLY people
 
 
 --
--- Name: photographs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: photographs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY photographs
@@ -531,7 +535,7 @@ ALTER TABLE ONLY photographs
 
 
 --
--- Name: slugs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: slugs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY slugs
@@ -539,7 +543,7 @@ ALTER TABLE ONLY slugs
 
 
 --
--- Name: users_email_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -547,7 +551,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -555,7 +559,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: users_subdomain_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users_subdomain_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -563,147 +567,147 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: aircraft_ident; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: aircraft_ident; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX aircraft_ident ON aircraft USING btree (user_id, ident);
 
 
 --
--- Name: airports_iata; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: airports_iata; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX airports_iata ON airports USING btree (iata);
 
 
 --
--- Name: airports_icao; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: airports_icao; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX airports_icao ON airports USING btree (icao);
 
 
 --
--- Name: airports_ident; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: airports_ident; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX airports_ident ON airports USING btree (lid, icao, iata);
 
 
 --
--- Name: airports_lid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: airports_lid; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX airports_lid ON airports USING btree (lid);
 
 
 --
--- Name: dest_user_photo; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: dest_user_photo; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX dest_user_photo ON destinations USING btree (user_id, has_photo);
 
 
 --
--- Name: destinations_pkey; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: destinations_pkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX destinations_pkey ON destinations USING btree (user_id, airport_id);
 
 
 --
--- Name: flights_logbook_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: flights_logbook_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX flights_logbook_id ON flights USING btree (user_id, logbook_id);
 
 
 --
--- Name: flights_user; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: flights_user; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX flights_user ON flights USING btree (user_id, sequence);
 
 
 --
--- Name: flights_user_blog; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: flights_user_blog; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX flights_user_blog ON flights USING btree (user_id, has_blog, sequence);
 
 
 --
--- Name: flights_user_dest; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: flights_user_dest; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX flights_user_dest ON flights USING btree (user_id, destination_id, sequence);
 
 
 --
--- Name: imports_user; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: imports_user; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX imports_user ON imports USING btree (user_id, state);
 
 
 --
--- Name: occupants_flight; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: occupants_flight; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX occupants_flight ON occupants USING btree (flight_id);
 
 
 --
--- Name: occupants_person; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: occupants_person; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX occupants_person ON occupants USING btree (person_id);
 
 
 --
--- Name: people_logbook_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: people_logbook_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX people_logbook_id ON people USING btree (user_id, logbook_id);
 
 
 --
--- Name: people_user_me_hours; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: people_user_me_hours; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX people_user_me_hours ON people USING btree (user_id, me, hours);
 
 
 --
--- Name: people_user_photo_me_hours; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: people_user_photo_me_hours; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX people_user_photo_me_hours ON people USING btree (user_id, has_photo, me, hours);
 
 
 --
--- Name: photographs_flight; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: photographs_flight; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX photographs_flight ON photographs USING btree (flight_id);
 
 
 --
--- Name: stops_in_sequence; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: stops_in_sequence; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX stops_in_sequence ON stops USING btree (flight_id, sequence);
 
 
 --
--- Name: stops_pkey; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: stops_pkey; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX stops_pkey ON stops USING btree (destination_id, flight_id);
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
@@ -817,7 +821,7 @@ ALTER TABLE ONLY stops
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user",public;
+SET search_path TO "$user", public;
 
 INSERT INTO schema_migrations (version) VALUES ('1');
 
