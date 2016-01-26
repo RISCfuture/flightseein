@@ -51,3 +51,8 @@ RSpec.configure do |config|
     Rails.cache.clear
   end
 end
+
+# Rails 4.2.5.1 fix
+RSpec::Rails::ViewRendering::EmptyTemplatePathSetDecorator.class_eval do
+  alias_method :find_all_anywhere, :find_all
+end
