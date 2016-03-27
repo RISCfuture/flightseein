@@ -1,7 +1,7 @@
 lock '3.4.0'
 
 set :application, 'flightseein'
-set :repo_url, 'git@www.timothymorgan.info:flightseein.git'
+set :repo_url, 'timothymorgan.git:flightseein.git'
 
 set :deploy_to, '/var/www/www.flightsee.in'
 set :rvm_ruby_version, "2.3.0@#{fetch :application}"
