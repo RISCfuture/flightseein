@@ -1,4 +1,4 @@
-class AddMeBooleanToPeople < ActiveRecord::Migration
+class AddMeBooleanToPeople < ActiveRecord::Migration[4.2]
   def change
     change_table :people, bulk: true do |t|
       t.boolean :me, null: false, default: false

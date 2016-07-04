@@ -1,4 +1,4 @@
-class AddCarouselIndexes < ActiveRecord::Migration
+class AddCarouselIndexes < ActiveRecord::Migration[4.2]
   def change
     change_table :people do |t|
       t.index [ :user_id, :has_photo, :me, :hours ], name: 'people_user_photo_me_hours'

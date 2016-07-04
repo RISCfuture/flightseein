@@ -1,4 +1,4 @@
-class RemoveCrewColumnsFromFlights < ActiveRecord::Migration
+class RemoveCrewColumnsFromFlights < ActiveRecord::Migration[4.2]
   def up
     execute "ALTER TABLE flights DROP pic_id, DROP sic_id"
     drop_table :flights_passengers

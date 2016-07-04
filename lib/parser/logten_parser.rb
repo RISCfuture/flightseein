@@ -61,6 +61,7 @@ class LogtenParser < Parser
                 nil
               end
       user.aircraft.where(ident: ident).create_or_update!(year: year, type: type, long_type: long_type, notes: notes, image: image)
+      image&.close
     end
   end
 
@@ -87,6 +88,7 @@ class LogtenParser < Parser
       end
 
       destination = user.destinations.where(airport_id: airport.id).create_or_update!(photo: image)
+      image&.close
       @destination_ids[id] = destination
     end
   end
@@ -121,6 +123,7 @@ class LogtenParser < Parser
         person ||= user.people.build
         # in any case, update the logbook ID to the new UUID system
         person.update_attributes!(logbook_id: uuid, name: name, photo: image, me: is_me.parse_bool)
+        image&.close
       end
 
       @person_ids[pkey] = person
@@ -197,7 +200,7 @@ class LogtenParser < Parser
 
       flight.occupants.clear
 
-      Stop.delete_all(flight_id: flight.id)
+      Stop.where(flight_id: flight.id).delete_all
       if route.present? then
         route.split('-')
         route.split('-')[1..-2].each_with_index do |stop, index|

@@ -27,7 +27,7 @@ describe PeopleController, type: :controller do
       end
 
       it "should return the first 50 people by hours" do
-        get :index, format: 'json'
+        get :index, params: {format: 'json'}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(50)
         JSON.parse(response.body).zip(@people[0, 50]).each do |(json, person)|
@@ -41,7 +41,7 @@ describe PeopleController, type: :controller do
       end
 
       it "should paginate using the last_record parameter" do
-        get :index, format: 'json', last_record: @people[49].id
+        get :index, params: {format: 'json', last_record: @people[49].id}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(10)
         JSON.parse(response.body).zip(@people[50, 10]).each do |(json, person)|
@@ -50,7 +50,7 @@ describe PeopleController, type: :controller do
       end
 
       it "should not blow up if given an invalid last_record" do
-        get :index, format: 'json', last_record: FactoryGirl.create(:person).id
+        get :index, params: {format: 'json', last_record: FactoryGirl.create(:person).id}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(50)
         JSON.parse(response.body).zip(@people[0, 50]).each do |(json, person)|
@@ -62,12 +62,12 @@ describe PeopleController, type: :controller do
 
   describe "#show" do
     it "should 404 if an invalid flight ID is provided" do
-      get :show, id: 'not-found'
+      get :show, params: {id: 'not-found'}
       expect(response.status).to eql(404)
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      get :show, id: FactoryGirl.create(:person).slug
+      get :show, params: {id: FactoryGirl.create(:person).slug}
       expect(response.status).to eql(404)
     end
 
@@ -77,12 +77,12 @@ describe PeopleController, type: :controller do
       end
 
       it "should set @person to the person" do
-        get :show, id: @person.slug
+        get :show, params: {id: @person.slug}
         expect(assigns(:person)).to eql(@person)
       end
 
       it "should render the show template" do
-        get :show, id: @person.slug
+        get :show, params: {id: @person.slug}
         expect(response.status).to eql(200)
         expect(response).to render_template('show')
       end

@@ -1,4 +1,4 @@
-class AddSlugsToFlights < ActiveRecord::Migration
+class AddSlugsToFlights < ActiveRecord::Migration[4.2]
   def up
     execute "ALTER TYPE slugged_class RENAME TO _old_slugged_class"
     execute "CREATE TYPE slugged_class AS ENUM ('Person', 'Destination', 'Flight')"

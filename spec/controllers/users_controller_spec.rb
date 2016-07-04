@@ -6,8 +6,7 @@ describe UsersController, type: :controller do
   describe "#new" do
     it "should redirect to the root URL if the user is already logged in" do
       user = FactoryGirl.create(:user)
-      session[:user_id] = user.id
-      get :new
+      get :new, session: {user_id: user.id}
       expect(response).to redirect_to(root_url(subdomain: user.subdomain))
     end
 
@@ -21,14 +20,14 @@ describe UsersController, type: :controller do
     it "should redirect to the root URL if the user is already logged in" do
       user = FactoryGirl.create(:user)
       session[:user_id] = user.id
-      post :create, user: {}
+      post :create, params: {user: {}}
       expect(response).to redirect_to(root_url(subdomain: user.subdomain))
     end
 
     context "[valid values]" do
       before :each do
         @template = FactoryGirl.build(:user)
-        post :create, user: @template.attributes.slice('email', 'subdomain').merge('password' => 'password')
+        post :create, params: {user: @template.attributes.slice('email', 'subdomain').merge('password' => 'password')}
       end
 
       it "should create the new user" do
@@ -52,7 +51,7 @@ describe UsersController, type: :controller do
     context "[invalid values]" do
       before :each do
         @template = FactoryGirl.build(:user)
-        post :create, user: @template.attributes.slice('email').merge('password' => 'something')
+        post :create, params: {user: @template.attributes.slice('email').merge('password' => 'something')}
       end
 
       it "should render the signup form" do

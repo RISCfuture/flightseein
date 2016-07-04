@@ -1,4 +1,4 @@
-class RemoveLogbookIdFromDestinations < ActiveRecord::Migration
+class RemoveLogbookIdFromDestinations < ActiveRecord::Migration[4.2]
   def up
     execute "ALTER TABLE destinations DROP logbook_id"
   end

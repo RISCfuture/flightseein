@@ -34,7 +34,7 @@
 # | `aircraft`  | The {Aircraft} the flight was taken in.                                |
 # | `occupants` | All {Occupant Occupants} present on the flight (PIC and SIC included). |
 
-class Flight < ActiveRecord::Base
+class Flight < ApplicationRecord
   include HasMetadataColumn
   include Slugalicious
 
@@ -53,10 +53,6 @@ class Flight < ActiveRecord::Base
       blog:    { allow_blank: true }
   )
 
-  validates :user,
-            presence: true
-  validates :aircraft,
-            presence: true
   validates :duration,
             presence:     true,
             numericality: { greater_than: 0.0 }

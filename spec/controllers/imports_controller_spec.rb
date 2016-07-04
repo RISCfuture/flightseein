@@ -1,10 +1,6 @@
 require 'rails_helper'
-require 'sidekiq/testing'
-require 'importer'
 
 describe ImportsController, type: :controller do
-  before(:each) { Importer.jobs.clear }
-
   describe "#new" do
     it "should redirect if no user is logged in" do
       get :new
@@ -12,9 +8,8 @@ describe ImportsController, type: :controller do
     end
 
     it "should redirect if the user is not the subdomain owner" do
-      session[:user_id] = FactoryGirl.create(:user).id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      get :new
+      get :new, session: {user_id: FactoryGirl.create(:user).id}
       expect(response).to be_redirect
     end
 
@@ -40,14 +35,13 @@ describe ImportsController, type: :controller do
 
   describe "#create" do
     it "should redirect if no user is logged in" do
-      post :create, import: {}
+      post :create, params: {import: {}}
       expect(response).to be_redirect
     end
 
     it "should redirect if the user is not the subdomain owner" do
-      session[:user_id] = FactoryGirl.create(:user).id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      post :create, import: {}
+      post :create, params: {import: {}}, session: {user_id: FactoryGirl.create(:user).id}
       expect(response).to be_redirect
     end
 
@@ -64,19 +58,19 @@ describe ImportsController, type: :controller do
         end
 
         it "should create a new Import" do
-          post :create, import: @attributes
+          post :create, params: {import: @attributes}
           expect(@user.imports.count).to eql(1)
           import = @user.imports.first
           expect(import.logbook.original_filename).to eql('logten.zip')
         end
 
         it "should enqueue the Import" do
-          post :create, import: @attributes
-          expect(Importer.jobs.size).to eql(1)
+          post :create, params: {import: @attributes}
+          expect(ImporterJob).to have_been_enqueued
         end
 
         it "should redirect to the import progress page" do
-          post :create, import: @attributes
+          post :create, params: {import: @attributes}
           expect(response).to redirect_to(@user.imports.first)
         end
       end
@@ -87,26 +81,26 @@ describe ImportsController, type: :controller do
         end
 
         it "should move errors on the Paperclip aux fields to the main Paperclip field" do
-          post :create, import: @attributes
+          post :create, params: {import: @attributes}
           import = assigns(:import)
           expect(import.errors[:logbook]).not_to be_empty
           expect(import.errors[:logbook]).to eql(import.errors[:logbook_content_type])
         end
 
         it "should render the form" do
-          post :create, import: @attributes
+          post :create, params: {import: @attributes}
           expect(response).to render_template('new')
         end
 
         it "should set @import to the unsaved Import" do
-          post :create, import: @attributes
+          post :create, params: {import: @attributes}
           expect(assigns(:import)).to be_kind_of(Import)
           expect(assigns(:import)).to be_new_record
         end
 
         it "should not enqueue anything" do
-          post :create, import: @attributes
-          expect(Importer.jobs).to be_empty
+          post :create, params: {import: @attributes}
+          expect(ImporterJob).not_to have_been_enqueued
         end
       end
     end
@@ -114,15 +108,14 @@ describe ImportsController, type: :controller do
 
   describe "#show" do
     it "should redirect if no user is logged in" do
-      get :show, id: FactoryGirl.create(:import).id
+      get :show, params: {id: FactoryGirl.create(:import).id}
       expect(response).to be_redirect
     end
 
     it "should redirect if the user is not the subdomain owner" do
       user = FactoryGirl.create(:user)
-      session[:user_id] = user.id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      get :show, id: FactoryGirl.create(:import, user: user).id
+      get :show, params: {id: FactoryGirl.create(:import, user: user).id}, session: {user_id: user.id}
       expect(response).to be_redirect
     end
 
@@ -134,18 +127,18 @@ describe ImportsController, type: :controller do
       end
       
       it "should 404 if the Import does not belong to the current user" do
-        get :show, id: FactoryGirl.create(:import).id
+        get :show, params: {id: FactoryGirl.create(:import).id}
         expect(response.status).to eql(404)
       end
 
       it "should 404 if the Import is not found" do
-        get :show, id: 'not-found'
+        get :show, params: {id: 'not-found'}
         expect(response.status).to eql(404)
       end
 
       it "should set @import to the Import" do
         import = FactoryGirl.create(:import, user: @user)
-        get :show, id: import.id
+        get :show, params: {id: import.id}
         expect(assigns(:import)).to eql(import)
       end
     end

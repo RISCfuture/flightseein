@@ -31,7 +31,7 @@
 # |:---------------|:---------------------------------------------------------|
 # | `destinations` | The {Destination Destinations} referencing this airport. |
 
-class Airport < ActiveRecord::Base
+class Airport < ApplicationRecord
   include HasMetadataColumn
 
   STATES = %w( AL AK AS AZ AR CA CO CT DE DC FM FL GA GU HI ID IL IN IA KS KY LA

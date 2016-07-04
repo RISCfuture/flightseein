@@ -16,7 +16,7 @@
 # | `flight` | The {Flight} the occupant was on.   |
 # | `person` | The {Person} who was on the flight. |
 
-class Occupant < ActiveRecord::Base
+class Occupant < ApplicationRecord
   belongs_to :person, inverse_of: :occupantships
   belongs_to :flight, inverse_of: :occupants
 

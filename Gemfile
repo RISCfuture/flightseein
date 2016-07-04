@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '4.2.6'
+gem 'rails', '5.0.0'
 gem 'configoro'
 gem 'responders'
 
@@ -14,9 +14,9 @@ gem 'user-agent'
 
 # MODELS
 gem 'email_validation'
-gem 'enum_type'
 gem 'has_metadata_column'
 gem 'paperclip'
+gem 'aws-sdk', '>= 2.0.34'
 gem 'pg'
 gem 'slugalicious'
 gem 'find_or_create_on_scopes'
@@ -33,26 +33,30 @@ gem 'sqlite3'
 gem 'sidekiq'
 gem 'slim'
 # if you require 'sinatra' you get the DSL extended to Object
-gem 'sinatra', require: nil
+gem 'sinatra', github: 'sinatra/sinatra' # Rails 5.0
 gem 'zipruby'
 
 # CRON
 gem 'whenever'
 
 # ASSETS
-gem 'aws-s3', require: 'aws/s3'
-gem 'aws-sdk', '< 2.0' # incompatibility with aws-s3
 gem 'therubyracer', require: 'v8'
 gem 'autoprefixer-rails'
 gem 'sass-rails'
 gem 'uglifier'
 gem 'coffee-rails'
+gem 'turbolinks'
+
+# OTHER
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 group :development do
-  # DEVELOPMENT
-  gem 'rails3-generators'
+  gem 'puma'
+
+  # CHANGE WATCHING
   gem 'spring'
-  gem 'web-console'
+  gem 'listen'
+  gem 'spring-watcher-listen'
 
   # DEPLOY
   gem 'capistrano', require: nil
@@ -64,15 +68,24 @@ group :development do
 
   # DOCUMENTATION
   gem 'yard', require: nil
+
+  # ERRORS
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :test do
   # SPECS
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
+  gem 'rspec-activejob'
+
+  # FACTORIES/DB
   gem 'factory_girl_rails'
   gem 'faker'
-  gem 'nokogiri'
   gem 'database_cleaner'
+
+  gem 'nokogiri'
 end
 
 group :production do

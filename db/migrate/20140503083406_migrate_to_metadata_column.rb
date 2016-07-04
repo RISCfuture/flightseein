@@ -1,4 +1,4 @@
-class MigrateToMetadataColumn < ActiveRecord::Migration
+class MigrateToMetadataColumn < ActiveRecord::Migration[4.2]
   MODELS = [Airport, User, Aircraft, Destination, Person, Flight, Photograph, Import]
 
   def up

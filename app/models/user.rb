@@ -51,7 +51,7 @@ require 'digest/sha1'
 # | `flights` | The {Flight Flights} this user has imported. |
 # | `people`  | The {Person People} this user has imported.  |
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include HasMetadataColumn
 
   attr_accessor :password

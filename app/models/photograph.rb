@@ -21,7 +21,7 @@
 # | `flight` | The {Flight} this photo was taken on. |
 
 
-class Photograph < ActiveRecord::Base
+class Photograph < ApplicationRecord
   include HasMetadataColumn
 
   belongs_to :flight, inverse_of: :photographs

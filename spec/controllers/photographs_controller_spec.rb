@@ -17,7 +17,7 @@ describe PhotographsController, type: :controller do
       end
 
       it "should return the first 50 photos by hours" do
-        get :index, flight_id: @flight.to_param, format: 'json'
+        get :index, params: {flight_id: @flight.to_param, format: 'json'}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(10)
         JSON.parse(response.body).zip(@photographs[0, 10]).each do |(json, photo)|
@@ -29,7 +29,7 @@ describe PhotographsController, type: :controller do
       end
 
       it "should paginate using the last_record parameter" do
-        get :index, flight_id: @flight.to_param, format: 'json', last_record: @photographs[9].id
+        get :index, params: {flight_id: @flight.to_param, format: 'json', last_record: @photographs[9].id}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(5)
         JSON.parse(response.body).zip(@photographs[10, 5]).each do |(json, photo)|
@@ -38,7 +38,7 @@ describe PhotographsController, type: :controller do
       end
 
       it "should not blow up if given an invalid last_record" do
-        get :index, flight_id: @flight.to_param, format: 'json', last_record: 'abc'
+        get :index, params: {flight_id: @flight.to_param, format: 'json', last_record: 'abc'}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(10)
         JSON.parse(response.body).zip(@photographs[0, 10]).each do |(json, photo)|
@@ -53,14 +53,14 @@ describe PhotographsController, type: :controller do
       end
 
       it "should create a photograph from the 'photograph' parameter hash" do
-        post :create, flight_id: @flight.to_param, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg') }, format: 'json'
+        post :create, params: {flight_id: @flight.to_param, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg') }, format: 'json'}
         expect(response.status).to eql(201)
-        expect(@flight.photographs(true).size).to eql(1)
+        expect(@flight.photographs.reload.size).to eql(1)
         expect(@flight.photographs.first.image_file_name).to eql('image.jpg')
       end
 
       it "should encode errors in the JSON response" do
-        post :create, flight_id: @flight.to_param, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain') }, format: 'json'
+        post :create, params: {flight_id: @flight.to_param, photograph: { image: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain') }, format: 'json'}
         expect(response.status).to eql(422)
         expect(JSON.parse(response.body)['errors']['image_content_type']).to eql(['must be an image file (such as JPEG)'])
       end
@@ -78,7 +78,7 @@ describe PhotographsController, type: :controller do
         end
 
         it "should return photographs from the 10 most recent flights with photos" do
-          get :index, format: 'json'
+          get :index, params: {format: 'json'}
           expect(response.status).to eql(200)
           expect(JSON.parse(response.body).size).to eql(5)
           JSON.parse(response.body).zip(@flights[0, 5]).each do |(json, flight)|
@@ -91,7 +91,7 @@ describe PhotographsController, type: :controller do
         end
 
         it "should ignore the last_record parameter" do
-          get :index, format: 'json', last_record: '100'
+          get :index, params: {format: 'json', last_record: '100'}
           expect(response.status).to eql(200)
           expect(JSON.parse(response.body).size).to eql(5)
         end

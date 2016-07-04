@@ -31,7 +31,7 @@
 # |:----------|-------------------------------------------------|
 # | `flights` | The {Flight flights} this aircraft has been on. |
 
-class Aircraft < ActiveRecord::Base
+class Aircraft < ApplicationRecord
   include HasMetadataColumn
   include CheckForDuplicateAttachedFile
 

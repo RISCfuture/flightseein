@@ -1,4 +1,4 @@
-class MigrateCrewToOccupants < ActiveRecord::Migration
+class MigrateCrewToOccupants < ActiveRecord::Migration[4.2]
   Flight.belongs_to :pic, class_name: 'Person'
   Flight.belongs_to :sic, class_name: 'Person'
   Flight.has_and_belongs_to_many :passengers, class_name: 'Person', join_table: 'flights_passengers'

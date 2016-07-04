@@ -1,4 +1,4 @@
-class CreateDestinations < ActiveRecord::Migration
+class CreateDestinations < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       CREATE TABLE destinations (

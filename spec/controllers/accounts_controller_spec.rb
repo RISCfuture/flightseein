@@ -128,9 +128,8 @@ describe AccountsController, type: :controller do
     it "should render the edit page for the subdomain owner" do
       user = FactoryGirl.create(:user)
       request.host = "#{user.subdomain}.test.host"
-      session[:user_id] = user.id
 
-      get :edit
+      get :edit, session: {user_id: user.id}
 
       expect(response).to render_template('edit')
     end
@@ -152,14 +151,13 @@ describe AccountsController, type: :controller do
   describe "#update" do
     it "should redirect if logged out" do
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      patch :update, user: FactoryGirl.attributes_for(:user)
+      patch :update, params: {user: FactoryGirl.attributes_for(:user)}
       expect(response).to be_redirect
     end
 
     it "should redirect if the current user is not the account owner" do
-      session[:user_id] = FactoryGirl.create(:user).id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      patch :update, user: FactoryGirl.attributes_for(:user)
+      patch :update, params: {user: FactoryGirl.attributes_for(:user)}, session: {user_id: FactoryGirl.create(:user).id}
       expect(response).to be_redirect
     end
 
@@ -173,7 +171,7 @@ describe AccountsController, type: :controller do
       context "[valid values]" do
         before :each do
           @attributes = FactoryGirl.attributes_for(:user).slice(:password, :name, :quote, :subdomain, :avatar)
-          patch :update, user: @attributes
+          patch :update, params: {user: @attributes}
         end
 
         it "should update the user" do
@@ -189,7 +187,7 @@ describe AccountsController, type: :controller do
       context "[invalid values]" do
         before :each do
           @attributes = { subdomain: 'invalid/subdomain' }
-          patch :update, user: @attributes
+          patch :update, params: {user: @attributes}
         end
 
         it "should leave the user untouched" do
@@ -211,9 +209,8 @@ describe AccountsController, type: :controller do
     end
 
     it "should redirect if the current user is not the account owner" do
-      session[:user_id] = FactoryGirl.create(:user).id
       request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      delete :destroy
+      delete :destroy, session: {user_id: FactoryGirl.create(:user).id}
       expect(response).to be_redirect
     end
 

@@ -1,4 +1,4 @@
-class CreateImports < ActiveRecord::Migration
+class CreateImports < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       CREATE TYPE state_type AS ENUM(

@@ -21,9 +21,7 @@
 # | `active` | Whether this is the most recently generated slug for the sluggable.                              |
 # | `scope`  | Freeform data scoping this slug to a certain subset of records within the model.                 |
 
-class Slug < ActiveRecord::Base
-  extend EnumType
-
+class Slug < ApplicationRecord
   belongs_to :sluggable, polymorphic: true
 
   scope :for, ->(object_or_type, object_id=nil) {
@@ -38,15 +36,6 @@ class Slug < ActiveRecord::Base
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
 
-  enum_type :sluggable_type,
-            values:        %w( Person Destination Flight ),
-            register_type: true
-
-  validates :sluggable_type,
-            presence: true
-  validates :sluggable_id,
-            presence:     true,
-            numericality: { only_integer: true }
   validates :slug,
             presence:   true,
             length:     { maximum: 126 },

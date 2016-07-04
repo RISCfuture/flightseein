@@ -49,6 +49,7 @@ class LogtenSixParser < Parser
               end
 
       ac = user.aircraft.where(ident: ident).create_or_update(year: year, type: type, long_type: long_type, notes: notes, image: image)
+      image&.close
       if ac.invalid?
         user.aircraft.where(ident: ident).create_or_update!(year: year, type: type, long_type: long_type, notes: notes)
       end
@@ -78,6 +79,7 @@ class LogtenSixParser < Parser
       end
 
       destination = user.destinations.where(airport_id: airport.id).create_or_update(photo: image)
+      image&.close
       if destination.invalid?
         destination = user.destinations.where(airport_id: airport.id).create_or_update!
       end
@@ -106,6 +108,7 @@ class LogtenSixParser < Parser
       name = name1.present? ? name1 : name2
 
       person = user.people.where(logbook_id: uuid).create_or_update(name: name, photo: image, me: is_me.parse_bool)
+      image&.close
       if person.invalid?
         person = user.people.where(logbook_id: uuid).create_or_update!(name: name, me: is_me.parse_bool)
       end
@@ -175,7 +178,7 @@ class LogtenSixParser < Parser
 
       flight.occupants.clear
 
-      Stop.delete_all(flight_id: flight.id)
+      Stop.where(flight_id: flight.id).delete_all
       if route.present? then
         route.split('-').each_with_index do |stop, index|
           airport = Airport.with_ident(stop, stop, stop).first

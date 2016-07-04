@@ -1,14 +1,12 @@
 require 'rails_helper'
-require 'parser/logten_parser'
-require 'importer'
 
-describe Importer do
+RSpec.describe ImporterJob, type: :job do
   context "[decompression]" do
     it "should skip unknown files" do
       expect(LogtenSixParser).not_to receive(:new)
       expect(LogtenParser).not_to receive(:new)
       import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.zip'), 'application/zip'))
-      Importer.new.perform import.id
+      ImporterJob.new.perform import
     end
 
     context "[known files]" do
@@ -20,17 +18,17 @@ describe Importer do
 
       it "should decompress a .zip file" do
         import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.zip'), 'application/zip'))
-        Importer.new.perform import.id
+        ImporterJob.new.perform import
       end
 
       it "should decompress a .tar.gz file" do
         import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.tar.gz'), 'application/x-gzip'))
-        Importer.new.perform import.id
+        ImporterJob.new.perform import
       end
 
       it "should decompress a .tar.bz2 file" do
         import = FactoryGirl.create(:import, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.tar.bz2'), 'application/x-bzip2'))
-        Importer.new.perform import.id
+        ImporterJob.new.perform import
       end
     end
   end

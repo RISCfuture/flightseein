@@ -1,6 +1,8 @@
 require 'subdomain_router'
 
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
   constraints(subdomain: '') do
     get '' => redirect { |_, request| "http://www.#{request.host_with_port}" }
     get '*glob' => redirect { |_, request| "http://www.#{request.host_with_port}#{request.fullpath}" }

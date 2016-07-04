@@ -16,7 +16,7 @@
 # | `flight`      | The {Flight} the stop was made during. |
 # | `destination` | The {Destination} the stop was at.     |
 
-class Stop < ActiveRecord::Base
+class Stop < ApplicationRecord
   belongs_to :flight, inverse_of: :stops
 
   # @private
@@ -24,8 +24,6 @@ class Stop < ActiveRecord::Base
   # @private
   def destination=(dest) self.destination_id = dest.airport_id end
 
-  validates :flight,
-            presence: true
   validates :destination_id,
             presence: true
   validates :sequence,

@@ -29,7 +29,7 @@
 # | `user`    | The {User} who imported this destination.     |
 # | `airport` | The {Airport} referenced by this destination. |
 
-class Destination < ActiveRecord::Base
+class Destination < ApplicationRecord
   include HasMetadataColumn
   include CheckForDuplicateAttachedFile
 
@@ -47,11 +47,6 @@ class Destination < ActiveRecord::Base
       photo_updated_at:   { type: Time, allow_blank: true },
       photo_fingerprint:  { allow_blank: true }
   )
-
-  validates :user,
-            presence: true
-  validates :airport,
-            presence: true
 
   attr_readonly :airport
 

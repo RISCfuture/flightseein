@@ -1,4 +1,4 @@
-class CreateOccupants < ActiveRecord::Migration
+class CreateOccupants < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       CREATE TABLE occupants (

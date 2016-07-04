@@ -32,7 +32,7 @@
 # | `occupantships` | The times this person acted as a {Crewmember} on a flight.         |
 # | `flights`       | The {Flight Flights} this person was a passenger or crewmember on. |
 
-class Person < ActiveRecord::Base
+class Person < ApplicationRecord
   include HasMetadataColumn
   include Slugalicious
   include CheckForDuplicateAttachedFile
@@ -54,8 +54,6 @@ class Person < ActiveRecord::Base
       photo_fingerprint:  { allow_blank: true }
   )
 
-  validates :user,
-            presence: true
   validates :hours,
             presence:     true,
             numericality: { greater_than_or_equal_to: 0.0 }

@@ -1,32 +1,26 @@
-require 'securerandom'
-require 'open-uri'
+class ImporterJob < ApplicationJob
+  queue_as :default
 
-# Prepares an uploaded logbook file for importing and delegates the importing
-# to the appropriate {Parser}.
-
-class Importer
-  include Sidekiq::Worker
-  
   # Supported archive formats that can be decompressed.
   SUPPORTED_ARCHIVE_FORMATS = %w( .zip .gz .tar .bz2 .tgz .tbz )
   # Supported logbook formats.
   SUPPORTED_LOGBOOK_FORMATS = {
-    /\.logten$/ => 'LogtenParser',
-    /^LogTenProData$/ => 'LogtenSixParser'
+      /\.logten$/ => 'LogtenParser',
+      /^LogTenProData$/ => 'LogtenSixParser'
   }
-  
+
   # Attempts to decompress the logbook file (if necessary), then invokes the
   # correct {Parser} to do the importing.
   #
   # Should any exception occur, the import will be moved to the "failed" state.
   #
-  # @param [Fixnum] import_id The ID of an {Import}.
+  # @param [Import] import The import to process.
 
-  def perform(import_id)
-    @import = Import.find(import_id)
+  def perform(import)
+    @import = import
     @uuid = SecureRandom.uuid
     @work_dir = Rails.root.join('tmp', 'work', @uuid).to_s
-    
+
     @import.update_attribute :state, :starting
 
     path = download_file

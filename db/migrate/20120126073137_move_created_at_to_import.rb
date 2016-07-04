@@ -1,4 +1,4 @@
-class MoveCreatedAtToImport < ActiveRecord::Migration
+class MoveCreatedAtToImport < ActiveRecord::Migration[4.2]
   def up
     execute "ALTER TABLE imports ADD created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL"
     Import.reset_column_information

@@ -13,8 +13,9 @@ class ApplicationController < ActionController::Base
   SUPPORTED_BROWSERS = [ :Chrome, :chrome, :Safari, :safari ]
 
   protect_from_forgery
-  layout 'application'
   before_action :warn_for_incompatible_browsers
+
+  layout 'application'
 
   rescue_from(ActiveRecord::RecordNotFound) { render(file: Rails.root.join('public', '404.html'), status: :not_found) }
   rescue_from(ActiveRecord::RecordInvalid) { render(file: Rails.root.join('public', '422.html'), status: :unprocessable_entity) }

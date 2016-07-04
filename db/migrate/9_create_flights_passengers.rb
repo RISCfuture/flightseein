@@ -1,4 +1,4 @@
-class CreateFlightsPassengers < ActiveRecord::Migration
+class CreateFlightsPassengers < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       CREATE TABLE flights_passengers (

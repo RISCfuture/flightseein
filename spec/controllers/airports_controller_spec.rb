@@ -26,7 +26,7 @@ describe AirportsController, type: :controller do
 
     describe ".json" do
       it "should return the first 50 airports" do
-        get :index, format: 'json'
+        get :index, params: {format: 'json'}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(50)
         JSON.parse(response.body).zip(@destinations.sort_by(&:airport_id)[0,50]).each do |(json, dest)|
@@ -40,7 +40,7 @@ describe AirportsController, type: :controller do
       end
 
       it "should paginate using the last_record parameter" do
-        get :index, format: 'json', last_record: @destinations[39].airport_id
+        get :index, params: {format: 'json', last_record: @destinations[39].airport_id}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(20)
         JSON.parse(response.body).zip(@destinations.sort_by(&:airport_id)[40,20]).each do |(json, dest)|
@@ -52,12 +52,12 @@ describe AirportsController, type: :controller do
 
   describe "#show" do
     it "should return 404 if the airport doesn't exist" do
-      get :show, id: 'UNKN'
+      get :show, params: {id: 'UNKN'}
       expect(response.status).to eql(404)
     end
 
     it "should return 404 if the airport exists but is not a destination for this user" do
-      get :show, id: FactoryGirl.create(:airport).identifier
+      get :show, params: {id: FactoryGirl.create(:airport).identifier}
       expect(response.status).to eql(404)
     end
 
@@ -67,12 +67,12 @@ describe AirportsController, type: :controller do
       end
 
       it "should set @destination to the Destination record" do
-        get :show, id: @destination.airport.identifier
+        get :show, params: {id: @destination.airport.identifier}
         expect(assigns(:destination).id).to eql(@destination.id)
       end
 
       it "should render the show action" do
-        get :show, id: @destination.airport.identifier
+        get :show, params: {id: @destination.airport.identifier}
         expect(response.status).to eql(200)
         expect(response).to render_template('show')
       end

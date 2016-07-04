@@ -1,5 +1,3 @@
-require 'importer'
-
 # A digital logbook file to import. Progress is recorded via the `state` field,
 # which can take one of the following values:
 #
@@ -43,9 +41,8 @@ require 'importer'
 # |:-------|:--------------------------------------------|
 # | `user` | The {User} whose logbook is being imported. |
 
-class Import < ActiveRecord::Base
+class Import < ApplicationRecord
   include HasMetadataColumn
-  extend EnumType
 
   @queue          = :"import_#{Rails.env}"
 
@@ -63,22 +60,14 @@ class Import < ActiveRecord::Base
       logbook_fingerprint:  { allow_blank: true }
   )
 
-  extend EnumType
-  enum_type :state,
-            values:        %w( pending starting importing_aircraft
-                               importing_airports importing_passengers
-                               importing_flights uploading_photos completed
-                               failed ),
-            register_type: 'state_type'
-
   has_attached_file :logbook
   validates_attachment_content_type :logbook, content_type: SUPPORTED_TYPES
 
   # Enqueues this import for processing. Processing is performed by the
-  # {Importer}.
+  # {ImporterJob}.
 
   def enqueue
-    Importer.perform_async self.id
+    ImporterJob.perform_later self
   end
 
   # @return [Fixnum] A number from 0 to 6 indicating the progress of the import,

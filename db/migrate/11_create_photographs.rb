@@ -1,4 +1,4 @@
-class CreatePhotographs < ActiveRecord::Migration
+class CreatePhotographs < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       CREATE TABLE photographs (

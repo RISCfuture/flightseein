@@ -1,4 +1,4 @@
-class CreateSlugs < ActiveRecord::Migration
+class CreateSlugs < ActiveRecord::Migration[4.2]
   def up
     execute "CREATE TYPE slugged_class AS ENUM('Person', 'Destination')"
     execute <<-SQL

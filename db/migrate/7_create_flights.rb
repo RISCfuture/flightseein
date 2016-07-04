@@ -1,4 +1,4 @@
-class CreateFlights < ActiveRecord::Migration
+class CreateFlights < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       CREATE TABLE flights (

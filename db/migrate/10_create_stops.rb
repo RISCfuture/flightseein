@@ -1,4 +1,4 @@
-class CreateStops < ActiveRecord::Migration
+class CreateStops < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       CREATE TABLE stops (
