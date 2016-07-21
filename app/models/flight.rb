@@ -49,7 +49,7 @@ class Flight < ApplicationRecord
           slugifier: ->(str) { str.remove_formatting.replace_whitespace('_').collapse('_') }
 
   has_metadata_column(
-      remarks: { length: { maximum: 500 }, allow_blank: true },
+      remarks: { length: { maximum: 1_000_000 }, allow_blank: true },
       blog:    { allow_blank: true }
   )
 
