@@ -1,4 +1,4 @@
-lock '3.5.0'
+lock '3.6.1'
 
 set :application, 'flightseein'
 set :repo_url, 'timothymorgan.git:flightseein.git'
