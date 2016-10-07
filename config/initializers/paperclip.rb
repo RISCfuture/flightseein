@@ -1,6 +1,8 @@
+require File.join(File.dirname(__FILE__), 'recursively')
+
 # Also update it to include global storage configuration options.
 
-Paperclip::Attachment.default_options.update Flightseein::Configuration.paperclip.symbolize_keys
+Paperclip::Attachment.default_options.update Flightseein::Configuration.paperclip.symbolize_keys.recursively!(&:symbolize_keys!)
 
 # And add an interpolation that uses the content type to figure out the file's
 # extension, rather than the file name

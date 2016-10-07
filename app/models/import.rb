@@ -47,8 +47,11 @@ class Import < ApplicationRecord
   @queue          = :"import_#{Rails.env}"
 
   # Supported logbook file MIME types.
-  SUPPORTED_TYPES = %w( application/zip application/x-gzip application/x-tar
-                        application/gnutar application/x-bzip2 application/octet-stream )
+  SUPPORTED_TYPES = %w( application/zip
+                        application/x-gzip application/gzip
+                        application/x-tar application/gnutar
+                        application/x-bzip2 application/x-bzip
+                        application/octet-stream )
 
   belongs_to :user, inverse_of: :imports
 
