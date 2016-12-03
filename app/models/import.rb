@@ -44,8 +44,6 @@
 class Import < ApplicationRecord
   include HasMetadataColumn
 
-  @queue          = :"import_#{Rails.env}"
-
   # Supported logbook file MIME types.
   SUPPORTED_TYPES = %w( application/zip
                         application/x-gzip application/gzip
