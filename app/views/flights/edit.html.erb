@@ -1,7 +1,7 @@
 <% content_for :title, "Edit Flight" %>
 <%= render(partial: 'accounts/profile') %>
 
-<%= form_for @flight do |f| %>
+<%= form_with model: @flight, local: true do |f| %>
     <ul>
       <li>
         <%= f.text_area :blog, rows: 40, cols: 80, placeholder: "Write a blog entry" %>

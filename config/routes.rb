@@ -14,6 +14,10 @@ Rails.application.routes.draw do
     resources :photographs, only: :index
 
     root(to: 'users#new')
+
+    # require 'sidekiq/web'
+    # require 'admin_constraint'
+    # mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
   end
 
   constraints(SubdomainRouter::Constraint) do

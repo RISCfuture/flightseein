@@ -36,7 +36,7 @@ describe PeopleController, type: :controller do
           expect(json['hours']).to be_within(0.05).of(person.hours)
           expect(json['url']).to match(/\/people\/#{person.slug}$/)
           expect(json['flights']).to eql(person.flights.count)
-          expect(json['photo']).to include(person.photo.url(:carousel))
+          # expect(json['photo']).to include(person.photo.url(:carousel))
         end
       end
 

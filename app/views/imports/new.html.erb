@@ -1,7 +1,7 @@
 <% content_for :title, "Import your Logbook" %>
 
 <h1>Import your logbook to fill out your profile.</h1>
-<%= form_for @import do |f| %>
+<%= form_with model: @import, local: true do |f| %>
     <ul>
       <li><%= f.file_field :logbook %></li>
       <li class="submit"><%= f.submit %></li>

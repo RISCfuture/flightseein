@@ -56,7 +56,7 @@ class Import < ApplicationRecord
   has_metadata_column(
       logbook_file_name:    { allow_blank: true },
       logbook_content_type: { allow_blank: true },
-      logbook_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.gigabytes } },
+      logbook_file_size:    { type: Integer, allow_blank: true, numericality: { less_than: 2.gigabytes } },
       logbook_updated_at:   { type: Time, allow_blank: true },
       logbook_fingerprint:  { allow_blank: true }
   )
@@ -71,7 +71,7 @@ class Import < ApplicationRecord
     ImporterJob.perform_later self
   end
 
-  # @return [Fixnum] A number from 0 to 6 indicating the progress of the import,
+  # @return [Integer] A number from 0 to 6 indicating the progress of the import,
   #   or -1 if the import failed.
 
   def progress_value

@@ -44,7 +44,7 @@ describe User, type: :model do
   describe "#update_flight_sequence!" do
     before :each do
       @user = FactoryGirl.create(:user)
-      @flights = 5.times.map { |n| FactoryGirl.create :flight, user: @user, date: Date.today - n }.sort_by(&:date)
+      @flights = Array.new(5) { |n| FactoryGirl.create :flight, user: @user, date: Date.today - n }.sort_by(&:date)
       @flights << FactoryGirl.create(:flight, user: @user, date: @flights.last.date)
     end
 

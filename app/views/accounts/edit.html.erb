@@ -1,5 +1,5 @@
 <p id="call-to-action">Edit your profile:</p>
-<%= form_for current_user, url: account_url do |f| %>
+<%= form_with model: current_user, url: account_url, local: true do |f| %>
     <ul>
       <li><%= f.text_field :name, placeholder: t('activerecord.attributes.user.name') %></li>
       <li>

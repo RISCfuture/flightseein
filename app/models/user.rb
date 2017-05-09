@@ -77,7 +77,7 @@ class User < ApplicationRecord
 
       avatar_file_name:    { allow_blank: true },
       avatar_content_type: { allow_blank: true },
-      avatar_file_size:    { type: Fixnum, allow_blank: true, numericality: { less_than: 2.megabytes } },
+      avatar_file_size:    { type: Integer, allow_blank: true, numericality: { less_than: 2.megabytes } },
       avatar_updated_at:   { type: Time, allow_blank: true },
       avatar_fingerprint:  { allow_blank: true }
   )
@@ -217,7 +217,7 @@ class User < ApplicationRecord
   end
 
   def update_cache
-    Rails.cache.delete(self.class.subdomain_cache_key(subdomain_was)) if subdomain_changed?
+    Rails.cache.delete(self.class.subdomain_cache_key(subdomain_before_last_save)) if saved_change_to_subdomain?
     Rails.cache.write(subdomain_cache_key, self) if active?
   end
 

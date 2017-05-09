@@ -9,13 +9,11 @@ class LogtenSixParser < Parser
     @person_ids = Hash.new
     @flight_ids = Hash.new
 
-    Rails.logger.tagged(self.class.name) do
-      import_aircraft
-      import_airports
-      import_passengers
-      import_flights
-      import_certificates
-    end
+    import_aircraft
+    import_airports
+    import_passengers
+    import_flights
+    import_certificates
   rescue ActiveRecord::RecordInvalid => err
     Rails.logger.error "Invalid record: #{err.record.errors.inspect}"
     raise

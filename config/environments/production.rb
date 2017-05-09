@@ -14,6 +14,11 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  # Attempt to read encrypted secrets from `config/secrets.yml.enc`.
+  # Requires an encryption key in `ENV["RAILS_MASTER_KEY"]` or
+  # `config/secrets.yml.key`.
+  config.read_encrypted_secrets            = false
+
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   config.public_file_server.enabled        = ENV['RAILS_SERVE_STATIC_FILES'].present?
@@ -54,11 +59,12 @@ Rails.application.configure do
   config.log_tags                          = [:request_id]
 
   # Use a different cache store in production.
-  config.cache_store                       = :mem_cache_store
+  config.cache_store                       = :redis_store, 'redis://localhost:6379/0/flightseein_cache', {expires_in: 2.hours}
+  config.action_dispatch.rack_cache        = {
+      metastore:   'redis://localhost:6379/1/flightseein_metastore',
+      entitystore: 'redis://localhost:6379/1/flightseein_entitystore'
+  }
 
-  # Use a real queuing backend for Active Job (and separate queues per environment)
-  config.active_job.queue_adapter          = :sidekiq
-  config.active_job.queue_name_prefix      = "flightseein_#{Rails.env}"
   config.action_mailer.perform_caching     = false
 
   # Ignore bad email addresses and do not raise email delivery errors.

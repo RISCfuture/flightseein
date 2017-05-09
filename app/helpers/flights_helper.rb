@@ -8,7 +8,7 @@ module FlightsHelper
     @flight.blog.present? or subdomain_owner?
   end
 
-  # @return [Fixnum] A dimensionless value indicating the precedence of a crew
+  # @return [Integer] A dimensionless value indicating the precedence of a crew
   #   role; higher values have higher rank.
 
   def precedence(role)

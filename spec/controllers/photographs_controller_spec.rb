@@ -72,9 +72,9 @@ describe PhotographsController, type: :controller do
       describe ".json" do
         before :all do
           Flight.delete_all
-          @flights = 10.times.map { |i| FactoryGirl.create(:flight, date: Date.today - i) }.sort_by(&:date).reverse
+          @flights = Array.new(10) { |i| FactoryGirl.create(:flight, date: Date.today - i) }.sort_by(&:date).reverse
           @flights.each { |flight| FactoryGirl.create_list :photograph, 5, flight: flight }
-          5.times.map { |i| FactoryGirl.create :flight, date: Date.today - i }
+          Array.new(5) { |i| FactoryGirl.create :flight, date: Date.today - i }
         end
 
         it "should return photographs from the 10 most recent flights with photos" do

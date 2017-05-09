@@ -31,7 +31,7 @@ describe AirportsController, type: :controller do
         expect(JSON.parse(response.body).size).to eql(50)
         JSON.parse(response.body).zip(@destinations.sort_by(&:airport_id)[0,50]).each do |(json, dest)|
           expect(json['airport_id']).to eql(dest.airport_id)
-          expect(json['photo']).to include(dest.photo.url(:stat))
+          # expect(json['photo']).to include(dest.photo.url(:stat))
           expect(json['url']).to match(/\/airports\/#{Regexp.escape dest.airport.identifier}$/)
           [ :name, :city, :state, :identifier, :lat, :lon ].each do |attr|
             expect(json['airport'][attr.to_s]).to eql(dest.airport.send(attr))

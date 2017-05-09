@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <% @flight.occupants(includes: { person: :slugs }).sort { |c1, c2| precedence(c2.role) <=> precedence(c1.role) }.group_by(&:role).each do |role, occupants| %>
+    <% @flight.occupants.includes(person: :slugs).sort { |c1, c2| precedence(c2.role) <=> precedence(c1.role) }.group_by(&:role).each do |role, occupants| %>
         <h2><%= occupants.many? ? role.pluralize : role %></h2>
         <% occupants.each do |occupant| %>
             <div class="stat">

@@ -15,82 +15,82 @@ ActiveRecord::Schema.define(version: 20140503083406) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "aircraft", force: :cascade do |t|
-    t.integer "user_id",                              null: false
-    t.string  "ident",     limit: 16,                 null: false
-    t.boolean "has_image",            default: false, null: false
-    t.text    "metadata"
-    t.index ["user_id", "ident"], name: "aircraft_ident", unique: true, using: :btree
+  create_table "aircraft", id: :serial, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "ident", limit: 16, null: false
+    t.boolean "has_image", default: false, null: false
+    t.text "metadata"
+    t.index ["user_id", "ident"], name: "aircraft_ident", unique: true
   end
 
-  create_table "airports", force: :cascade do |t|
+  create_table "airports", id: :serial, force: :cascade do |t|
     t.string "site_number", limit: 11, null: false
-    t.string "lid",         limit: 4
-    t.string "icao",        limit: 4
-    t.string "iata",        limit: 4
-    t.text   "metadata"
-    t.index ["iata"], name: "airports_iata", using: :btree
-    t.index ["icao"], name: "airports_icao", using: :btree
-    t.index ["lid", "icao", "iata"], name: "airports_ident", unique: true, using: :btree
-    t.index ["lid"], name: "airports_lid", using: :btree
-    t.index ["site_number"], name: "airports_site_number_key", unique: true, using: :btree
+    t.string "lid", limit: 4
+    t.string "icao", limit: 4
+    t.string "iata", limit: 4
+    t.text "metadata"
+    t.index ["iata"], name: "airports_iata"
+    t.index ["icao"], name: "airports_icao"
+    t.index ["lid", "icao", "iata"], name: "airports_ident", unique: true
+    t.index ["lid"], name: "airports_lid"
+    t.index ["site_number"], name: "airports_site_number_key", unique: true
   end
 
   create_table "destinations", id: false, force: :cascade do |t|
-    t.integer "user_id",                       null: false
-    t.integer "airport_id",                    null: false
-    t.boolean "has_photo",     default: false, null: false
-    t.integer "flights_count", default: 0,     null: false
-    t.text    "metadata"
-    t.index ["user_id", "airport_id"], name: "destinations_pkey", unique: true, using: :btree
-    t.index ["user_id", "has_photo"], name: "dest_user_photo", using: :btree
+    t.integer "user_id", null: false
+    t.integer "airport_id", null: false
+    t.boolean "has_photo", default: false, null: false
+    t.integer "flights_count", default: 0, null: false
+    t.text "metadata"
+    t.index ["user_id", "airport_id"], name: "destinations_pkey", unique: true
+    t.index ["user_id", "has_photo"], name: "dest_user_photo"
   end
 
-  create_table "flights", force: :cascade do |t|
-    t.string  "logbook_id",     limit: 60,                 null: false
-    t.integer "user_id",                                   null: false
-    t.integer "origin_id",                                 null: false
-    t.integer "destination_id",                            null: false
-    t.integer "aircraft_id",                               null: false
-    t.float   "duration",                                  null: false
-    t.date    "date",                                      null: false
-    t.boolean "has_blog",                  default: false, null: false
-    t.boolean "has_photos",                default: false, null: false
+  create_table "flights", id: :serial, force: :cascade do |t|
+    t.string "logbook_id", limit: 60, null: false
+    t.integer "user_id", null: false
+    t.integer "origin_id", null: false
+    t.integer "destination_id", null: false
+    t.integer "aircraft_id", null: false
+    t.float "duration", null: false
+    t.date "date", null: false
+    t.boolean "has_blog", default: false, null: false
+    t.boolean "has_photos", default: false, null: false
     t.integer "sequence"
-    t.text    "metadata"
-    t.index ["user_id", "destination_id", "sequence"], name: "flights_user_dest", using: :btree
-    t.index ["user_id", "has_blog", "sequence"], name: "flights_user_blog", using: :btree
-    t.index ["user_id", "logbook_id"], name: "flights_logbook_id", unique: true, using: :btree
-    t.index ["user_id", "sequence"], name: "flights_user", unique: true, using: :btree
+    t.text "metadata"
+    t.index ["user_id", "destination_id", "sequence"], name: "flights_user_dest"
+    t.index ["user_id", "has_blog", "sequence"], name: "flights_user_blog"
+    t.index ["user_id", "logbook_id"], name: "flights_logbook_id", unique: true
+    t.index ["user_id", "sequence"], name: "flights_user", unique: true
   end
 
 # Could not dump table "imports" because of following StandardError
 #   Unknown type 'state_type' for column 'state'
 
-  create_table "occupants", force: :cascade do |t|
-    t.integer "flight_id",             null: false
-    t.integer "person_id",             null: false
-    t.string  "role",      limit: 126
-    t.index ["flight_id"], name: "occupants_flight", using: :btree
-    t.index ["person_id"], name: "occupants_person", using: :btree
-  end
-
-  create_table "people", force: :cascade do |t|
-    t.string  "logbook_id", limit: 60,                 null: false
-    t.integer "user_id",                               null: false
-    t.float   "hours",                 default: 0.0,   null: false
-    t.boolean "has_photo",             default: false, null: false
-    t.boolean "me",                    default: false, null: false
-    t.text    "metadata"
-    t.index ["user_id", "has_photo", "me", "hours"], name: "people_user_photo_me_hours", using: :btree
-    t.index ["user_id", "logbook_id"], name: "people_logbook_id", unique: true, using: :btree
-    t.index ["user_id", "me", "hours"], name: "people_user_me_hours", using: :btree
-  end
-
-  create_table "photographs", force: :cascade do |t|
+  create_table "occupants", id: :serial, force: :cascade do |t|
     t.integer "flight_id", null: false
-    t.text    "metadata"
-    t.index ["flight_id"], name: "photographs_flight", using: :btree
+    t.integer "person_id", null: false
+    t.string "role", limit: 126
+    t.index ["flight_id"], name: "occupants_flight"
+    t.index ["person_id"], name: "occupants_person"
+  end
+
+  create_table "people", id: :serial, force: :cascade do |t|
+    t.string "logbook_id", limit: 60, null: false
+    t.integer "user_id", null: false
+    t.float "hours", default: 0.0, null: false
+    t.boolean "has_photo", default: false, null: false
+    t.boolean "me", default: false, null: false
+    t.text "metadata"
+    t.index ["user_id", "has_photo", "me", "hours"], name: "people_user_photo_me_hours"
+    t.index ["user_id", "logbook_id"], name: "people_logbook_id", unique: true
+    t.index ["user_id", "me", "hours"], name: "people_user_me_hours"
+  end
+
+  create_table "photographs", id: :serial, force: :cascade do |t|
+    t.integer "flight_id", null: false
+    t.text "metadata"
+    t.index ["flight_id"], name: "photographs_flight"
   end
 
 # Could not dump table "slugs" because of following StandardError
@@ -98,23 +98,23 @@ ActiveRecord::Schema.define(version: 20140503083406) do
 
   create_table "stops", id: false, force: :cascade do |t|
     t.integer "destination_id", null: false
-    t.integer "flight_id",      null: false
-    t.integer "sequence",       null: false
-    t.index ["destination_id", "flight_id"], name: "stops_pkey", unique: true, using: :btree
-    t.index ["flight_id", "sequence"], name: "stops_in_sequence", using: :btree
+    t.integer "flight_id", null: false
+    t.integer "sequence", null: false
+    t.index ["destination_id", "flight_id"], name: "stops_pkey", unique: true
+    t.index ["flight_id", "sequence"], name: "stops_in_sequence"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string   "email",      limit: 255,                 null: false
-    t.string   "subdomain",  limit: 32,                  null: false
-    t.boolean  "active",                 default: true,  null: false
-    t.boolean  "has_avatar",             default: false, null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.boolean  "admin",                  default: false, null: false
-    t.text     "metadata"
-    t.index ["email"], name: "users_email_key", unique: true, using: :btree
-    t.index ["subdomain"], name: "users_subdomain_key", unique: true, using: :btree
+  create_table "users", id: :serial, force: :cascade do |t|
+    t.string "email", limit: 255, null: false
+    t.string "subdomain", limit: 32, null: false
+    t.boolean "active", default: true, null: false
+    t.boolean "has_avatar", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "admin", default: false, null: false
+    t.text "metadata"
+    t.index ["email"], name: "users_email_key", unique: true
+    t.index ["subdomain"], name: "users_subdomain_key", unique: true
   end
 
   add_foreign_key "aircraft", "users", name: "aircraft_user_id_fkey", on_delete: :cascade

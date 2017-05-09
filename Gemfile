@@ -1,9 +1,16 @@
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '5.0.0.1'
+gem 'rails', '5.1.1'
 gem 'configoro'
+
+# CONTROLLERS
 gem 'responders'
 
 # ROUTING
@@ -14,7 +21,7 @@ gem 'user-agent'
 
 # MODELS
 gem 'email_validation'
-gem 'has_metadata_column'
+gem 'has_metadata_column', '>= 1.1.7'
 gem 'paperclip'
 gem 'aws-sdk', '>= 2.0.34'
 gem 'pg'
@@ -32,8 +39,6 @@ gem 'multiuploader'
 gem 'sqlite3'
 gem 'sidekiq'
 gem 'slim'
-# if you require 'sinatra' you get the DSL extended to Object
-gem 'sinatra', github: 'sinatra/sinatra' # Rails 5.0
 gem 'zipruby'
 
 # CRON
@@ -52,11 +57,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 group :development do
   gem 'puma'
-
-  # CHANGE WATCHING
-  gem 'spring'
   gem 'listen'
-  gem 'spring-watcher-listen'
 
   # DEPLOY
   gem 'capistrano', require: nil
@@ -90,5 +91,6 @@ end
 
 group :production do
   # CACHING
-  gem 'dalli'
+  gem 'redis-rails'
+  gem 'rack-cache', require: 'rack/cache'
 end

@@ -30,7 +30,7 @@ class Photograph < ApplicationRecord
       caption:            { allow_blank: true, length: { maximum: 300 } },
       image_file_name:    { presence: true },
       image_content_type: { presence: true },
-      image_file_size:    { type: Fixnum, presence: true, numericality: { less_than: 2.megabytes } },
+      image_file_size:    { type: Integer, presence: true, numericality: { less_than: 2.megabytes } },
       image_updated_at:   { type: Time, presence: true },
       image_fingerprint:  { presence: true }
   )

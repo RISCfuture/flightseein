@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe UsersController, type: :controller do
   render_views
-  
+
   describe "#new" do
     it "should redirect to the root URL if the user is already logged in" do
       user = FactoryGirl.create(:user)
@@ -61,11 +61,11 @@ describe UsersController, type: :controller do
       it "should preserve existing values except the password" do
         html = Nokogiri::HTML(response.body)
 
-        tags = html.css('form input#user_email')
+        tags = html.css('form input[type=email]')
         expect(tags.size).to eql(1)
         expect(tags.first['value']).to eql(@template.email)
 
-        tags = html.css('form input#user_password')
+        tags = html.css('form input[type=password]')
         expect(tags.size).to eql(1)
         expect(tags.first['value']).to be_nil
       end

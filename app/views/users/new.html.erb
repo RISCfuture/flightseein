@@ -12,7 +12,7 @@
 
 <p id="call-to-action">To get started, sign up below, then import your digital
   logbook:</p>
-<%= form_for @user do |f| %>
+<%= form_with model: @user, local: true do |f| %>
     <ul>
       <li><%= f.text_field :name, placeholder: t('activerecord.attributes.user.name') %></li>
       <li><%= f.text_field :email, type: 'email', required: true, placeholder: t('activerecord.attributes.user.email') %></li>

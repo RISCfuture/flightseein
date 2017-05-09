@@ -4,7 +4,7 @@ module ApplicationHelper
 
   # A combination of `pluralize` and `number_with_delimiter`.
   #
-  # @param [Fixnum] count The number of items. This number will be formatted.
+  # @param [Integer] count The number of items. This number will be formatted.
   # @param [String] singular The string to append to the count if the count is
   #   one.
   # @param [String] plural The string to append to the count if the count is not

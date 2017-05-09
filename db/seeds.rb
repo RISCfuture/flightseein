@@ -2,14 +2,16 @@
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
 require 'airport_importer'
+require 'net/http'
 
 BASE_DATE = Date.civil(2014, 2, 6)
 
 date = BASE_DATE
-until date + 56 > Date.today
-  date += 56
+until date + 28 > Date.today
+  date += 28
 end
-url = URI.parse("https://nfdc.faa.gov/webContent/56DaySub/#{date.strftime '%Y-%m-%d'}/APT.zip")
+
+url = URI.parse("https://nfdc.faa.gov/webContent/28DaySub/#{date.strftime '%Y-%m-%d'}/APT.zip")
 
 puts "Downloading NASR airport data..."
 zipped_data = Net::HTTP.get(url)
