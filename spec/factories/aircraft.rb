@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :aircraft do
     association :user
-    
+
     sequence(:ident) { |i| "N#{i.to_s.rjust(5, '0')}" }
     year { rand(Date.today.year - 1970) + 1970 }
     type { %w( C152 C172 C182 PA28 7ECA ).sample }

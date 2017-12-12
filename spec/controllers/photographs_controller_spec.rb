@@ -3,7 +3,7 @@ require 'rails_helper'
 describe PhotographsController, type: :controller do
   context "[nested under flights]" do
     before :all do
-      @user = FactoryGirl.create(:user)
+      @user = FactoryBot.create(:user)
     end
 
     before :each do
@@ -12,8 +12,8 @@ describe PhotographsController, type: :controller do
 
     describe "#index" do
       before :all do
-        @flight      = FactoryGirl.create(:flight, user: @user)
-        @photographs = FactoryGirl.create_list(:photograph, 15, flight: @flight).sort_by(&:id)
+        @flight      = FactoryBot.create(:flight, user: @user)
+        @photographs = FactoryBot.create_list(:photograph, 15, flight: @flight).sort_by(&:id)
       end
 
       it "should return the first 50 photos by hours" do
@@ -49,7 +49,7 @@ describe PhotographsController, type: :controller do
 
     describe "#create" do
       before :all do
-        @flight = FactoryGirl.create(:flight, user: @user)
+        @flight = FactoryBot.create(:flight, user: @user)
       end
 
       it "should create a photograph from the 'photograph' parameter hash" do
@@ -72,9 +72,9 @@ describe PhotographsController, type: :controller do
       describe ".json" do
         before :all do
           Flight.delete_all
-          @flights = Array.new(10) { |i| FactoryGirl.create(:flight, date: Date.today - i) }.sort_by(&:date).reverse
-          @flights.each { |flight| FactoryGirl.create_list :photograph, 5, flight: flight }
-          Array.new(5) { |i| FactoryGirl.create :flight, date: Date.today - i }
+          @flights = Array.new(10) { |i| FactoryBot.create(:flight, date: Date.today - i) }.sort_by(&:date).reverse
+          @flights.each { |flight| FactoryBot.create_list :photograph, 5, flight: flight }
+          Array.new(5) { |i| FactoryBot.create :flight, date: Date.today - i }
         end
 
         it "should return photographs from the 10 most recent flights with photos" do

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe FlightsController, type: :controller do
   before :all do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
   end
 
   before :each do
@@ -22,14 +22,14 @@ describe FlightsController, type: :controller do
       describe "[basic route]" do
         before :all do
           Flight.delete_all
-          @blog_flights = Array.new(60) { FactoryGirl.create :flight, user: @user, blog: "Hello, world!", date: Date.today - rand(600) }
-          noblog_flights = Array.new(60) { FactoryGirl.create :flight, user: @user, blog: nil, date: Date.today - rand(600) }
+          @blog_flights = Array.new(60) { FactoryBot.create :flight, user: @user, blog: "Hello, world!", date: Date.today - rand(600) }
+          noblog_flights = Array.new(60) { FactoryBot.create :flight, user: @user, blog: nil, date: Date.today - rand(600) }
           @user.update_flight_sequence!
           @blog_flights = Flight.where(id: @blog_flights.map(&:id)).order('sequence DESC')
           @flights = Flight.where(id: (@blog_flights + noblog_flights).map(&:id)).order('sequence DESC')
 
-          100.times { FactoryGirl.create :photograph, flight: @flights.sample }
-          50.times { FactoryGirl.create :passenger, flight: @flights.sample, person: FactoryGirl.create(:person, user: @user) }
+          100.times { FactoryBot.create :photograph, flight: @flights.sample }
+          50.times { FactoryBot.create :passenger, flight: @flights.sample, person: FactoryBot.create(:person, user: @user) }
         end
 
         it "should use filter=all by default" do
@@ -147,10 +147,10 @@ describe FlightsController, type: :controller do
 
       describe "[people nested resource]" do
         before :all do
-          @person = FactoryGirl.create(:person, user: @user)
+          @person = FactoryBot.create(:person, user: @user)
           flights = Array.new(60) do
-            flight = FactoryGirl.create(:flight, user: @user, date: Date.today - rand(400))
-            FactoryGirl.create :passenger, flight: flight, person: @person
+            flight = FactoryBot.create(:flight, user: @user, date: Date.today - rand(400))
+            FactoryBot.create :passenger, flight: flight, person: @person
             flight
           end
           @user.update_flight_sequence!
@@ -187,11 +187,11 @@ describe FlightsController, type: :controller do
 
       describe "[airports nested resource]" do
         before :all do
-          @destination = FactoryGirl.create(:destination, user: @user)
-          @flights = Array.new(60) { FactoryGirl.create :flight, destination: @destination, user: @user, date: Date.today - rand(400) }
+          @destination = FactoryBot.create(:destination, user: @user)
+          @flights = Array.new(60) { FactoryBot.create :flight, destination: @destination, user: @user, date: Date.today - rand(400) }
           # red herrings
-          FactoryGirl.create :flight, origin: @destination, user: @user
-          FactoryGirl.create :stop, destination: @destination, sequence: 1
+          FactoryBot.create :flight, origin: @destination, user: @user
+          FactoryBot.create :stop, destination: @destination, sequence: 1
 
           @user.update_flight_sequence!
           @flights = Flight.where(id: @flights.map(&:id)).order('sequence DESC')
@@ -234,13 +234,13 @@ describe FlightsController, type: :controller do
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      get :show, params: {id: FactoryGirl.create(:flight).to_param}
+      get :show, params: {id: FactoryBot.create(:flight).to_param}
       expect(response.status).to eql(404)
     end
 
     context "[valid flight]" do
       before :each do
-        @flight = FactoryGirl.create(:flight, user: @user)
+        @flight = FactoryBot.create(:flight, user: @user)
       end
 
       it "should set @flight to the flight" do
@@ -268,13 +268,13 @@ describe FlightsController, type: :controller do
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      get :edit, params: {id: FactoryGirl.create(:flight).to_param}
+      get :edit, params: {id: FactoryBot.create(:flight).to_param}
       expect(response.status).to eql(404)
     end
 
     context "[valid flight]" do
       before :each do
-        @flight = FactoryGirl.create(:flight, user: @user)
+        @flight = FactoryBot.create(:flight, user: @user)
       end
 
       it "should set @flight to the flight" do
@@ -307,13 +307,13 @@ describe FlightsController, type: :controller do
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      patch :update, params: {id: FactoryGirl.create(:flight).to_param}
+      patch :update, params: {id: FactoryBot.create(:flight).to_param}
       expect(response.status).to eql(404)
     end
 
     context "[valid flight]" do
       before :each do
-        @flight = FactoryGirl.create(:flight, user: @user)
+        @flight = FactoryBot.create(:flight, user: @user)
       end
 
       context "[valid attributes]" do
@@ -328,7 +328,7 @@ describe FlightsController, type: :controller do
         end
 
         it "should update photographs as well" do
-          photo = FactoryGirl.create(:photograph, flight: @flight, caption: 'foo')
+          photo = FactoryBot.create(:photograph, flight: @flight, caption: 'foo')
           patch :update, params: {id: @flight.to_param, flight: { blog: 'new 2', photographs_attributes: { '0' => { caption: 'bar', _destroy: '0', id: photo.id.to_s } } }}
           expect(photo.reload.caption).to eql('bar')
         end

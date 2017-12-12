@@ -3,7 +3,7 @@ require 'rails_helper'
 describe AccountsController, type: :controller do
   describe "#show" do
     before :each do
-      @user = FactoryGirl.create(:user)
+      @user = FactoryBot.create(:user)
       request.host = "#{@user.subdomain}.test.host"
     end
 
@@ -13,16 +13,16 @@ describe AccountsController, type: :controller do
     end
 
     it "should set @flight_count to the number of flights" do
-      FactoryGirl.create_list :flight, 7, user: @user
+      FactoryBot.create_list :flight, 7, user: @user
       get :show
       expect(assigns(:flight_count)).to eql(7)
     end
 
     it "should set @pax_count to the number of people" do
-      FactoryGirl.create_list :person, 8, user: @user, hours: 2.0
+      FactoryBot.create_list :person, 8, user: @user, hours: 2.0
       # red herrings
-      FactoryGirl.create :person, user: @user, hours: 0.0
-      FactoryGirl.create :person, user: @user, hours: 2.0, me: true
+      FactoryBot.create :person, user: @user, hours: 0.0
+      FactoryBot.create :person, user: @user, hours: 2.0, me: true
 
       get :show
 
@@ -30,8 +30,8 @@ describe AccountsController, type: :controller do
     end
 
     it "should set @airport_count to the number of airports" do
-      FactoryGirl.create_list :flight, 9, user: @user
-      FactoryGirl.create(:flight, user: @user, destination: @user.destinations.first)
+      FactoryBot.create_list :flight, 9, user: @user
+      FactoryBot.create(:flight, user: @user, destination: @user.destinations.first)
 
       get :show
 
@@ -39,7 +39,7 @@ describe AccountsController, type: :controller do
     end
 
     it "should set @flight_images to the last four flights" do
-      flights = Array.new(5) { FactoryGirl.create :flight, user: @user, date: Date.today - rand(100) }.reverse.sort_by { |f| [ f.date, f.id ] }.reverse
+      flights = Array.new(5) { FactoryBot.create :flight, user: @user, date: Date.today - rand(100) }.reverse.sort_by { |f| [ f.date, f.id ] }.reverse
       # reverse twice so we get a sort by date then ID
       @user.update_flight_sequence!
       get :show
@@ -47,7 +47,7 @@ describe AccountsController, type: :controller do
     end
 
     it "should set @flight_images to the last flights if there are fewer than four" do
-      flights = Array.new(2) { FactoryGirl.create :flight, user: @user, date: Date.today - rand(100) }.reverse.sort_by { |f| [ f.date, f.id ] }.reverse
+      flights = Array.new(2) { FactoryBot.create :flight, user: @user, date: Date.today - rand(100) }.reverse.sort_by { |f| [ f.date, f.id ] }.reverse
       # reverse twice so we get a sort by date then ID
       @user.update_flight_sequence!
       get :show
@@ -55,11 +55,11 @@ describe AccountsController, type: :controller do
     end
 
     it "should set @pax_images to four random people with photos" do
-      people = FactoryGirl.create_list(:person, 4, hours: 4.0, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
+      people = FactoryBot.create_list(:person, 4, hours: 4.0, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
       # red herrings
-      FactoryGirl.create :person, user: @user, hours: 2.0
-      FactoryGirl.create :person, user: @user, hours: 0.0
-      FactoryGirl.create :person, user: @user, me: true
+      FactoryBot.create :person, user: @user, hours: 2.0
+      FactoryBot.create :person, user: @user, hours: 0.0
+      FactoryBot.create :person, user: @user, me: true
 
       get :show
 
@@ -68,12 +68,12 @@ describe AccountsController, type: :controller do
     end
 
     it "should fill @pax_images if four people with photos aren't available" do
-      people = FactoryGirl.create_list(:person, 2, hours: 2.0, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
-      people << FactoryGirl.create(:person, user: @user, hours: 2.0)
-      people << FactoryGirl.create(:person, user: @user, hours: 2.0)
+      people = FactoryBot.create_list(:person, 2, hours: 2.0, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
+      people << FactoryBot.create(:person, user: @user, hours: 2.0)
+      people << FactoryBot.create(:person, user: @user, hours: 2.0)
       # red herrings
-      FactoryGirl.create :person, user: @user, hours: 0.0
-      FactoryGirl.create :person, user: @user, hours: 2.0, me: true
+      FactoryBot.create :person, user: @user, hours: 0.0
+      FactoryBot.create :person, user: @user, hours: 2.0, me: true
 
       get :show
 
@@ -82,10 +82,10 @@ describe AccountsController, type: :controller do
     end
 
     it "should use as many people as are available if there are fewer than four" do
-      people = FactoryGirl.create_list(:person, 2, hours: 2.0, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
+      people = FactoryBot.create_list(:person, 2, hours: 2.0, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
       # red herrings
-      FactoryGirl.create :person, user: @user, hours: 0.0
-      FactoryGirl.create :person, user: @user, hours: 2.0, me: true
+      FactoryBot.create :person, user: @user, hours: 0.0
+      FactoryBot.create :person, user: @user, hours: 2.0, me: true
 
       get :show
 
@@ -94,8 +94,8 @@ describe AccountsController, type: :controller do
     end
 
     it "should set @airport_images to four random destinations with photos" do
-      dests = FactoryGirl.create_list(:destination, 4, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
-      FactoryGirl.create :destination, user: @user
+      dests = FactoryBot.create_list(:destination, 4, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
+      FactoryBot.create :destination, user: @user
 
       get :show
 
@@ -104,9 +104,9 @@ describe AccountsController, type: :controller do
     end
 
     it "should fill @airport_images if four destinations with photos aren't available" do
-      dests = FactoryGirl.create_list(:destination, 2, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
-      dests << FactoryGirl.create(:destination, user: @user)
-      dests << FactoryGirl.create(:destination, user: @user)
+      dests = FactoryBot.create_list(:destination, 2, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
+      dests << FactoryBot.create(:destination, user: @user)
+      dests << FactoryBot.create(:destination, user: @user)
 
       get :show
 
@@ -115,7 +115,7 @@ describe AccountsController, type: :controller do
     end
 
     it "should use as many destinations as are available if there are fewer than four" do
-      dests = FactoryGirl.create_list(:destination, 2, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
+      dests = FactoryBot.create_list(:destination, 2, user: @user, photo: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'image.jpg'), 'image/jpeg'))
 
       get :show
 
@@ -126,7 +126,7 @@ describe AccountsController, type: :controller do
 
   describe "#edit" do
     it "should render the edit page for the subdomain owner" do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       request.host = "#{user.subdomain}.test.host"
 
       get :edit, session: {user_id: user.id}
@@ -135,14 +135,14 @@ describe AccountsController, type: :controller do
     end
 
     it "should redirect if logged out" do
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
       get :edit
       expect(response).to be_redirect
     end
 
     it "should redirect if the current user is not the account owner" do
-      session[:user_id] = FactoryGirl.create(:user).id
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
+      session[:user_id] = FactoryBot.create(:user).id
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
       get :edit
       expect(response).to be_redirect
     end
@@ -150,27 +150,27 @@ describe AccountsController, type: :controller do
 
   describe "#update" do
     it "should redirect if logged out" do
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      patch :update, params: {user: FactoryGirl.attributes_for(:user)}
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
+      patch :update, params: {user: FactoryBot.attributes_for(:user)}
       expect(response).to be_redirect
     end
 
     it "should redirect if the current user is not the account owner" do
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      patch :update, params: {user: FactoryGirl.attributes_for(:user)}, session: {user_id: FactoryGirl.create(:user).id}
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
+      patch :update, params: {user: FactoryBot.attributes_for(:user)}, session: {user_id: FactoryBot.create(:user).id}
       expect(response).to be_redirect
     end
 
     context "[subdomain owner]" do
       before :each do
-        @user = FactoryGirl.create(:user)
+        @user = FactoryBot.create(:user)
         session[:user_id] = @user.id
         request.host = "#{@user.subdomain}.test.host"
       end
 
       context "[valid values]" do
         before :each do
-          @attributes = FactoryGirl.attributes_for(:user).slice(:password, :name, :quote, :subdomain, :avatar)
+          @attributes = FactoryBot.attributes_for(:user).slice(:password, :name, :quote, :subdomain, :avatar)
           patch :update, params: {user: @attributes}
         end
 
@@ -203,20 +203,20 @@ describe AccountsController, type: :controller do
 
   describe "#destroy" do
     it "should redirect if logged out" do
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
       delete :destroy
       expect(response).to be_redirect
     end
 
     it "should redirect if the current user is not the account owner" do
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      delete :destroy, session: {user_id: FactoryGirl.create(:user).id}
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
+      delete :destroy, session: {user_id: FactoryBot.create(:user).id}
       expect(response).to be_redirect
     end
 
     context "[subdomain owner]" do
       before :each do
-        @user = FactoryGirl.create(:user)
+        @user = FactoryBot.create(:user)
         session[:user_id] = @user.id
         request.host = "#{@user.subdomain}.test.host"
         delete :destroy

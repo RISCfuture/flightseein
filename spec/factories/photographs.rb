@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :photograph do
     association :flight
     caption "Looking eastward over the valley."

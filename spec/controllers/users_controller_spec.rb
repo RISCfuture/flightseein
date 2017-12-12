@@ -5,7 +5,7 @@ describe UsersController, type: :controller do
 
   describe "#new" do
     it "should redirect to the root URL if the user is already logged in" do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       get :new, session: {user_id: user.id}
       expect(response).to redirect_to(root_url(subdomain: user.subdomain))
     end
@@ -18,7 +18,7 @@ describe UsersController, type: :controller do
 
   describe "#create" do
     it "should redirect to the root URL if the user is already logged in" do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       session[:user_id] = user.id
       post :create, params: {user: {}}
       expect(response).to redirect_to(root_url(subdomain: user.subdomain))
@@ -26,7 +26,7 @@ describe UsersController, type: :controller do
 
     context "[valid values]" do
       before :each do
-        @template = FactoryGirl.build(:user)
+        @template = FactoryBot.build(:user)
         post :create, params: {user: @template.attributes.slice('email', 'subdomain').merge('password' => 'password')}
       end
 
@@ -50,7 +50,7 @@ describe UsersController, type: :controller do
 
     context "[invalid values]" do
       before :each do
-        @template = FactoryGirl.build(:user)
+        @template = FactoryBot.build(:user)
         post :create, params: {user: @template.attributes.slice('email').merge('password' => 'something')}
       end
 

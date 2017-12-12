@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :airport do
     sequence(:site_number) { |i| "A#{i.to_s.rjust(5, '0')}" }
     sequence(:lid) { |i| i.to_s(36).rjust(4, '0').upcase[0,4] }

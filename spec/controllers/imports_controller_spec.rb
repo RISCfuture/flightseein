@@ -8,14 +8,14 @@ describe ImportsController, type: :controller do
     end
 
     it "should redirect if the user is not the subdomain owner" do
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      get :new, session: {user_id: FactoryGirl.create(:user).id}
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
+      get :new, session: {user_id: FactoryBot.create(:user).id}
       expect(response).to be_redirect
     end
 
     context "[subdomain owner]" do
       before :each do
-        @user = FactoryGirl.create(:user)
+        @user = FactoryBot.create(:user)
         session[:user_id] = @user.id
         request.host = "#{@user.subdomain}.test.host"
         get :new
@@ -40,21 +40,21 @@ describe ImportsController, type: :controller do
     end
 
     it "should redirect if the user is not the subdomain owner" do
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      post :create, params: {import: {}}, session: {user_id: FactoryGirl.create(:user).id}
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
+      post :create, params: {import: {}}, session: {user_id: FactoryBot.create(:user).id}
       expect(response).to be_redirect
     end
 
     context "[subdomain owner]" do
       before :each do
-        @user = FactoryGirl.create(:user)
+        @user = FactoryBot.create(:user)
         session[:user_id] = @user.id
         request.host = "#{@user.subdomain}.test.host"
       end
 
       context "[valid values]" do
         before :each do
-          @attributes = FactoryGirl.attributes_for(:import, user: @user, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.zip'), 'application/zip'))
+          @attributes = FactoryBot.attributes_for(:import, user: @user, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'logten.zip'), 'application/zip'))
         end
 
         it "should create a new Import" do
@@ -77,7 +77,7 @@ describe ImportsController, type: :controller do
 
       context "[invalid values]" do
         before :each do
-          @attributes = FactoryGirl.attributes_for(:import, user: @user, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain'))
+          @attributes = FactoryBot.attributes_for(:import, user: @user, logbook: Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'bogus.txt'), 'text/plain'))
         end
 
         it "should move errors on the Paperclip aux fields to the main Paperclip field" do
@@ -108,26 +108,26 @@ describe ImportsController, type: :controller do
 
   describe "#show" do
     it "should redirect if no user is logged in" do
-      get :show, params: {id: FactoryGirl.create(:import).id}
+      get :show, params: {id: FactoryBot.create(:import).id}
       expect(response).to be_redirect
     end
 
     it "should redirect if the user is not the subdomain owner" do
-      user = FactoryGirl.create(:user)
-      request.host = "#{FactoryGirl.create(:user).subdomain}.test.host"
-      get :show, params: {id: FactoryGirl.create(:import, user: user).id}, session: {user_id: user.id}
+      user = FactoryBot.create(:user)
+      request.host = "#{FactoryBot.create(:user).subdomain}.test.host"
+      get :show, params: {id: FactoryBot.create(:import, user: user).id}, session: {user_id: user.id}
       expect(response).to be_redirect
     end
 
     context "[subdomain owner]" do
       before :each do
-        @user = FactoryGirl.create(:user)
+        @user = FactoryBot.create(:user)
         session[:user_id] = @user.id
         request.host = "#{@user.subdomain}.test.host"
       end
       
       it "should 404 if the Import does not belong to the current user" do
-        get :show, params: {id: FactoryGirl.create(:import).id}
+        get :show, params: {id: FactoryBot.create(:import).id}
         expect(response.status).to eql(404)
       end
 
@@ -137,7 +137,7 @@ describe ImportsController, type: :controller do
       end
 
       it "should set @import to the Import" do
-        import = FactoryGirl.create(:import, user: @user)
+        import = FactoryBot.create(:import, user: @user)
         get :show, params: {id: import.id}
         expect(assigns(:import)).to eql(import)
       end

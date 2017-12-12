@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe PeopleController, type: :controller do
   before :all do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
   end
 
   before :each do
@@ -20,8 +20,8 @@ describe PeopleController, type: :controller do
 
     describe ".json" do
       before :all do
-        @people = FactoryGirl.create_list(:person, 60, user: @user)
-        @people.each { |pers| FactoryGirl.create :passenger, person: pers, flight: FactoryGirl.create(:flight, user: @user) }
+        @people = FactoryBot.create_list(:person, 60, user: @user)
+        @people.each { |pers| FactoryBot.create :passenger, person: pers, flight: FactoryBot.create(:flight, user: @user) }
         @people.each(&:update_hours!)
         @people = @people.sort_by { |pers| [ pers.hours, pers.id ] }.reverse
       end
@@ -50,7 +50,7 @@ describe PeopleController, type: :controller do
       end
 
       it "should not blow up if given an invalid last_record" do
-        get :index, params: {format: 'json', last_record: FactoryGirl.create(:person).id}
+        get :index, params: {format: 'json', last_record: FactoryBot.create(:person).id}
         expect(response.status).to eql(200)
         expect(JSON.parse(response.body).size).to eql(50)
         JSON.parse(response.body).zip(@people[0, 50]).each do |(json, person)|
@@ -67,13 +67,13 @@ describe PeopleController, type: :controller do
     end
 
     it "should 404 if the flight does not belong to the subdomain owner" do
-      get :show, params: {id: FactoryGirl.create(:person).slug}
+      get :show, params: {id: FactoryBot.create(:person).slug}
       expect(response.status).to eql(404)
     end
 
     context "[valid person]" do
       before :each do
-        @person = FactoryGirl.create(:person, user: @user)
+        @person = FactoryBot.create(:person, user: @user)
       end
 
       it "should set @person to the person" do

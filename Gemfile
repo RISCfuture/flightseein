@@ -7,7 +7,7 @@ end
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '5.1.3'
+gem 'rails', '5.1.4'
 gem 'configoro'
 
 # CONTROLLERS
@@ -23,7 +23,7 @@ gem 'user-agent'
 gem 'email_validation'
 gem 'has_metadata_column', '>= 1.1.7'
 gem 'paperclip'
-gem 'aws-sdk', '>= 2.0.34'
+gem 'aws-sdk-s3'
 gem 'pg'
 gem 'slugalicious'
 gem 'find_or_create_on_scopes'
@@ -82,7 +82,7 @@ group :test do
   gem 'rspec-activejob'
 
   # FACTORIES/DB
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'faker'
   gem 'database_cleaner'
 

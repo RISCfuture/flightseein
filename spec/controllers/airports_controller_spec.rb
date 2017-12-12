@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe AirportsController, type: :controller do
   before :all do
-    @user = FactoryGirl.create(:user)
-    @destinations = FactoryGirl.create_list(:destination, 60, user: @user)
+    @user = FactoryBot.create(:user)
+    @destinations = FactoryBot.create_list(:destination, 60, user: @user)
   end
 
   before :each do
@@ -57,13 +57,13 @@ describe AirportsController, type: :controller do
     end
 
     it "should return 404 if the airport exists but is not a destination for this user" do
-      get :show, params: {id: FactoryGirl.create(:airport).identifier}
+      get :show, params: {id: FactoryBot.create(:airport).identifier}
       expect(response.status).to eql(404)
     end
 
     context "[valid airport identifier]" do
       before :each do
-        @destination = FactoryGirl.create(:destination, user: @user)
+        @destination = FactoryBot.create(:destination, user: @user)
       end
 
       it "should set @destination to the Destination record" do

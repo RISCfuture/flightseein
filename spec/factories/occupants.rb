@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :passenger, class: Occupant do
     association :person
     association :flight
