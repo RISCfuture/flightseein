@@ -9,7 +9,7 @@ Paperclip::Attachment.default_options.update Flightseein::Configuration.papercli
 
 Paperclip.interpolates(:content_extension) do |attachment, style_name|
   ((style = attachment.styles[style_name]) && style[:format]) || begin
-    fallback = File.extname(attachment.original_filename).gsub(/^\.+/, '')
+    fallback = File.extname(attachment.original_filename).delete_prefix('.')
     type     = MIME::Types[attachment.content_type].first
     return fallback unless type
     extension = type.extensions.first

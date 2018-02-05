@@ -28,7 +28,7 @@ class ImporterJob < ApplicationJob
       path = decompress_file(path)
     end
 
-    Dir.entries(@work_dir).each do |entry|
+    Dir.each_child(@work_dir) do |entry|
       next if entry.starts_with?('.')
       SUPPORTED_LOGBOOK_FORMATS.each do |rx, parser_name|
         if entry =~ rx then

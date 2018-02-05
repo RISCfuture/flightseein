@@ -4,7 +4,7 @@ set :application, 'flightseein'
 set :repo_url, 'timothymorgan.git:flightseein.git'
 
 set :deploy_to, '/var/www/www.flightsee.in'
-set :rvm_ruby_version, "2.4.1@#{fetch :application}"
+set :rvm_ruby_version, "2.5.0@#{fetch :application}"
 
 append :linked_files, 'config/secrets.yml', 'config/sidekiq.yml',
        'config/environments/production/paperclip.yml'
