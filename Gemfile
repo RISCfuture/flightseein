@@ -7,7 +7,7 @@ end
 
 # FRAMEWORK
 gem 'rake'
-gem 'rails', '5.1.4'
+gem 'rails', '5.1.5'
 gem 'configoro'
 
 # CONTROLLERS
