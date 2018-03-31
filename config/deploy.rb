@@ -12,3 +12,5 @@ append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets',
        'public/system'
 
 set :sidekiq_config, 'config/sidekiq.yml'
+
+set :bugsnag_api_key, '6285b84a69b55bcbeaf6ba190688127e'

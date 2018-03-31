@@ -8,6 +8,7 @@ require 'authentication_helpers'
 class ApplicationController < ActionController::Base
   include SubdomainRouter::Controller
   include AuthenticationHelpers
+  before_bugsnag_notify :add_user_info_to_bugsnag
 
   # The User-Agent names of supported web browsers.
   SUPPORTED_BROWSERS = [ :Chrome, :chrome, :Safari, :safari ]
@@ -37,5 +38,12 @@ class ApplicationController < ActionController::Base
     agent = Agent.new(request.env['HTTP_USER_AGENT'])
     @unsupported = !SUPPORTED_BROWSERS.include?(agent.name)
     return true
+  end
+
+  def add_user_info_to_bugsnag(report)
+    report.user = {
+        id:    current_user.id,
+        email: current_user.email
+    } if logged_in?
   end
 end

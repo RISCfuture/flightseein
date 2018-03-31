@@ -63,6 +63,9 @@ GEM
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     boolean (1.0.1)
+    bugsnag (6.6.4)
+      concurrent-ruby (~> 1.0)
+    bugsnag-capistrano (1.1.1)
     builder (3.2.3)
     capistrano (3.10.1)
       airbrussh (>= 1.0.0)
@@ -320,6 +323,8 @@ DEPENDENCIES
   aws-sdk-s3
   better_errors
   binding_of_caller
+  bugsnag
+  bugsnag-capistrano
   capistrano
   capistrano-bundler
   capistrano-passenger
