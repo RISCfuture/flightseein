@@ -35,6 +35,7 @@ class ApplicationController < ActionController::Base
   private
 
   def warn_for_incompatible_browsers
+    return unless request.env['HTTP_USER_AGENT'].present?
     agent = Agent.new(request.env['HTTP_USER_AGENT'])
     @unsupported = !SUPPORTED_BROWSERS.include?(agent.name)
     return true
