@@ -96,5 +96,5 @@ end
 group :production do
   # CACHING
   gem 'redis-rails'
-  gem 'rack-cache', require: 'rack/cache'
+  gem 'redis-rack-cache'
 end
