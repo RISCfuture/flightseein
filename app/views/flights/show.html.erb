@@ -65,7 +65,7 @@
         <ul id="photos"></ul>
         <%= content_for :javascripts do %>
             <script type="text/javascript">
-              $('#photos').carousel("<%= flight_photographs_url(@flight) %>", 'vertical')
+              $('#photos').carousel("<%= flight_photographs_url(@flight, format: 'json') %>", 'vertical')
             </script>
         <% end %>
     <% end %>
@@ -77,7 +77,7 @@
     <ul id="photos"></ul>
     <%= content_for :javascripts do %>
         <script type="text/javascript">
-          $('#photos').carousel("<%= flight_photographs_url(@flight) %>", 'horizontal')
+          $('#photos').carousel("<%= flight_photographs_url(@flight, format: 'json') %>", 'horizontal')
         </script>
     <% end %>
 <% end %>

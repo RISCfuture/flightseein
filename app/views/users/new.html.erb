@@ -6,7 +6,7 @@
 <ul id="examples"></ul>
 <%= content_for :javascripts do %>
     <script type="text/javascript">
-      $('#examples').carousel("<%= photographs_url %>", 'horizontal', { captions: false, lightboxes: false })
+      $('#examples').carousel("<%= photographs_url(format: 'json') %>", 'horizontal', { captions: false, lightboxes: false })
     </script>
 <% end %>
 
