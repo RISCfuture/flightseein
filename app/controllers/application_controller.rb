@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
   # The User-Agent names of supported web browsers.
   SUPPORTED_BROWSERS = [ :Chrome, :chrome, :Safari, :safari ]
 
-  protect_from_forgery
   before_action :warn_for_incompatible_browsers
 
   layout 'application'
